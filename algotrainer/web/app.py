@@ -280,6 +280,10 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
         return {"hint": hints[body.tier], "tier": body.tier,
                 "has_more": body.tier + 1 < len(hints)}
 
+    @app.get("/api/verdict/status")
+    def verdict_status(session_id: str):
+        return {"ready": (session_dir / f"verdict-{session_id}.json").exists()}
+
     @app.post("/api/verdict/ingest")
     def ingest(body: IngestBody):
         try:

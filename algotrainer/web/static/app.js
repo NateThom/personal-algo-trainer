@@ -3,6 +3,19 @@ let sessionId = null;    // last handoff session
 let hintsUsed = 0;
 let nextHintTier = 0;
 let editor = null;
+let pollTimer = null;
+
+async function checkVerdict() {
+  if (!sessionId) { clearInterval(pollTimer); return; }
+  const r = await fetch(`/api/verdict/status?session_id=${sessionId}`);
+  const { ready } = await r.json();
+  if (ready) {
+    clearInterval(pollTimer);
+    const b = document.getElementById("ingest");
+    b.disabled = false;
+    b.textContent = "Verdict ready — ingest";
+  }
+}
 
 function renderPoolBanner(pool) {
   const el = document.getElementById("pool-banner");
@@ -46,6 +59,8 @@ async function loadNext() {
   document.getElementById("results").textContent = "";
   document.getElementById("handoff").disabled = true;
   document.getElementById("ingest").disabled = true;
+  document.getElementById("ingest").textContent = "Ingest verdict";
+  clearInterval(pollTimer);
   hintsUsed = 0;
   nextHintTier = 0;
   document.getElementById("hints").innerHTML = "";
@@ -90,6 +105,7 @@ async function handoff() {
     `In Claude Code, run the tutor on this session, then click "Ingest verdict".`;
   document.getElementById("ingest").disabled = false;
   document.getElementById("copy-cmd").disabled = false;
+  pollTimer = setInterval(checkVerdict, 5000);
 }
 
 async function ingest() {
@@ -108,6 +124,7 @@ async function ingest() {
     `\n\nGRADE: ${res.grade}\nNext due: ${res.next_due}\nTutor: ${res.feedback}`;
   localStorage.removeItem("algotrainer.sessionId");
   sessionId = null;
+  clearInterval(pollTimer);
   document.getElementById("copy-cmd").disabled = true;
   loadMastery();
   loadDashboard();
@@ -127,6 +144,7 @@ function restoreSession() {
   if (sessionId) {
     document.getElementById("ingest").disabled = false;
     document.getElementById("copy-cmd").disabled = false;
+    pollTimer = setInterval(checkVerdict, 5000);
   }
 }
 

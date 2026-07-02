@@ -161,6 +161,18 @@ def test_ingest_rejects_session_mismatch(tmp_path):
     assert r.status_code == 400
 
 
+def test_verdict_status_not_ready_for_unknown_session(tmp_path):
+    c = _client(tmp_path)
+    r = c.get("/api/verdict/status", params={"session_id": "no-such-session"})
+    assert r.json() == {"ready": False}
+
+
+def test_verdict_status_ready_once_verdict_file_exists(tmp_path):
+    c, sess, session_dir, db_path = _run_full_loop_up_to_ingest(tmp_path)
+    r = c.get("/api/verdict/status", params={"session_id": sess["session_id"]})
+    assert r.json() == {"ready": True}
+
+
 def load_default_solution(problem_id: str) -> str:
     from algotrainer.content import load_problem
     return load_problem(problem_id).reference_solution
