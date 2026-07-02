@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class TestCase:
+    __test__ = False
     args: list
     expected: object
 
