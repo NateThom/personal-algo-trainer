@@ -71,9 +71,10 @@ class Store:
              int(judge_passed), hints_used, _iso(created_at)),
         )
         self._conn.commit()
+        assert cur.lastrowid is not None
         return cur.lastrowid
 
-    def record_review(self, attempt_id, problem_id, rating, review_log_json, reviewed_at):
+    def record_review(self, attempt_id: int, problem_id: str, rating: int, review_log_json: str, reviewed_at: datetime) -> None:
         self._conn.execute(
             "INSERT INTO review(attempt_id, problem_id, rating, review_log_json, reviewed_at) "
             "VALUES(?,?,?,?,?)",
@@ -82,7 +83,7 @@ class Store:
         self._conn.commit()
 
     def ingest_verdict(
-        self, attempt_id, problem_id, rating, card_json, next_due, review_log_json, reviewed_at,
+        self, attempt_id: int, problem_id: str, rating: int, card_json: str, next_due: datetime, review_log_json: str, reviewed_at: datetime,
     ) -> None:
         try:
             self._conn.execute("BEGIN")
