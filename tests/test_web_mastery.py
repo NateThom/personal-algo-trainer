@@ -23,14 +23,14 @@ def _solve_and_grade(c, session_dir, db_path):
     subprocess.run([sys.executable, "scripts/stub_tutor.py", str(session_dir),
                     sess["session_id"]], check=True, cwd=REPO)
     c.post("/api/verdict/ingest", json={"session_id": sess["session_id"]})
-    return prob
+    return prob, sess["session_id"]
 
 
 def test_ingest_writes_graded_attempt_and_pattern_card(tmp_path):
     session_dir = tmp_path / "sessions"
     db_path = tmp_path / "t.db"
     c = TestClient(create_app(db_path=db_path, content_dir=None, session_dir=session_dir))
-    prob = _solve_and_grade(c, session_dir, db_path)
+    prob, _ = _solve_and_grade(c, session_dir, db_path)
 
     conn = sqlite3.connect(db_path)
     ga = conn.execute("SELECT pattern, grade FROM graded_attempt").fetchall()
@@ -45,7 +45,7 @@ def test_mastery_endpoint_reports_pattern(tmp_path):
     session_dir = tmp_path / "sessions"
     db_path = tmp_path / "t.db"
     c = TestClient(create_app(db_path=db_path, content_dir=None, session_dir=session_dir))
-    prob = _solve_and_grade(c, session_dir, db_path)
+    prob, _ = _solve_and_grade(c, session_dir, db_path)
 
     r = c.get("/api/mastery")
     assert r.status_code == 200
@@ -66,3 +66,27 @@ def test_next_uses_composer_without_crashing(tmp_path):
     r = c.get("/api/next")
     assert r.status_code == 200
     assert "problem" in r.json()
+
+
+def test_double_ingest_does_not_double_write_plan3_tables(tmp_path):
+    # A re-ingest (idempotent short-circuit) must not advance the pattern card
+    # or add a second graded_attempt row.
+    session_dir = tmp_path / "sessions"
+    db_path = tmp_path / "t.db"
+    c = TestClient(create_app(db_path=db_path, content_dir=None, session_dir=session_dir))
+    _prob, session_id = _solve_and_grade(c, session_dir, db_path)
+
+    conn = sqlite3.connect(db_path)
+    ga_before = conn.execute("SELECT COUNT(*) FROM graded_attempt").fetchone()[0]
+    pc_before = conn.execute("SELECT pattern, card_json, next_due FROM pattern_card").fetchall()
+    conn.close()
+
+    r = c.post("/api/verdict/ingest", json={"session_id": session_id})
+    assert r.json().get("already_ingested") is True
+
+    conn = sqlite3.connect(db_path)
+    ga_after = conn.execute("SELECT COUNT(*) FROM graded_attempt").fetchone()[0]
+    pc_after = conn.execute("SELECT pattern, card_json, next_due FROM pattern_card").fetchall()
+    conn.close()
+    assert ga_after == ga_before  # no duplicate graded_attempt
+    assert pc_after == pc_before  # pattern card unchanged (not re-advanced)

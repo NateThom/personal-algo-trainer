@@ -72,6 +72,10 @@ def create_app(db_path, content_dir, session_dir) -> FastAPI:
         if not ids:
             return {"problem": None}
         problem_pattern = {pid: problems[pid].pattern for pid in ids}
+        # "Immature" for blocked-practice purposes is deliberately keyed on
+        # transfer breadth (initial exposure), NOT the full mastery gate: a
+        # pattern with breadth but a memorization trap / low stability should
+        # still graduate to interleaving, where discrimination is trained.
         immature = {
             pat for pat in set(problem_pattern.values())
             if _mastery_for(pat).transfer_breadth < mastery_mod.GATE_BREADTH
