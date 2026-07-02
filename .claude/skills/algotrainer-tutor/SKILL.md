@@ -12,6 +12,7 @@ spaced-repetition schedule.
 
 ## Inputs
 
+- Run all commands from the repo root (paths like `sessions/` and `scripts/write_verdict.py` are repo-root-relative).
 - Session directory: `sessions/` at the repo root unless told otherwise.
 - Session id: given by the user (e.g. "grade session a1b2c3d4e5f6").
 - Read `sessions/session-<id>.json`. Its fields:
