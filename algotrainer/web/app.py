@@ -137,6 +137,22 @@ def create_app(db_path, content_dir, session_dir) -> FastAPI:
             verdict.attempt_id, verdict.problem_id, rating,
             new_card_json, next_due, log_json, now,
         )
+
+        # --- Plan 3: pattern-level FSRS + analytics row ---
+        p = problems.get(verdict.problem_id)
+        pattern = p.pattern if p else verdict.problem_id
+        pcard = store.get_pattern_card(pattern)
+        new_pcard, p_next_due, _ = scheduler.review(pcard, rating, now)
+        store.save_pattern_card(pattern, new_pcard, p_next_due)
+        store.record_graded_attempt(
+            attempt_id=verdict.attempt_id, problem_id=verdict.problem_id, pattern=pattern,
+            recall_pattern=(attempt or {}).get("recall_pattern"),
+            hints_used=(attempt or {}).get("hints_used", 0),
+            judge_passed=(attempt or {}).get("judge_passed", False),
+            grade=verdict.grade, complexity_ok=verdict.complexity_ok,
+            error_code=verdict.error_code, reviewed_at=now,
+        )
+
         return {"grade": verdict.grade, "next_due": next_due.isoformat(),
                 "feedback": verdict.feedback, "already_ingested": False}
 

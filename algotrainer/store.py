@@ -89,9 +89,13 @@ class Store:
     def get_attempt(self, attempt_id: int) -> dict | None:
         with self._lock:
             row = self._conn.execute(
-                "SELECT problem_id FROM attempt WHERE id = ?", (attempt_id,)
+                "SELECT problem_id, recall_pattern, hints_used, judge_passed "
+                "FROM attempt WHERE id = ?", (attempt_id,)
             ).fetchone()
-        return {"problem_id": row[0]} if row else None
+        if row is None:
+            return None
+        return {"problem_id": row[0], "recall_pattern": row[1],
+                "hints_used": row[2], "judge_passed": bool(row[3])}
 
     def attempt_has_review(self, attempt_id: int) -> bool:
         with self._lock:
