@@ -9,3 +9,4 @@ sessions/*.json
 .DS_Store
 .superpowers/
 *.egg-info/
+content/generated/*.json
