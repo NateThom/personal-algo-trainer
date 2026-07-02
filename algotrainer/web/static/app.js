@@ -77,6 +77,7 @@ async function ingest() {
   const res = await r.json();
   document.getElementById("results").textContent +=
     `\n\nGRADE: ${res.grade}\nNext due: ${res.next_due}\nTutor: ${res.feedback}`;
+  loadMastery();
   setTimeout(loadNext, 1500);
 }
 
@@ -96,6 +97,21 @@ async function getHint() {
   if (!has_more) document.getElementById("hint").disabled = true;
 }
 
+async function loadMastery() {
+  const r = await fetch("/api/mastery");
+  const { patterns } = await r.json();
+  const body = document.getElementById("mastery-body");
+  if (!patterns.length) { body.textContent = "No data yet — solve a problem."; return; }
+  body.innerHTML = patterns.map(p =>
+    `<div class="mrow${p.mastered ? " mastered" : ""}">` +
+    `<span class="mname">${p.name}</span>` +
+    `<span class="mscore">score ${p.mastery_score.toFixed(2)}</span>` +
+    `<span class="mbreadth">breadth ${p.transfer_breadth}</span>` +
+    (p.memorization_trap ? `<span class="mtrap">⚠ memorizing, not recognizing</span>` : "") +
+    (p.mastered ? `<span class="mgate">✓ mastered</span>` : "") +
+    `</div>`).join("");
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   editor = CodeMirror.fromTextArea(document.getElementById("editor"),
     { mode: "python", lineNumbers: true, indentUnit: 4 });
@@ -104,4 +120,5 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("handoff").addEventListener("click", handoff);
   document.getElementById("ingest").addEventListener("click", ingest);
   loadNext();
+  loadMastery();
 });

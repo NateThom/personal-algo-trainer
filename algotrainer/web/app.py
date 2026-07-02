@@ -7,10 +7,13 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+from algotrainer import mastery as mastery_mod
+from algotrainer.composer import compose_order
 from algotrainer.content import DEFAULT_CONTENT_DIR, load_problems
 from algotrainer.handoff.files import read_verdict, write_session
 from algotrainer.handoff.schema import SessionFile
 from algotrainer.judge import run_submission
+from algotrainer.patterns import confusable_group, pattern_meta, roadmap_order
 from algotrainer.scheduler import RATING_BY_NAME, SrsScheduler
 from algotrainer.store import Store
 
@@ -48,6 +51,15 @@ def create_app(db_path, content_dir, session_dir) -> FastAPI:
     scheduler = SrsScheduler()
     problems = {p.id: p for p in load_problems(content_dir)}
 
+    def _pattern_stability(pattern: str) -> float:
+        from fsrs import Card
+        cj = store.get_pattern_card(pattern)
+        return Card.from_json(cj).stability if cj else 0.0
+
+    def _mastery_for(pattern: str):
+        rows = store.graded_attempts_by_pattern(pattern)
+        return mastery_mod.compute_pattern_mastery(pattern, rows, _pattern_stability(pattern))
+
     @app.get("/")
     def index():
         return FileResponse(_STATIC / "index.html")
@@ -59,12 +71,43 @@ def create_app(db_path, content_dir, session_dir) -> FastAPI:
         ids = scheduler.due_problem_ids(due_map, list(problems), now)
         if not ids:
             return {"problem": None}
-        p = problems[ids[0]]
+        problem_pattern = {pid: problems[pid].pattern for pid in ids}
+        # "Immature" for blocked-practice purposes is deliberately keyed on
+        # transfer breadth (initial exposure), NOT the full mastery gate: a
+        # pattern with breadth but a memorization trap / low stability should
+        # still graduate to interleaving, where discrimination is trained.
+        immature = {
+            pat for pat in set(problem_pattern.values())
+            if _mastery_for(pat).transfer_breadth < mastery_mod.GATE_BREADTH
+        }
+        plan = compose_order(
+            ids, problem_pattern, immature, store.error_counts_by_pattern(),
+            confusable_of=confusable_group,
+        )
+        pid = plan.order[0]
+        p = problems[pid]
         return {"problem": {
             "id": p.id, "title": p.title, "pattern": p.pattern,
             "difficulty": p.difficulty, "statement": p.statement,
             "function_name": p.function_name, "starter_code": p.starter_code,
         }}
+
+    @app.get("/api/mastery")
+    def mastery():
+        out = []
+        for pat in store.all_graded_patterns():
+            m = _mastery_for(pat)
+            meta = pattern_meta(pat)
+            out.append({
+                "pattern": pat, "name": meta.name if meta else pat,
+                "attempts": m.attempts, "transfer_breadth": m.transfer_breadth,
+                "solve_rate": m.solve_rate, "pattern_id_accuracy": m.pattern_id_accuracy,
+                "optimal_rate": m.optimal_rate, "stability": m.stability,
+                "memorization_trap": m.memorization_trap,
+                "mastery_score": m.mastery_score, "mastered": m.mastered,
+            })
+        out.sort(key=lambda e: roadmap_order(e["pattern"]))
+        return {"patterns": out}
 
     @app.post("/api/judge")
     def judge(body: JudgeBody):
@@ -137,6 +180,22 @@ def create_app(db_path, content_dir, session_dir) -> FastAPI:
             verdict.attempt_id, verdict.problem_id, rating,
             new_card_json, next_due, log_json, now,
         )
+
+        # --- Plan 3: pattern-level FSRS + analytics row ---
+        p = problems.get(verdict.problem_id)
+        pattern = p.pattern if p else verdict.problem_id
+        pcard = store.get_pattern_card(pattern)
+        new_pcard, p_next_due, _ = scheduler.review(pcard, rating, now)
+        store.save_pattern_card(pattern, new_pcard, p_next_due)
+        store.record_graded_attempt(
+            attempt_id=verdict.attempt_id, problem_id=verdict.problem_id, pattern=pattern,
+            recall_pattern=(attempt or {}).get("recall_pattern"),
+            hints_used=(attempt or {}).get("hints_used", 0),
+            judge_passed=(attempt or {}).get("judge_passed", False),
+            grade=verdict.grade, complexity_ok=verdict.complexity_ok,
+            error_code=verdict.error_code, reviewed_at=now,
+        )
+
         return {"grade": verdict.grade, "next_due": next_due.isoformat(),
                 "feedback": verdict.feedback, "already_ingested": False}
 

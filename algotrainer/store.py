@@ -28,6 +28,23 @@ CREATE TABLE IF NOT EXISTS review (
     review_log_json TEXT NOT NULL,
     reviewed_at TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS pattern_card (
+    pattern   TEXT PRIMARY KEY,
+    card_json TEXT NOT NULL,
+    next_due  TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS graded_attempt (
+    attempt_id INTEGER PRIMARY KEY,
+    problem_id TEXT NOT NULL,
+    pattern TEXT NOT NULL,
+    recall_pattern TEXT,
+    hints_used INTEGER NOT NULL,
+    judge_passed INTEGER NOT NULL,
+    grade TEXT NOT NULL,
+    complexity_ok INTEGER,
+    error_code TEXT,
+    reviewed_at TEXT NOT NULL
+);
 """
 
 
@@ -72,9 +89,13 @@ class Store:
     def get_attempt(self, attempt_id: int) -> dict | None:
         with self._lock:
             row = self._conn.execute(
-                "SELECT problem_id FROM attempt WHERE id = ?", (attempt_id,)
+                "SELECT problem_id, recall_pattern, hints_used, judge_passed "
+                "FROM attempt WHERE id = ?", (attempt_id,)
             ).fetchone()
-        return {"problem_id": row[0]} if row else None
+        if row is None:
+            return None
+        return {"problem_id": row[0], "recall_pattern": row[1],
+                "hints_used": row[2], "judge_passed": bool(row[3])}
 
     def attempt_has_review(self, attempt_id: int) -> bool:
         with self._lock:
@@ -136,6 +157,70 @@ class Store:
             except Exception:
                 self._conn.rollback()
                 raise
+
+    def get_pattern_card(self, pattern: str) -> str | None:
+        with self._lock:
+            row = self._conn.execute(
+                "SELECT card_json FROM pattern_card WHERE pattern = ?", (pattern,)
+            ).fetchone()
+            return row[0] if row else None
+
+    def save_pattern_card(self, pattern: str, card_json: str, next_due: datetime) -> None:
+        with self._lock:
+            self._conn.execute(
+                "INSERT INTO pattern_card(pattern, card_json, next_due) VALUES(?,?,?) "
+                "ON CONFLICT(pattern) DO UPDATE SET card_json=excluded.card_json, "
+                "next_due=excluded.next_due",
+                (pattern, card_json, _iso(next_due)),
+            )
+            self._conn.commit()
+
+    def record_graded_attempt(
+        self, attempt_id: int, problem_id: str, pattern: str, recall_pattern: str | None,
+        hints_used: int, judge_passed: bool, grade: str, complexity_ok: bool | None,
+        error_code: str | None, reviewed_at: datetime,
+    ) -> None:
+        with self._lock:
+            self._conn.execute(
+                "INSERT INTO graded_attempt(attempt_id, problem_id, pattern, recall_pattern, "
+                "hints_used, judge_passed, grade, complexity_ok, error_code, reviewed_at) "
+                "VALUES(?,?,?,?,?,?,?,?,?,?) "
+                "ON CONFLICT(attempt_id) DO NOTHING",
+                (attempt_id, problem_id, pattern, recall_pattern, hints_used,
+                 int(judge_passed), grade,
+                 None if complexity_ok is None else int(complexity_ok),
+                 error_code, _iso(reviewed_at)),
+            )
+            self._conn.commit()
+
+    def graded_attempts_by_pattern(self, pattern: str) -> list[dict]:
+        with self._lock:
+            rows = self._conn.execute(
+                "SELECT problem_id, recall_pattern, hints_used, judge_passed, grade, "
+                "complexity_ok, error_code FROM graded_attempt WHERE pattern = ? "
+                "ORDER BY attempt_id", (pattern,),
+            ).fetchall()
+        return [
+            {"problem_id": r[0], "recall_pattern": r[1], "hints_used": r[2],
+             "judge_passed": bool(r[3]), "grade": r[4],
+             "complexity_ok": None if r[5] is None else bool(r[5]), "error_code": r[6]}
+            for r in rows
+        ]
+
+    def error_counts_by_pattern(self) -> dict[str, int]:
+        with self._lock:
+            rows = self._conn.execute(
+                "SELECT pattern, COUNT(*) FROM graded_attempt "
+                "WHERE error_code IS NOT NULL GROUP BY pattern"
+            ).fetchall()
+        return {r[0]: r[1] for r in rows}
+
+    def all_graded_patterns(self) -> list[str]:
+        with self._lock:
+            rows = self._conn.execute(
+                "SELECT DISTINCT pattern FROM graded_attempt ORDER BY pattern"
+            ).fetchall()
+        return [r[0] for r in rows]
 
     def close(self) -> None:
         self._conn.close()
