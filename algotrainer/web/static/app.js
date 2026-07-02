@@ -10,8 +10,8 @@ function renderPoolBanner(pool) {
   const parts = [];
   if (pool.unseen === 0) {
     parts.push(
-      `You've seen all ${pool.total} ${pool.pattern} problems — ask the Claude tutor ` +
-      `to generate a variant (see the Guide), then click Reload problems.`
+      `You've seen every problem in this problem's pattern pool (${pool.total} total) — ` +
+      `ask the Claude tutor to generate a variant (see the Guide), then click Reload problems.`
     );
   }
   if (pool.needs_more > 0) {
@@ -38,7 +38,6 @@ async function loadNext() {
   }
   document.getElementById("title").textContent = problem.title;
   document.getElementById("statement").textContent = problem.statement;
-  document.getElementById("pattern-badge").textContent = "";  // pattern hidden on purpose
   document.getElementById("seen-badge").textContent = problem.seen_count === 0
     ? "🆕 New"
     : `🔁 Review · seen ${problem.seen_count}×`;

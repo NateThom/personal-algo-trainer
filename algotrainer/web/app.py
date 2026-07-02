@@ -83,7 +83,7 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
             if pid in problems and problems[pid].pattern == pattern
         )
         return {
-            "pattern": pattern, "total": total, "unseen": total - seen,
+            "total": total, "unseen": total - seen,
             "needs_more": max(0, mastery_mod.GATE_BREADTH - total),
         }
 
@@ -146,7 +146,7 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
         pid = reviews[0] if reviews else (novel[0] if novel else plan.order[0])
         p = problems[pid]
         return {"problem": {
-            "id": p.id, "title": p.title, "pattern": p.pattern,
+            "id": p.id, "title": p.title,
             "difficulty": p.difficulty, "statement": p.statement,
             "function_name": p.function_name, "starter_code": p.starter_code,
             "seen_count": store.attempt_count_for_problem(p.id),

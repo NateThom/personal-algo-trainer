@@ -67,7 +67,7 @@ def _solve_and_grade(c, session_dir):
     judged = c.post("/api/judge", json={"problem_id": prob["id"], "code": code}).json()
     sess = c.post("/api/session", json={
         "problem_id": prob["id"], "code": code,
-        "recall": {"pattern": prob["pattern"], "approach": "x", "complexity": "O(n)"},
+        "recall": {"pattern": load_problem(prob["id"]).pattern, "approach": "x", "complexity": "O(n)"},
         "judge_passed": judged["passed"], "hints_used": 0,
     }).json()
     subprocess.run([sys.executable, "scripts/stub_tutor.py", str(session_dir),

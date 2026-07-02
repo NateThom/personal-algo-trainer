@@ -4,6 +4,7 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
+from algotrainer.content import load_problem
 from algotrainer.handoff.schema import Verdict
 from algotrainer.web.app import create_app
 
@@ -35,7 +36,7 @@ def _run_full_loop_up_to_ingest(tmp_path):
     judged = c.post("/api/judge", json={"problem_id": prob["id"], "code": code}).json()
     sess = c.post("/api/session", json={
         "problem_id": prob["id"], "code": code,
-        "recall": {"pattern": prob["pattern"], "approach": "x", "complexity": "O(n)"},
+        "recall": {"pattern": load_problem(prob["id"]).pattern, "approach": "x", "complexity": "O(n)"},
         "judge_passed": judged["passed"], "hints_used": 0,
     }).json()
 
@@ -61,6 +62,13 @@ def test_next_returns_problem_without_solution(tmp_path):
     assert prob is not None
     assert "reference_solution" not in prob
     assert "tests" not in prob
+
+
+def test_next_does_not_leak_pattern(tmp_path):
+    c = _client(tmp_path)
+    p = c.get("/api/next").json()["problem"]
+    assert "pattern" not in p
+    assert "pattern" not in p["pattern_pool"]
 
 
 def test_judge_endpoint_runs_code(tmp_path):
@@ -89,7 +97,7 @@ def test_full_loop_with_stub_tutor(tmp_path):
     judged = c.post("/api/judge", json={"problem_id": prob["id"], "code": code}).json()
     sess = c.post("/api/session", json={
         "problem_id": prob["id"], "code": code,
-        "recall": {"pattern": prob["pattern"], "approach": "x", "complexity": "O(n)"},
+        "recall": {"pattern": load_problem(prob["id"]).pattern, "approach": "x", "complexity": "O(n)"},
         "judge_passed": judged["passed"], "hints_used": 0,
     }).json()
 
