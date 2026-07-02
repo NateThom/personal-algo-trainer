@@ -105,6 +105,7 @@ async function handoff() {
     `In Claude Code, run the tutor on this session, then click "Ingest verdict".`;
   document.getElementById("ingest").disabled = false;
   document.getElementById("copy-cmd").disabled = false;
+  clearInterval(pollTimer);
   pollTimer = setInterval(checkVerdict, 5000);
 }
 
@@ -144,6 +145,7 @@ function restoreSession() {
   if (sessionId) {
     document.getElementById("ingest").disabled = false;
     document.getElementById("copy-cmd").disabled = false;
+    clearInterval(pollTimer);
     pollTimer = setInterval(checkVerdict, 5000);
   }
 }
