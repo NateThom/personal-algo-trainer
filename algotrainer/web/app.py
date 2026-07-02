@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -32,6 +32,11 @@ class SessionBody(BaseModel):
 
 class IngestBody(BaseModel):
     session_id: str
+
+
+class HintBody(BaseModel):
+    problem_id: str
+    tier: int
 
 
 def create_app(db_path, content_dir, session_dir) -> FastAPI:
@@ -92,6 +97,17 @@ def create_app(db_path, content_dir, session_dir) -> FastAPI:
         )
         write_session(session_dir, sf)
         return {"session_id": sid, "attempt_id": attempt_id}
+
+    @app.post("/api/hint")
+    def hint(body: HintBody):
+        p = problems.get(body.problem_id)
+        if p is None:
+            raise HTTPException(status_code=404, detail="unknown problem")
+        hints = p.hints
+        if body.tier < 0 or body.tier >= len(hints):
+            return {"hint": None, "tier": body.tier, "has_more": False}
+        return {"hint": hints[body.tier], "tier": body.tier,
+                "has_more": body.tier + 1 < len(hints)}
 
     @app.post("/api/verdict/ingest")
     def ingest(body: IngestBody):
