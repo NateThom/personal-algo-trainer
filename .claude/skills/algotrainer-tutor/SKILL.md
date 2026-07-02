@@ -56,6 +56,22 @@ single worked step — based on `hints_used` (which tells you how many tiers the
 have already seen). NEVER reveal the full solution. Do not write a verdict for a
 hint request; just respond in the chat.
 
+## If asked to generate a variant
+
+When asked to create a new practice problem / variant for a pattern (e.g. "generate
+an arrays-hashing variant, medium"):
+1. Read `references/variant.md` for the exact candidate schema and correctness bar.
+2. Author a NOVEL problem for that pattern at the requested difficulty — new surface,
+   same underlying schema; never copy a seed problem.
+3. Persist it ONLY through the validating CLI (run from the repo root):
+   ```bash
+   echo '<candidate-json>' | python scripts/add_variant.py
+   ```
+   If it exits non-zero, read the rejection reason (a failing self-test, an id
+   collision, or bad shape), fix the candidate, and retry until accepted.
+4. Tell the learner the new problem id and that they can click "Reload problems"
+   in the app (or restart) to have it enter rotation.
+
 ## Principles
 
 - Be encouraging and specific. Name one highest-leverage improvement, not ten.
