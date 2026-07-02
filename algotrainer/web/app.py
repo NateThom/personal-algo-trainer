@@ -1,0 +1,113 @@
+import uuid
+from datetime import datetime, timezone
+from pathlib import Path
+
+from fastapi import FastAPI
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
+
+from algotrainer.content import DEFAULT_CONTENT_DIR, load_problems
+from algotrainer.handoff.files import read_verdict, write_session
+from algotrainer.handoff.schema import SessionFile
+from algotrainer.judge import run_submission
+from algotrainer.scheduler import RATING_BY_NAME, SrsScheduler
+from algotrainer.store import Store
+
+_STATIC = Path(__file__).resolve().parent / "static"
+
+
+class JudgeBody(BaseModel):
+    problem_id: str
+    code: str
+
+
+class SessionBody(BaseModel):
+    problem_id: str
+    code: str
+    recall: dict
+    judge_passed: bool
+    hints_used: int = 0
+
+
+class IngestBody(BaseModel):
+    session_id: str
+
+
+def create_app(db_path, content_dir, session_dir) -> FastAPI:
+    content_dir = content_dir or DEFAULT_CONTENT_DIR
+    session_dir = Path(session_dir)
+    app = FastAPI(title="AlgoTrainer")
+    app.mount("/static", StaticFiles(directory=_STATIC), name="static")
+    store = Store(db_path)
+    scheduler = SrsScheduler()
+    problems = {p.id: p for p in load_problems(content_dir)}
+
+    @app.get("/")
+    def index():
+        return FileResponse(_STATIC / "index.html")
+
+    @app.get("/api/next")
+    def next_problem():
+        now = datetime.now(timezone.utc)
+        due_map = store.all_card_due(now)
+        ids = scheduler.due_problem_ids(due_map, list(problems), now)
+        if not ids:
+            return {"problem": None}
+        p = problems[ids[0]]
+        return {"problem": {
+            "id": p.id, "title": p.title, "pattern": p.pattern,
+            "difficulty": p.difficulty, "statement": p.statement,
+            "function_name": p.function_name, "starter_code": p.starter_code,
+        }}
+
+    @app.post("/api/judge")
+    def judge(body: JudgeBody):
+        p = problems[body.problem_id]
+        r = run_submission(body.code, p.function_name, p.tests)
+        return {
+            "passed": r.passed, "error": r.error, "runtime_ms": r.runtime_ms,
+            "cases": [
+                {"args": c.args, "expected": c.expected, "got": c.got,
+                 "passed": c.passed, "error": c.error} for c in r.cases
+            ],
+        }
+
+    @app.post("/api/session")
+    def session(body: SessionBody):
+        now = datetime.now(timezone.utc)
+        attempt_id = store.record_attempt(
+            body.problem_id, body.code, body.recall.get("pattern"),
+            body.recall.get("approach"), body.recall.get("complexity"),
+            body.judge_passed, body.hints_used, now,
+        )
+        sid = uuid.uuid4().hex[:12]
+        p = problems[body.problem_id]
+        sf = SessionFile(
+            session_id=sid, attempt_id=attempt_id,
+            problem={"id": p.id, "title": p.title, "pattern": p.pattern,
+                     "statement": p.statement, "reference_solution": p.reference_solution},
+            attempt={"code": body.code, "judge_passed": body.judge_passed},
+            recall=body.recall, hints_used=body.hints_used, request="grade",
+        )
+        write_session(session_dir, sf)
+        return {"session_id": sid, "attempt_id": attempt_id}
+
+    @app.post("/api/verdict/ingest")
+    def ingest(body: IngestBody):
+        try:
+            verdict = read_verdict(session_dir, body.session_id)
+        except FileNotFoundError:
+            return JSONResponse({"error": "verdict not found yet"}, status_code=409)
+        now = datetime.now(timezone.utc)
+        rating = RATING_BY_NAME[verdict.grade]
+        card_json = store.get_card(verdict.problem_id)
+        new_card_json, next_due, log_json = scheduler.review(card_json, rating, now)
+        store.ingest_verdict(
+            verdict.attempt_id, verdict.problem_id, rating,
+            new_card_json, next_due, log_json, now,
+        )
+        return {"grade": verdict.grade, "next_due": next_due.isoformat(),
+                "feedback": verdict.feedback}
+
+    return app
