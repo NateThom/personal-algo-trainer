@@ -14,7 +14,7 @@
       you problems — it diagnoses your weak patterns, schedules spaced re-practice of <em>novel</em>
       instances, grades you honestly, tutors you Socratically, and tracks genuine mastery. The whole
       loop is:</p>
-      <p class="loop">cold problem → recall gate → judge → tutor grade/hint → reschedule → mastery update → repeat</p>
+      <p class="loop">cold problem → recall gate → judge → tutor grade → reschedule → mastery update → repeat</p>
     </section>
 
     <section>
@@ -24,7 +24,7 @@
       the app writes a session file describing your attempt, you ask Claude Code to grade it, and it writes
       a verdict the app reads back. This uses your Claude <em>subscription</em> — there is no per-call API
       cost — and keeps the tutor a version-controlled part of the project. The trade-off is one deliberate
-      seam: you step over to the Claude Code pane for the grade/hint moments. For a learner already living
+      seam: you step over to the Claude Code pane for the grading moments. For a learner already living
       in Claude Code, that's a natural boundary.</p>
     </section>
 
@@ -62,7 +62,6 @@
         <thead><tr><th>Ask Claude Code…</th><th>What it does</th></tr></thead>
         <tbody>
           <tr><td><em>"grade session &lt;id&gt;"</em></td><td>Reads the session, writes a schema-valid verdict the app ingests.</td></tr>
-          <tr><td><em>"hint session &lt;id&gt;"</em></td><td>Gives the next graduated hint only — never the full solution. (For quick pre-authored hints, use the in-app <em>Get hint</em> button instead.)</td></tr>
           <tr><td><em>"generate an arrays-hashing variant (medium)"</em></td><td>Authors a brand-new problem for that pattern and saves it (only if its reference solution passes its own tests). Click <em>Reload problems</em> in the nav to bring it into rotation.</td></tr>
         </tbody>
       </table>
