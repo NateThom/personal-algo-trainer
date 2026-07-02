@@ -84,10 +84,12 @@ async function handoff() {
   });
   const { session_id } = await r.json();
   sessionId = session_id;
+  localStorage.setItem("algotrainer.sessionId", session_id);
   document.getElementById("results").textContent +=
     `\n\nSession written: sessions/session-${session_id}.json\n` +
     `In Claude Code, run the tutor on this session, then click "Ingest verdict".`;
   document.getElementById("ingest").disabled = false;
+  document.getElementById("copy-cmd").disabled = false;
 }
 
 async function ingest() {
@@ -98,14 +100,34 @@ async function ingest() {
   });
   if (r.status === 409) {
     document.getElementById("results").textContent += "\n\nNo verdict yet — run the tutor first.";
+    document.getElementById("ingest").disabled = false;
     return;
   }
   const res = await r.json();
   document.getElementById("results").textContent +=
     `\n\nGRADE: ${res.grade}\nNext due: ${res.next_due}\nTutor: ${res.feedback}`;
+  localStorage.removeItem("algotrainer.sessionId");
+  sessionId = null;
+  document.getElementById("copy-cmd").disabled = true;
   loadMastery();
   loadDashboard();
   setTimeout(loadNext, 1500);
+}
+
+async function copyTutorCommand() {
+  await navigator.clipboard.writeText(
+    `Use the algotrainer-tutor skill to grade session ${sessionId}.`);
+  const b = document.getElementById("copy-cmd");
+  b.textContent = "Copied!";
+  setTimeout(() => { b.textContent = "Copy tutor command"; }, 1500);
+}
+
+function restoreSession() {
+  sessionId = localStorage.getItem("algotrainer.sessionId");
+  if (sessionId) {
+    document.getElementById("ingest").disabled = false;
+    document.getElementById("copy-cmd").disabled = false;
+  }
 }
 
 async function getHint() {
@@ -147,14 +169,16 @@ async function loadDashboard() {
     `${d.due_count} due · ${d.total_problems} problems · ${mastered}/${d.patterns.length} patterns mastered`;
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", async () => {
   editor = CodeMirror.fromTextArea(document.getElementById("editor"),
     { mode: "python", lineNumbers: true, indentUnit: 4 });
   document.getElementById("hint").addEventListener("click", getHint);
   document.getElementById("run").addEventListener("click", runTests);
   document.getElementById("handoff").addEventListener("click", handoff);
   document.getElementById("ingest").addEventListener("click", ingest);
-  loadNext();
+  document.getElementById("copy-cmd").addEventListener("click", copyTutorCommand);
+  await loadNext();
+  restoreSession();
   loadMastery();
   loadDashboard();
 });
