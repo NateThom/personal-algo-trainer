@@ -1,0 +1,20 @@
+{
+  "id": "valid-parentheses",
+  "pattern": "stack",
+  "title": "Valid Parentheses",
+  "difficulty": "easy",
+  "statement": "Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid: every open bracket must be closed by the same type of bracket, in the correct order.",
+  "function_name": "is_valid_parens",
+  "starter_code": "def is_valid_parens(s):\n    # your code here\n    pass\n",
+  "reference_solution": "def is_valid_parens(s):\n    pairs = {')': '(', ']': '[', '}': '{'}\n    stack = []\n    for c in s:\n        if c in '([{':\n            stack.append(c)\n        elif c in pairs:\n            if not stack or stack.pop() != pairs[c]:\n                return False\n        else:\n            return False\n    return not stack\n",
+  "tests": [
+    {"args": ["()[]{}"], "expected": true},
+    {"args": ["(]"], "expected": false},
+    {"args": ["([)]"], "expected": false}
+  ],
+  "hints": [
+    "Push opening brackets onto a stack.",
+    "When you see a closing bracket, pop and check it matches the expected opener.",
+    "The string is valid only if the stack is empty at the end."
+  ]
+}

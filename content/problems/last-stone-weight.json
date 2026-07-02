@@ -1,0 +1,20 @@
+{
+  "id": "last-stone-weight",
+  "pattern": "heaps",
+  "title": "Last Stone Weight",
+  "difficulty": "easy",
+  "statement": "You are given an array of integers stones representing stone weights. Repeatedly smash the two heaviest stones together: if they are equal both are destroyed, otherwise the lighter is destroyed and the heavier becomes the difference. Return the weight of the last remaining stone, or 0 if none remain.",
+  "function_name": "last_stone_weight",
+  "starter_code": "def last_stone_weight(stones):\n    # your code here\n    pass\n",
+  "reference_solution": "import heapq\n\ndef last_stone_weight(stones):\n    heap = [-s for s in stones]\n    heapq.heapify(heap)\n    while len(heap) > 1:\n        first = -heapq.heappop(heap)\n        second = -heapq.heappop(heap)\n        if first != second:\n            heapq.heappush(heap, -(first - second))\n    return -heap[0] if heap else 0\n",
+  "tests": [
+    {"args": [[2, 7, 4, 1, 8, 1]], "expected": 1},
+    {"args": [[1]], "expected": 1},
+    {"args": [[2, 2]], "expected": 0}
+  ],
+  "hints": [
+    "Use a max-heap (negate values for Python's min-heap) to always grab the two heaviest stones.",
+    "Push the difference back onto the heap when the two stones are unequal.",
+    "Stop when at most one stone remains."
+  ]
+}
