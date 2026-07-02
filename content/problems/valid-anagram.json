@@ -1,0 +1,20 @@
+{
+  "id": "valid-anagram",
+  "pattern": "arrays-hashing",
+  "title": "Valid Anagram",
+  "difficulty": "easy",
+  "statement": "Given two strings s and t, return True if t is an anagram of s, and False otherwise.",
+  "function_name": "is_anagram",
+  "starter_code": "def is_anagram(s, t):\n    # your code here\n    pass\n",
+  "reference_solution": "def is_anagram(s, t):\n    if len(s) != len(t):\n        return False\n    from collections import Counter\n    return Counter(s) == Counter(t)\n",
+  "tests": [
+    {"args": ["anagram", "nagaram"], "expected": true},
+    {"args": ["rat", "car"], "expected": false},
+    {"args": ["", ""], "expected": true}
+  ],
+  "hints": [
+    "Counting characters is a hashing problem.",
+    "Compare frequency maps of both strings.",
+    "Early-exit on unequal lengths."
+  ]
+}

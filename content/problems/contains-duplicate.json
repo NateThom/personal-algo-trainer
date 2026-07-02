@@ -1,0 +1,20 @@
+{
+  "id": "contains-duplicate",
+  "pattern": "arrays-hashing",
+  "title": "Contains Duplicate",
+  "difficulty": "easy",
+  "statement": "Given an integer array nums, return True if any value appears at least twice, and False if every element is distinct.",
+  "function_name": "contains_duplicate",
+  "starter_code": "def contains_duplicate(nums):\n    # your code here\n    pass\n",
+  "reference_solution": "def contains_duplicate(nums):\n    seen = set()\n    for n in nums:\n        if n in seen:\n            return True\n        seen.add(n)\n    return False\n",
+  "tests": [
+    {"args": [[1, 2, 3, 1]], "expected": true},
+    {"args": [[1, 2, 3, 4]], "expected": false},
+    {"args": [[]], "expected": false}
+  ],
+  "hints": [
+    "Same family as Two Sum: fast membership checks.",
+    "A set gives O(1) membership; add as you go.",
+    "Return True the first time you re-encounter a value."
+  ]
+}
