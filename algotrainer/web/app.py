@@ -76,6 +76,17 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
         rows = store.graded_attempts_by_pattern(pattern)
         return mastery_mod.compute_pattern_mastery(pattern, rows, _pattern_stability(pattern))
 
+    def _pattern_pool(pattern: str) -> dict:
+        total = sum(1 for p in problems.values() if p.pattern == pattern)
+        seen = sum(
+            1 for pid in store.attempted_problem_ids()
+            if pid in problems and problems[pid].pattern == pattern
+        )
+        return {
+            "pattern": pattern, "total": total, "unseen": total - seen,
+            "needs_more": max(0, mastery_mod.GATE_BREADTH - total),
+        }
+
     @app.get("/")
     def index():
         return FileResponse(_STATIC / "index.html")
@@ -139,6 +150,7 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
             "difficulty": p.difficulty, "statement": p.statement,
             "function_name": p.function_name, "starter_code": p.starter_code,
             "seen_count": store.attempt_count_for_problem(p.id),
+            "pattern_pool": _pattern_pool(p.pattern),
         }}
 
     @app.post("/api/reload")
@@ -150,6 +162,7 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
         for pat in store.all_graded_patterns():
             m = _mastery_for(pat)
             meta = pattern_meta(pat)
+            instances = sum(1 for p in problems.values() if p.pattern == pat)
             out.append({
                 "pattern": pat, "name": meta.name if meta else pat,
                 "attempts": m.attempts, "transfer_breadth": m.transfer_breadth,
@@ -157,6 +170,8 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
                 "optimal_rate": m.optimal_rate, "stability": m.stability,
                 "memorization_trap": m.memorization_trap,
                 "mastery_score": m.mastery_score, "mastered": m.mastered,
+                "instances": instances,
+                "needs_more": max(0, mastery_mod.GATE_BREADTH - instances),
             })
         out.sort(key=lambda e: roadmap_order(e["pattern"]))
         return out

@@ -4,6 +4,7 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
+from algotrainer import mastery as mastery_mod
 from algotrainer.content import load_problem
 from algotrainer.store import Store
 from algotrainer.web.app import create_app
@@ -85,3 +86,47 @@ def test_next_seen_count_increments_after_grading(tmp_path):
     assert served is not None
     if served["id"] == prob["id"]:
         assert served["seen_count"] == expected
+
+
+# --- Task 6: pattern_pool on /api/next ---
+
+def test_next_includes_pattern_pool_with_expected_keys(tmp_path):
+    c = _client(tmp_path)
+    problem = c.get("/api/next").json()["problem"]
+    assert problem is not None
+    pool = problem["pattern_pool"]
+    assert set(pool.keys()) == {"pattern", "total", "unseen", "needs_more"}
+    assert pool["pattern"] == problem["pattern"]
+    assert pool["total"] >= 1
+    assert pool["unseen"] == pool["total"]  # nothing attempted yet
+    assert pool["needs_more"] == max(0, mastery_mod.GATE_BREADTH - pool["total"])
+
+
+def test_next_pattern_pool_unseen_decreases_after_grading(tmp_path):
+    session_dir = tmp_path / "sessions"
+    c = _client(tmp_path)
+    prob, _ = _solve_and_grade(c, session_dir)
+
+    r = c.get("/api/next")
+    problem = r.json()["problem"]
+    if problem is not None and problem["pattern"] == prob["pattern"]:
+        pool = problem["pattern_pool"]
+        assert pool["unseen"] == pool["total"] - 1
+
+
+# --- Task 6: /api/dashboard instances / needs_more ---
+
+def test_dashboard_patterns_include_instances_and_needs_more(tmp_path):
+    session_dir = tmp_path / "sessions"
+    c = _client(tmp_path)
+    prob, _ = _solve_and_grade(c, session_dir)
+
+    r = c.get("/api/dashboard")
+    assert r.status_code == 200
+    pats = {p["pattern"]: p for p in r.json()["patterns"]}
+    assert prob["pattern"] in pats
+    entry = pats[prob["pattern"]]
+    assert "instances" in entry
+    assert "needs_more" in entry
+    assert entry["instances"] >= 1
+    assert entry["needs_more"] == max(0, mastery_mod.GATE_BREADTH - entry["instances"])

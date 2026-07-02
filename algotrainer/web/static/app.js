@@ -4,6 +4,27 @@ let hintsUsed = 0;
 let nextHintTier = 0;
 let editor = null;
 
+function renderPoolBanner(pool) {
+  const el = document.getElementById("pool-banner");
+  if (!pool) { el.hidden = true; el.textContent = ""; return; }
+  const parts = [];
+  if (pool.unseen === 0) {
+    parts.push(
+      `You've seen all ${pool.total} ${pool.pattern} problems — ask the Claude tutor ` +
+      `to generate a variant (see the Guide), then click Reload problems.`
+    );
+  }
+  if (pool.needs_more > 0) {
+    parts.push(
+      `This pattern needs ${pool.needs_more} more instance(s) before it can reach the ` +
+      `mastery gate.`
+    );
+  }
+  if (!parts.length) { el.hidden = true; el.textContent = ""; return; }
+  el.hidden = false;
+  el.textContent = parts.join(" ");
+}
+
 async function loadNext() {
   const r = await fetch("/api/next");
   const { problem } = await r.json();
@@ -12,6 +33,7 @@ async function loadNext() {
     document.getElementById("title").textContent = "Nothing due — you're caught up!";
     document.getElementById("statement").textContent = "";
     document.getElementById("seen-badge").textContent = "";
+    document.getElementById("pool-banner").hidden = true;
     return;
   }
   document.getElementById("title").textContent = problem.title;
@@ -20,6 +42,7 @@ async function loadNext() {
   document.getElementById("seen-badge").textContent = problem.seen_count === 0
     ? "🆕 New"
     : `🔁 Review · seen ${problem.seen_count}×`;
+  renderPoolBanner(problem.pattern_pool);
   editor.setValue(problem.starter_code);
   document.getElementById("results").textContent = "";
   document.getElementById("handoff").disabled = true;
