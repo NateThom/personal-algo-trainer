@@ -1,0 +1,23 @@
+{
+  "id": "dp-1d",
+  "summary": "Build a bottom-up 1-D table where each entry is computed from a small fixed number of previous entries via a recurrence, avoiding exponential recomputation from naive recursion.",
+  "recognize_when": [
+    "The problem asks for a count, min/max, or yes/no answer that depends on smaller versions of the same problem (e.g. dp[i] depends on dp[i-1], dp[i-2])",
+    "A brute-force recursive solution has overlapping subproblems (recomputes the same state repeatedly)",
+    "State can be described by a single index into a sequence, like 'ways to reach step i' or 'best result ending at i'",
+    "Keywords like 'number of ways', 'minimum cost to reach', or 'maximum sum/product ending here'",
+    "The recurrence only needs a constant window of previous states, hinting space can be optimized to O(1)"
+  ],
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(n)",
+    "notes": "One pass filling the table with O(1) work per entry; space can often be reduced to O(1) by keeping only the last few states instead of the full table."
+  },
+  "template": "def dp_1d(n):\n    if n <= 1:\n        return n\n    dp = [0] * (n + 1)\n    dp[0], dp[1] = 0, 1\n    for i in range(2, n + 1):\n        dp[i] = dp[i - 1] + dp[i - 2]\n    return dp[n]\n",
+  "gotchas": [
+    "Off-by-one errors in table size or base cases (dp array needs n+1 slots to include index n)",
+    "Forgetting to handle small edge cases (n = 0 or 1) before the main loop touches dp[i-2]",
+    "Applying the recurrence in the wrong order (must fill smaller indices before larger ones depend on them)"
+  ],
+  "examples": ["Climbing Stairs", "House Robber", "Coin Change"]
+}

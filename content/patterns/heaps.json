@@ -1,0 +1,23 @@
+{
+  "id": "heaps",
+  "summary": "Use a binary heap (priority queue) to repeatedly access the smallest/largest element in O(log n), ideal for top-K, merging, and greedy-by-priority problems.",
+  "recognize_when": [
+    "Problem asks for the top-K, K-th largest/smallest, or K closest elements",
+    "You need to repeatedly extract the current min/max as elements are added over time (streaming median, scheduling)",
+    "Merging K sorted lists/arrays",
+    "A greedy algorithm needs to always process the next-smallest/largest available item (Dijkstra, task scheduling)",
+    "Full sort would be O(n log n) but you only need partial ordering or the extremes"
+  ],
+  "complexity": {
+    "time": "O(n log k)",
+    "space": "O(k)",
+    "notes": "Each push/pop is O(log k) where k is the heap size; maintaining a heap of size k across n elements gives O(n log k) total, better than sorting (O(n log n)) when k << n."
+  },
+  "template": "import heapq\n\n\ndef k_largest(nums, k):\n    heap = []\n    for num in nums:\n        heapq.heappush(heap, num)\n        if len(heap) > k:\n            heapq.heappop(heap)\n    return heap\n",
+  "gotchas": [
+    "heapq is a min-heap only; for a max-heap, push negated values (or negate on push/pop) and remember to negate back",
+    "Keeping the heap size at k for 'k largest' means popping the smallest so far -- easy to invert the logic and get 'k smallest' by mistake",
+    "Pushing tuples for tie-breaking (e.g. (distance, node)) can crash on unorderable second elements; add a unique counter as a tiebreaker if needed"
+  ],
+  "examples": ["Kth Largest Element in an Array", "Merge k Sorted Lists", "Top K Frequent Elements", "Find Median from Data Stream"]
+}

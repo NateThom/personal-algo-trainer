@@ -1,0 +1,9 @@
+{
+  "id": "graphs",
+  "summary": "Traverse nodes and edges (or grid cells) using BFS for shortest-path/level-order needs or DFS for connectivity/exhaustive exploration.",
+  "recognize_when": ["input is an adjacency list/matrix or an implicit grid of cells", "need shortest path in an unweighted graph (use BFS)", "need to find connected components, cycles, or explore all paths (use DFS)", "'islands', 'rooms', 'clone graph', or 'course schedule' style problems", "need topological order or to detect cycles in a directed graph"],
+  "complexity": {"time": "O(V + E)", "space": "O(V)", "notes": "each vertex and edge visited once; space covers visited set, queue/stack, and recursion depth for DFS"},
+  "template": "from collections import deque\n\ndef bfs(start, graph):\n    visited = {start}\n    queue = deque([start])\n    while queue:\n        node = queue.popleft()\n        for neighbor in graph[node]:\n            if neighbor not in visited:\n                visited.add(neighbor)\n                queue.append(neighbor)\n    return visited\n\ndef dfs(node, graph, visited=None):\n    if visited is None:\n        visited = set()\n    visited.add(node)\n    for neighbor in graph[node]:\n        if neighbor not in visited:\n            dfs(neighbor, graph, visited)\n    return visited\n",
+  "gotchas": ["marking a node visited when it's popped instead of when it's enqueued causes duplicate queue entries in BFS", "forgetting to check grid bounds before visiting a neighbor cell", "using DFS recursion on very deep/large graphs can hit Python's recursion limit; consider an explicit stack", "not handling disconnected components when a single traversal from one start node won't cover the whole graph"],
+  "examples": ["Number of Islands", "Course Schedule", "Clone Graph", "Word Ladder", "Rotting Oranges"]
+}

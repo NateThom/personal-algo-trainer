@@ -1,0 +1,23 @@
+{
+  "id": "stack",
+  "summary": "Use a LIFO stack to track the most recent unresolved item (an opening bracket, a smaller/larger element, a pending operation) so it can be matched or resolved in O(1) when the right condition appears later.",
+  "recognize_when": [
+    "The problem involves matching pairs like brackets, parentheses, or tags",
+    "You need the 'next greater/smaller element' or 'nearest previous element with property X'",
+    "Nested or recursive structure needs to be undone in reverse order (e.g. evaluating expressions, decoding strings)",
+    "You're simulating backtracking through a sequence of operations (undo, browser history)",
+    "A monotonic increasing/decreasing property over a range would let you discard dominated elements permanently"
+  ],
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(n)",
+    "notes": "Every element is pushed and popped at most once even in monotonic-stack variants, giving amortized O(n) despite the nested-looking while loop; space is proportional to how much of the input can be held unresolved at once."
+  },
+  "template": "def stack_pattern(items):\n    stack = []\n    result = [0] * len(items)\n    for i, val in enumerate(items):\n        while stack and items[stack[-1]] < val:\n            prev_index = stack.pop()\n            result[prev_index] = i - prev_index\n        stack.append(i)\n    return result\n",
+  "gotchas": [
+    "Forgetting to check if the stack is empty before popping or peeking, causing an IndexError",
+    "Pushing values instead of indices when you later need position/distance information",
+    "Leaving unmatched items on the stack at the end without validating that it's empty (e.g. unbalanced brackets)"
+  ],
+  "examples": ["Valid Parentheses", "Daily Temperatures", "Next Greater Element I", "Evaluate Reverse Polish Notation"]
+}

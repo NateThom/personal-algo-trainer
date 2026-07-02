@@ -1,0 +1,23 @@
+{
+  "id": "arrays-hashing",
+  "summary": "Use a hash map or hash set to trade space for speed, turning O(n) or O(n^2) linear scans/lookups into O(1) average-case membership checks and frequency counts.",
+  "recognize_when": [
+    "You need to check membership, count occurrences, or find duplicates in a collection",
+    "A brute force solution repeatedly scans the array to find a complement or match (e.g. Two Sum)",
+    "You need to group items by a derived key (anagrams, categories)",
+    "The problem mentions 'have you seen this before' or 'first/only unique element'",
+    "You need O(1) average lookup/insert instead of O(n) linear search or O(log n) sorted search"
+  ],
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(n)",
+    "notes": "Single pass building/querying the map gives O(n) time; space is proportional to the number of distinct keys stored."
+  },
+  "template": "def arrays_hashing(nums, target):\n    seen = {}\n    for i, num in enumerate(nums):\n        complement = target - num\n        if complement in seen:\n            return [seen[complement], i]\n        seen[num] = i\n    return None\n",
+  "gotchas": [
+    "Using a list for membership checks instead of a set/dict, silently degrading to O(n) per lookup",
+    "Forgetting that dict/set keys must be hashable (can't use a list or another dict as a key)",
+    "Inserting into the map before checking for the complement, which can incorrectly match an element with itself"
+  ],
+  "examples": ["Two Sum", "Group Anagrams", "Contains Duplicate", "Top K Frequent Elements"]
+}

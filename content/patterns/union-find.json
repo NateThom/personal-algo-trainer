@@ -1,0 +1,9 @@
+{
+  "id": "union-find",
+  "summary": "Disjoint Set Union (DSU) tracks a partition of elements into groups, supporting fast merge and same-group queries.",
+  "recognize_when": ["need to group elements into connected components incrementally as edges/relations arrive", "detecting cycles in an undirected graph", "'number of provinces/islands via connections' or 'redundant connection' style problems", "need to answer 'are these two elements connected' repeatedly", "Kruskal's minimum spanning tree algorithm"],
+  "complexity": {"time": "O(alpha(n)) amortized per operation", "space": "O(n)", "notes": "alpha is the inverse Ackermann function, effectively constant for all practical n, achieved via path compression plus union by rank"},
+  "template": "class UnionFind:\n    def __init__(self, n):\n        self.parent = list(range(n))\n        self.rank = [0] * n\n\n    def find(self, x):\n        if self.parent[x] != x:\n            self.parent[x] = self.find(self.parent[x])  # path compression\n        return self.parent[x]\n\n    def union(self, x, y):\n        root_x, root_y = self.find(x), self.find(y)\n        if root_x == root_y:\n            return False  # already connected (would form a cycle)\n        if self.rank[root_x] < self.rank[root_y]:\n            root_x, root_y = root_y, root_x\n        self.parent[root_y] = root_x\n        if self.rank[root_x] == self.rank[root_y]:\n            self.rank[root_x] += 1\n        return True\n",
+  "gotchas": ["forgetting path compression or union by rank degrades to O(n) per find on a skewed tree", "comparing find(x) == find(y) after calling union incorrectly, instead of checking before merging to detect a cycle", "off-by-one when mapping problem elements (e.g., 1-indexed nodes) into the 0-indexed parent array"],
+  "examples": ["Number of Provinces", "Redundant Connection", "Accounts Merge", "Graph Valid Tree"]
+}

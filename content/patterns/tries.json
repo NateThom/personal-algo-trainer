@@ -1,0 +1,23 @@
+{
+  "id": "tries",
+  "summary": "Store strings in a tree of characters so that shared prefixes are shared nodes, enabling fast prefix search, autocomplete, and word lookup.",
+  "recognize_when": [
+    "Problem involves a dictionary of words plus prefix queries (starts-with, autocomplete)",
+    "You need to repeatedly search for words or prefixes among a large, static or growing set of strings",
+    "Word search on a grid/board combined with a dictionary of valid words",
+    "Naive approach would re-scan the whole word list for every prefix check",
+    "Building a word/phone-number/IP structure where common prefixes should be deduplicated"
+  ],
+  "complexity": {
+    "time": "O(L)",
+    "space": "O(N*L)",
+    "notes": "Insert/search/startsWith each cost O(L) where L is the word length, independent of how many words are stored; space is O(N*L) in the worst case (alphabet size branching factor per node) but shared prefixes reduce this in practice."
+  },
+  "template": "class TrieNode:\n    def __init__(self):\n        self.children = {}\n        self.is_word = False\n\n\nclass Trie:\n    def __init__(self):\n        self.root = TrieNode()\n\n    def insert(self, word):\n        node = self.root\n        for ch in word:\n            if ch not in node.children:\n                node.children[ch] = TrieNode()\n            node = node.children[ch]\n        node.is_word = True\n\n    def search(self, word):\n        node = self._find(word)\n        return node is not None and node.is_word\n\n    def starts_with(self, prefix):\n        return self._find(prefix) is not None\n\n    def _find(self, s):\n        node = self.root\n        for ch in s:\n            if ch not in node.children:\n                return None\n            node = node.children[ch]\n        return node\n",
+  "gotchas": [
+    "Confusing search() (must end on a complete word, is_word True) with starts_with() (just needs the path to exist)",
+    "Not marking is_word=True at the end of insert, so search always returns False even for inserted words",
+    "Using a fixed-size array of 26 children when the alphabet isn't guaranteed lowercase a-z; a dict is safer and more general"
+  ],
+  "examples": ["Implement Trie (Prefix Tree)", "Word Search II", "Design Add and Search Words Data Structure"]
+}

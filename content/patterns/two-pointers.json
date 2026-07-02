@@ -1,0 +1,23 @@
+{
+  "id": "two-pointers",
+  "summary": "Use two indices moving through a sequence (toward each other, or both forward at different speeds) to avoid nested loops when the data is sorted or has a structural property to exploit.",
+  "recognize_when": [
+    "The input array or linked list is sorted (or can be sorted without losing needed info)",
+    "You need to find a pair/triplet satisfying a sum or comparison condition",
+    "You're comparing elements from both ends of a sequence (palindrome checks, container/area problems)",
+    "A brute force pairwise check would be O(n^2) but the sorted order lets you eliminate possibilities monotonically",
+    "Detecting cycles or finding midpoints in a linked list (fast/slow pointer variant)"
+  ],
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(1)",
+    "notes": "Each pointer traverses the sequence at most once (or O(n log n) total if an initial sort is required); no extra data structures needed beyond the pointers themselves."
+  },
+  "template": "def two_pointers(arr, target):\n    arr.sort()\n    left, right = 0, len(arr) - 1\n    while left < right:\n        current = arr[left] + arr[right]\n        if current == target:\n            return [left, right]\n        elif current < target:\n            left += 1\n        else:\n            right -= 1\n    return None\n",
+  "gotchas": [
+    "Forgetting to sort first when the pointers rely on monotonic ordering to decide which side to move",
+    "Off-by-one on the loop condition (left < right vs left <= right) causing missed or duplicate pairs",
+    "Not skipping duplicate values when the problem asks for unique pairs/triplets (e.g. 3Sum)"
+  ],
+  "examples": ["Two Sum II - Input Array Is Sorted", "Container With Most Water", "3Sum", "Valid Palindrome"]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "topological-sort",
+  "summary": "Order the nodes of a directed acyclic graph so every edge points from an earlier node to a later one, typically via Kahn's BFS algorithm that repeatedly removes zero-in-degree nodes.",
+  "recognize_when": [
+    "The problem involves prerequisites, dependencies, or 'must happen before' relationships",
+    "You're given a directed graph and asked for a valid build/execution/course order",
+    "You need to detect whether a cycle exists in a directed graph (a cycle means no valid ordering exists)",
+    "The input describes edges between tasks/courses/modules rather than an adjacency-free list",
+    "You need all valid orderings or just any one valid ordering of dependent items"
+  ],
+  "complexity": {
+    "time": "O(V + E)",
+    "space": "O(V + E)",
+    "notes": "Each vertex is enqueued/dequeued once and each edge is examined once when decrementing in-degrees; space holds the adjacency list and in-degree/queue structures."
+  },
+  "template": "from collections import deque, defaultdict\n\ndef topological_sort(num_nodes, edges):\n    graph = defaultdict(list)\n    in_degree = [0] * num_nodes\n    for src, dst in edges:\n        graph[src].append(dst)\n        in_degree[dst] += 1\n\n    queue = deque(node for node in range(num_nodes) if in_degree[node] == 0)\n    order = []\n\n    while queue:\n        node = queue.popleft()\n        order.append(node)\n        for neighbor in graph[node]:\n            in_degree[neighbor] -= 1\n            if in_degree[neighbor] == 0:\n                queue.append(neighbor)\n\n    if len(order) != num_nodes:\n        return []  # cycle detected: no valid topological order\n    return order\n",
+  "gotchas": [
+    "Forgetting the cycle check: if len(order) != num_nodes, the graph has a cycle and no valid ordering exists",
+    "Mixing up edge direction (src -> dst means src must come before dst, not the reverse)",
+    "Not initializing in-degree for nodes with no incoming edges (they should start in the queue)"
+  ],
+  "examples": ["Course Schedule", "Course Schedule II", "Alien Dictionary"]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "prefix-sum",
+  "summary": "Precompute cumulative sums (or counts) so that the sum of any subrange can be retrieved in O(1), turning repeated range-sum queries or subarray-sum-equals-target problems into a single pass.",
+  "recognize_when": [
+    "You need many range-sum queries over an otherwise static array",
+    "The problem asks for the number/length of subarrays whose sum equals (or is divisible by) some target",
+    "A brute force would recompute the sum of overlapping subarrays repeatedly (O(n^2) or worse)",
+    "You can reframe the condition as prefix[j] - prefix[i] == target, hinting at a hashmap of seen prefix sums",
+    "2D grid versions ask for sums over rectangular subregions"
+  ],
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(n)",
+    "notes": "Building the prefix array/hashmap is a single O(n) pass; each query or lookup afterward is O(1). Space is O(n) for the prefix array (or O(1) extra if only a running sum and hashmap of counts are kept)."
+  },
+  "template": "def prefix_sum_subarray_count(nums, target):\n    from collections import defaultdict\n    prefix_counts = defaultdict(int)\n    prefix_counts[0] = 1\n    running_sum = 0\n    count = 0\n    for num in nums:\n        running_sum += num\n        count += prefix_counts[running_sum - target]\n        prefix_counts[running_sum] += 1\n    return count\n",
+  "gotchas": [
+    "Forgetting to seed prefix_counts[0] = 1, which breaks counting subarrays that start at index 0",
+    "Off-by-one when converting between prefix-array indices and original array indices (prefix[i] represents sum of first i elements, not including index i)",
+    "Using a plain running sum without a hashmap when duplicates of the same partial sum matter, losing the ability to count multiple valid subarrays"
+  ],
+  "examples": ["Subarray Sum Equals K", "Range Sum Query - Immutable", "Continuous Subarray Sum", "Product of Array Except Self"]
+}

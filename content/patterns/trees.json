@@ -1,0 +1,23 @@
+{
+  "id": "trees",
+  "summary": "Traverse or transform a binary (or n-ary) tree using recursive DFS (pre/in/post-order) or iterative BFS (level order) to compute properties, search, or rebuild structure.",
+  "recognize_when": [
+    "Input is explicitly a binary tree / BST / n-ary tree with node.left, node.right (or children)",
+    "You need a property defined recursively on subtrees (height, sum, balance, LCA)",
+    "The problem asks for level-by-level output or the shortest path in an unweighted tree (favors BFS)",
+    "You need to validate or construct a tree from a traversal order",
+    "Path-sum or root-to-leaf style problems that naturally decompose into subproblems"
+  ],
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(h)",
+    "notes": "Every node is visited once; DFS space is the recursion stack depth (O(h), worst case O(n) for a skewed tree, O(log n) if balanced). BFS space is O(w), the max width of a level, due to the queue."
+  },
+  "template": "class TreeNode:\n    def __init__(self, val=0, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right\n\n\ndef dfs(node):\n    if node is None:\n        return 0\n    left = dfs(node.left)\n    right = dfs(node.right)\n    return 1 + max(left, right)\n",
+  "gotchas": [
+    "Missing the base case (node is None) causes infinite recursion or AttributeError",
+    "Reaching for recursive DFS when the problem actually wants level-order output or shortest unweighted path -- use BFS with a queue (collections.deque) instead",
+    "Confusing traversal orders (pre/in/post) when reconstructing a tree or when order of visiting matters for the answer"
+  ],
+  "examples": ["Maximum Depth of Binary Tree", "Binary Tree Level Order Traversal", "Validate Binary Search Tree", "Lowest Common Ancestor of a Binary Tree"]
+}

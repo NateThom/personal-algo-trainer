@@ -1,0 +1,23 @@
+{
+  "id": "dp-2d",
+  "summary": "Fill a 2-D table indexed by two positions (two sequences, or a grid's rows/columns) where each cell is derived from neighboring cells, capturing pairwise or grid-based subproblem overlap.",
+  "recognize_when": [
+    "The problem compares or aligns two sequences (strings/arrays), like matching, editing, or subsequence problems",
+    "You're moving through a grid and need the best path, count of paths, or min cost to reach each cell",
+    "State naturally needs two indices, e.g. dp[i][j] = 'best answer using first i of A and first j of B'",
+    "Keywords like 'longest common', 'edit distance', 'minimum path sum', or 'distinct ways through a grid'",
+    "A 1-D DP recurrence isn't enough because the answer depends on two independent positions/choices"
+  ],
+  "complexity": {
+    "time": "O(m*n)",
+    "space": "O(m*n)",
+    "notes": "Every cell is computed once from O(1) neighboring cells; space can often drop to O(n) by keeping only the previous row when the recurrence only looks one row back."
+  },
+  "template": "def dp_2d(word1, word2):\n    m, n = len(word1), len(word2)\n    dp = [[0] * (n + 1) for _ in range(m + 1)]\n\n    for i in range(m + 1):\n        dp[i][0] = i\n    for j in range(n + 1):\n        dp[0][j] = j\n\n    for i in range(1, m + 1):\n        for j in range(1, n + 1):\n            if word1[i - 1] == word2[j - 1]:\n                dp[i][j] = dp[i - 1][j - 1]\n            else:\n                dp[i][j] = 1 + min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1])\n\n    return dp[m][n]\n",
+  "gotchas": [
+    "Forgetting to initialize the base row/column (dp[i][0] and dp[0][j]) before filling the interior",
+    "Off-by-one between string indices (0-based) and dp table indices (1-based, shifted by the empty-prefix row/column)",
+    "Using O(m*n) space when O(n) rolling-row space would suffice, causing avoidable memory limits on large inputs"
+  ],
+  "examples": ["Longest Common Subsequence", "Edit Distance", "Unique Paths"]
+}
