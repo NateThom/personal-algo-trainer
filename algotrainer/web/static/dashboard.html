@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AlgoTrainer — Dashboard</title>
+  <link rel="stylesheet" href="/static/app.css" />
+</head>
+<body>
+  <nav class="topnav">
+    <div class="navlinks">
+      <a href="/">Solve</a>
+      <a href="/dashboard" class="active">Dashboard</a>
+      <a href="/docs" target="_blank" rel="noopener">API Docs ↗</a>
+    </div>
+    <button id="reset-btn" class="danger" type="button">Reset progress</button>
+  </nav>
+  <header><h1>Dashboard</h1><span id="stats"></span></header>
+  <main>
+    <section id="summary">
+      <div class="tiles" id="tiles"></div>
+    </section>
+    <section id="mastery-table-wrap">
+      <h3>Pattern mastery</h3>
+      <div style="overflow-x:auto;">
+        <table id="mastery-table">
+          <thead>
+            <tr>
+              <th>Pattern</th><th>Score</th><th>Breadth</th><th>Pattern-ID acc.</th>
+              <th>Optimal</th><th>Attempts</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="mastery-rows"><tr><td colspan="7">No data yet — solve a problem.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+    <section id="errors">
+      <h3>Error journal (by pattern)</h3>
+      <div id="error-body">No errors logged yet.</div>
+    </section>
+    <p><a href="/">← Back to solving</a></p>
+  </main>
+  <script src="/static/nav.js"></script>
+  <script src="/static/dashboard.js"></script>
+</body>
+</html>

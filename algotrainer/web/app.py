@@ -77,6 +77,15 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
     def index():
         return FileResponse(_STATIC / "index.html")
 
+    @app.get("/dashboard")
+    def dashboard_page():
+        return FileResponse(_STATIC / "dashboard.html")
+
+    @app.post("/api/reset")
+    def reset():
+        store.reset_progress()
+        return {"ok": True}
+
     @app.get("/api/next")
     def next_problem():
         now = datetime.now(timezone.utc)

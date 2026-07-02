@@ -18,3 +18,24 @@ button { padding: 8px 16px; cursor: pointer; }
 #mastery .mgate { color: #2e7d32; font-weight: 600; }
 #mastery .mrow.mastered { background: #f1f8e9; }
 #stats { font-size: 0.9rem; opacity: 0.9; }
+
+/* --- top nav (shared across pages) --- */
+.topnav { background: #0f0f23; color: #fff; padding: 8px 20px; display: flex;
+  justify-content: space-between; align-items: center; }
+.topnav .navlinks { display: flex; gap: 18px; }
+.topnav a { color: #cfd3ff; text-decoration: none; font-weight: 600; }
+.topnav a.active { color: #fff; border-bottom: 2px solid #6be675; }
+.topnav a:hover { color: #fff; }
+button.danger { background: #7a1f1f; color: #fff; border: 1px solid #a33; }
+button.danger:hover { background: #a33; }
+
+/* --- dashboard --- */
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+.tile { background: #16213e; color: #fff; border-radius: 8px; padding: 16px; text-align: center; }
+.tile-val { font-size: 2rem; font-weight: 700; }
+.tile-label { font-size: 0.85rem; opacity: 0.85; }
+#mastery-table { width: 100%; border-collapse: collapse; }
+#mastery-table th, #mastery-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #eee; }
+#mastery-table tr.mastered { background: #f1f8e9; }
+.mprog { color: #666; }
+.erow { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #eee; }

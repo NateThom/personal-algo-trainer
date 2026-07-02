@@ -8,6 +8,14 @@
   <link rel="stylesheet" href="/static/app.css" />
 </head>
 <body>
+  <nav class="topnav">
+    <div class="navlinks">
+      <a href="/" class="active">Solve</a>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/docs" target="_blank" rel="noopener">API Docs ↗</a>
+    </div>
+    <button id="reset-btn" class="danger" type="button">Reset progress</button>
+  </nav>
   <header><h1>AlgoTrainer</h1><span id="stats"></span><span id="pattern-badge"></span></header>
   <main>
     <section id="problem">
@@ -38,6 +46,7 @@
   </main>
   <script src="/static/vendor/codemirror/codemirror.min.js"></script>
   <script src="/static/vendor/codemirror/mode/python/python.min.js"></script>
+  <script src="/static/nav.js"></script>
   <script src="/static/app.js"></script>
 </body>
 </html>
