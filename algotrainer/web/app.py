@@ -99,6 +99,20 @@ def create_app(db_path, content_dir, session_dir) -> FastAPI:
             verdict = read_verdict(session_dir, body.session_id)
         except FileNotFoundError:
             return JSONResponse({"error": "verdict not found yet"}, status_code=409)
+
+        if verdict.session_id != body.session_id:
+            return JSONResponse({"error": "verdict/session mismatch"}, status_code=400)
+
+        attempt = store.get_attempt(verdict.attempt_id)
+        if attempt is None:
+            return JSONResponse({"error": "unknown attempt"}, status_code=400)
+        if attempt["problem_id"] != verdict.problem_id:
+            return JSONResponse({"error": "verdict/attempt problem mismatch"}, status_code=400)
+
+        if store.attempt_has_review(verdict.attempt_id):
+            return {"grade": verdict.grade, "next_due": None,
+                    "feedback": verdict.feedback, "already_ingested": True}
+
         now = datetime.now(timezone.utc)
         rating = RATING_BY_NAME[verdict.grade]
         card_json = store.get_card(verdict.problem_id)
@@ -108,6 +122,6 @@ def create_app(db_path, content_dir, session_dir) -> FastAPI:
             new_card_json, next_due, log_json, now,
         )
         return {"grade": verdict.grade, "next_due": next_due.isoformat(),
-                "feedback": verdict.feedback}
+                "feedback": verdict.feedback, "already_ingested": False}
 
     return app

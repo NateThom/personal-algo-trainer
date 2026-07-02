@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS review (
 
 
 def _iso(dt: datetime) -> str:
+    assert dt.tzinfo is not None, "datetime must be timezone-aware UTC"
     return dt.astimezone(timezone.utc).isoformat()
 
 
@@ -68,9 +69,30 @@ class Store:
             rows = self._conn.execute("SELECT problem_id, next_due FROM card").fetchall()
         return {pid: datetime.fromisoformat(due) for pid, due in rows}
 
+    def get_attempt(self, attempt_id: int) -> dict | None:
+        with self._lock:
+            row = self._conn.execute(
+                "SELECT problem_id FROM attempt WHERE id = ?", (attempt_id,)
+            ).fetchone()
+        return {"problem_id": row[0]} if row else None
+
+    def attempt_has_review(self, attempt_id: int) -> bool:
+        with self._lock:
+            row = self._conn.execute(
+                "SELECT 1 FROM review WHERE attempt_id = ? LIMIT 1", (attempt_id,)
+            ).fetchone()
+        return row is not None
+
     def record_attempt(
-        self, problem_id, code, recall_pattern, recall_approach, recall_complexity,
-        judge_passed, hints_used, created_at,
+        self,
+        problem_id: str,
+        code: str,
+        recall_pattern: str | None,
+        recall_approach: str | None,
+        recall_complexity: str | None,
+        judge_passed: bool,
+        hints_used: int,
+        created_at: datetime,
     ) -> int:
         with self._lock:
             cur = self._conn.execute(

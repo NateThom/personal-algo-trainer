@@ -61,6 +61,7 @@ async function handoff() {
 }
 
 async function ingest() {
+  document.getElementById("ingest").disabled = true;
   const r = await fetch("/api/verdict/ingest", {
     method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ session_id: sessionId }),

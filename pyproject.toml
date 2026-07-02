@@ -16,6 +16,9 @@ dev = ["pytest>=8.0", "httpx>=0.27", "ruff>=0.4"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+filterwarnings = [
+    "ignore:.*httpx.*is deprecated.*:starlette.exceptions.StarletteDeprecationWarning",
+]
 
 [tool.ruff]
 line-length = 100

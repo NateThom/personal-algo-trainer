@@ -4,6 +4,7 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
+from algotrainer.handoff.schema import Verdict
 from algotrainer.web.app import create_app
 
 
@@ -14,6 +15,35 @@ def _client(tmp_path):
         session_dir=tmp_path / "sessions",
     )
     return TestClient(app)
+
+
+def _run_full_loop_up_to_ingest(tmp_path):
+    """Shared setup: drive the app through judge/session/stub-tutor, stopping
+    just before the (first) call to /api/verdict/ingest. Returns (client, sess, db_path)."""
+    session_dir = tmp_path / "sessions"
+    db_path = tmp_path / "t.db"
+    app = create_app(db_path=db_path, content_dir=None, session_dir=session_dir)
+    c = TestClient(app)
+
+    prob = c.get("/api/next").json()["problem"]
+    code = ("def two_sum(nums, target):\n    seen={}\n"
+            "    for i,n in enumerate(nums):\n"
+            "        if target-n in seen: return [seen[target-n], i]\n"
+            "        seen[n]=i\n") if prob["id"] == "two-sum" else \
+        load_default_solution(prob["id"])
+
+    judged = c.post("/api/judge", json={"problem_id": prob["id"], "code": code}).json()
+    sess = c.post("/api/session", json={
+        "problem_id": prob["id"], "code": code,
+        "recall": {"pattern": prob["pattern"], "approach": "x", "complexity": "O(n)"},
+        "judge_passed": judged["passed"], "hints_used": 0,
+    }).json()
+
+    subprocess.run(
+        [sys.executable, "scripts/stub_tutor.py", str(session_dir), sess["session_id"]],
+        check=True, cwd=Path(__file__).resolve().parent.parent,
+    )
+    return c, sess, session_dir, db_path
 
 
 def test_index_served(tmp_path):
@@ -72,6 +102,42 @@ def test_full_loop_with_stub_tutor(tmp_path):
     ingested = c.post("/api/verdict/ingest", json={"session_id": sess["session_id"]}).json()
     assert ingested["grade"] in {"again", "hard", "good", "easy"}
     assert "next_due" in ingested
+
+
+def test_double_ingest_does_not_advance_twice(tmp_path):
+    c, sess, session_dir, db_path = _run_full_loop_up_to_ingest(tmp_path)
+
+    first = c.post("/api/verdict/ingest", json={"session_id": sess["session_id"]}).json()
+    assert first["already_ingested"] is False
+    first_next_due = first["next_due"]
+
+    second = c.post("/api/verdict/ingest", json={"session_id": sess["session_id"]}).json()
+    assert second["already_ingested"] is True
+    assert second["next_due"] is None
+    assert second["grade"] == first["grade"]
+
+    import sqlite3
+    conn = sqlite3.connect(str(db_path))
+    try:
+        count = conn.execute(
+            "SELECT COUNT(*) FROM review WHERE attempt_id = ?", (sess["attempt_id"],)
+        ).fetchone()[0]
+    finally:
+        conn.close()
+    assert count == 1
+    assert first_next_due is not None
+
+
+def test_ingest_rejects_session_mismatch(tmp_path):
+    c, sess, session_dir, db_path = _run_full_loop_up_to_ingest(tmp_path)
+
+    verdict_path = session_dir / f"verdict-{sess['session_id']}.json"
+    verdict = Verdict.model_validate_json(verdict_path.read_text())
+    tampered = verdict.model_copy(update={"session_id": "some-other-session"})
+    verdict_path.write_text(tampered.model_dump_json(indent=2))
+
+    r = c.post("/api/verdict/ingest", json={"session_id": sess["session_id"]})
+    assert r.status_code == 400
 
 
 def load_default_solution(problem_id: str) -> str:
