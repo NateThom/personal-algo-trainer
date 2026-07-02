@@ -108,8 +108,7 @@ def create_app(db_path, content_dir, session_dir) -> FastAPI:
     def reload():
         return {"count": _reload_problems()}
 
-    @app.get("/api/mastery")
-    def mastery():
+    def _mastery_list():
         out = []
         for pat in store.all_graded_patterns():
             m = _mastery_for(pat)
@@ -123,7 +122,23 @@ def create_app(db_path, content_dir, session_dir) -> FastAPI:
                 "mastery_score": m.mastery_score, "mastered": m.mastered,
             })
         out.sort(key=lambda e: roadmap_order(e["pattern"]))
-        return {"patterns": out}
+        return out
+
+    @app.get("/api/mastery")
+    def mastery():
+        return {"patterns": _mastery_list()}
+
+    @app.get("/api/dashboard")
+    def dashboard():
+        now = datetime.now(timezone.utc)
+        due_map = store.all_card_due(now)
+        due = scheduler.due_problem_ids(due_map, list(problems), now)
+        return {
+            "due_count": len(due),
+            "total_problems": len(problems),
+            "patterns": _mastery_list(),
+            "error_counts": store.error_counts_by_pattern(),
+        }
 
     @app.post("/api/judge")
     def judge(body: JudgeBody):

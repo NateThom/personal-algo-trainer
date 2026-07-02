@@ -20,3 +20,13 @@ def test_next_prefers_unseen(tmp_path, monkeypatch):
     c = _client(tmp_path)
     r = c.get("/api/next")
     assert r.json()["problem"] is not None
+
+
+def test_dashboard_shape(tmp_path):
+    c = _client(tmp_path)
+    r = c.get("/api/dashboard")
+    assert r.status_code == 200
+    body = r.json()
+    assert set(body) == {"due_count", "total_problems", "patterns", "error_counts"}
+    assert body["total_problems"] >= 4
+    assert isinstance(body["patterns"], list)
