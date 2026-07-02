@@ -57,12 +57,12 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
     problems: dict = {}
 
     def _reload_problems() -> int:
-        problems.clear()
-        for p in load_problems(content_dir):
-            problems[p.id] = p
+        nonlocal problems
+        new_map = {p.id: p for p in load_problems(content_dir)}
         for p in load_generated(generated_dir):
             # seed ids win over generated on collision (setdefault keeps the seed)
-            problems.setdefault(p.id, p)
+            new_map.setdefault(p.id, p)
+        problems = new_map
         return len(problems)
 
     _reload_problems()

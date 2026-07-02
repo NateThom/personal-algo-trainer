@@ -10,9 +10,6 @@ class SrsScheduler:
         # Deterministic scheduling (no fuzz) so tests and intervals are reproducible.
         self._scheduler = Scheduler(enable_fuzzing=False)
 
-    def new_card_json(self) -> str:
-        return Card().to_json()
-
     def review(
         self, card_json: str | None, rating: int, when: datetime
     ) -> tuple[str, datetime, str]:

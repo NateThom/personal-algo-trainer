@@ -139,15 +139,6 @@ class Store:
         assert cur.lastrowid is not None
         return cur.lastrowid
 
-    def record_review(self, attempt_id: int, problem_id: str, rating: int, review_log_json: str, reviewed_at: datetime) -> None:
-        with self._lock:
-            self._conn.execute(
-                "INSERT INTO review(attempt_id, problem_id, rating, review_log_json, reviewed_at) "
-                "VALUES(?,?,?,?,?)",
-                (attempt_id, problem_id, rating, review_log_json, _iso(reviewed_at)),
-            )
-            self._conn.commit()
-
     def ingest_verdict(
         self, attempt_id: int, problem_id: str, rating: int, card_json: str, next_due: datetime, review_log_json: str, reviewed_at: datetime,
     ) -> None:
