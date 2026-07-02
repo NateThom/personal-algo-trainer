@@ -4,6 +4,7 @@ const NAV_PAGES = [
   { href: "/", label: "Solve" },
   { href: "/guide", label: "Guide" },
   { href: "/methodology", label: "Methodology" },
+  { href: "/patterns", label: "Patterns" },
   { href: "/dashboard", label: "Dashboard" },
   { href: "/docs", label: "API Docs ↗", external: true },
 ];
