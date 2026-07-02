@@ -8,3 +8,4 @@ sessions/*.json
 .env
 .DS_Store
 .superpowers/
+*.egg-info/
