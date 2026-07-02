@@ -1,6 +1,7 @@
 let current = null;      // current problem
 let sessionId = null;    // last handoff session
 let hintsUsed = 0;
+let nextHintTier = 0;
 let editor = null;
 
 async function loadNext() {
@@ -20,6 +21,9 @@ async function loadNext() {
   document.getElementById("handoff").disabled = true;
   document.getElementById("ingest").disabled = true;
   hintsUsed = 0;
+  nextHintTier = 0;
+  document.getElementById("hints").innerHTML = "";
+  document.getElementById("hint").disabled = false;
 }
 
 async function runTests() {
@@ -76,9 +80,26 @@ async function ingest() {
   setTimeout(loadNext, 1500);
 }
 
+async function getHint() {
+  const r = await fetch("/api/hint", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ problem_id: current.id, tier: nextHintTier }),
+  });
+  const { hint, has_more } = await r.json();
+  if (hint == null) { document.getElementById("hint").disabled = true; return; }
+  const div = document.createElement("div");
+  div.className = "hint-item";
+  div.textContent = `Hint ${nextHintTier + 1}: ${hint}`;
+  document.getElementById("hints").appendChild(div);
+  nextHintTier += 1;
+  hintsUsed += 1;
+  if (!has_more) document.getElementById("hint").disabled = true;
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   editor = CodeMirror.fromTextArea(document.getElementById("editor"),
     { mode: "python", lineNumbers: true, indentUnit: 4 });
+  document.getElementById("hint").addEventListener("click", getHint);
   document.getElementById("run").addEventListener("click", runTests);
   document.getElementById("handoff").addEventListener("click", handoff);
   document.getElementById("ingest").addEventListener("click", ingest);

@@ -10,3 +10,5 @@ input, textarea { width: 100%; padding: 6px; font: inherit; }
 button { padding: 8px 16px; cursor: pointer; }
 #results { background: #0f0f23; color: #6be675; padding: 12px; min-height: 40px;
   white-space: pre-wrap; border-radius: 6px; }
+#hints { margin-top: 10px; display: grid; gap: 6px; }
+.hint-item { background: #fff8e1; border-left: 3px solid #ffb300; padding: 8px; border-radius: 4px; }
