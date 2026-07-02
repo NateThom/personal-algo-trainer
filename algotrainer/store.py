@@ -229,5 +229,19 @@ class Store:
             ).fetchall()
         return {r[0] for r in rows}
 
+    def reset_progress(self) -> None:
+        """Wipe all learner progress (cards, attempts, reviews, graded history,
+        pattern cards) in one transaction. Leaves the schema intact; problems and
+        generated variants live in files, not the db, so they are untouched."""
+        with self._lock:
+            try:
+                self._conn.execute("BEGIN")
+                for table in ("card", "attempt", "review", "graded_attempt", "pattern_card"):
+                    self._conn.execute(f"DELETE FROM {table}")  # noqa: S608 - fixed table names
+                self._conn.commit()
+            except Exception:
+                self._conn.rollback()
+                raise
+
     def close(self) -> None:
         self._conn.close()
