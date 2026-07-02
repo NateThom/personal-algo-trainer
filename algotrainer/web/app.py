@@ -10,7 +10,7 @@ from pydantic import BaseModel
 from algotrainer import mastery as mastery_mod
 from algotrainer.composer import compose_order
 from algotrainer.content import DEFAULT_CONTENT_DIR, load_problems
-from algotrainer.generated import load_generated
+from algotrainer.generated import GENERATED_DIR, load_generated
 from algotrainer.handoff.files import read_verdict, write_session
 from algotrainer.handoff.schema import SessionFile
 from algotrainer.judge import run_submission
@@ -43,8 +43,9 @@ class HintBody(BaseModel):
     tier: int
 
 
-def create_app(db_path, content_dir, session_dir) -> FastAPI:
+def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI:
     content_dir = content_dir or DEFAULT_CONTENT_DIR
+    generated_dir = generated_dir or GENERATED_DIR
     session_dir = Path(session_dir)
     app = FastAPI(title="AlgoTrainer")
     app.mount("/static", StaticFiles(directory=_STATIC), name="static")
@@ -56,8 +57,9 @@ def create_app(db_path, content_dir, session_dir) -> FastAPI:
         problems.clear()
         for p in load_problems(content_dir):
             problems[p.id] = p
-        for p in load_generated():
-            problems[p.id] = p
+        for p in load_generated(generated_dir):
+            # seed ids win over generated on collision (setdefault keeps the seed)
+            problems.setdefault(p.id, p)
         return len(problems)
 
     _reload_problems()
@@ -95,8 +97,14 @@ def create_app(db_path, content_dir, session_dir) -> FastAPI:
             ids, problem_pattern, immature, store.error_counts_by_pattern(),
             confusable_of=confusable_group,
         )
+        # Every id in plan.order is due. Serve due REVIEWS (already-seen) before
+        # NOVEL instances, so an endless supply of new problems can't starve
+        # overdue reviews — retention (the point of spaced repetition) comes first.
+        # Within each class the composer's weakest-first/interleaved order is kept.
         attempted = store.attempted_problem_ids()
-        pid = next((x for x in plan.order if x not in attempted), plan.order[0])
+        reviews = [x for x in plan.order if x in attempted]
+        novel = [x for x in plan.order if x not in attempted]
+        pid = reviews[0] if reviews else (novel[0] if novel else plan.order[0])
         p = problems[pid]
         return {"problem": {
             "id": p.id, "title": p.title, "pattern": p.pattern,
