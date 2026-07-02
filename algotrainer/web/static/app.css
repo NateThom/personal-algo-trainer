@@ -22,6 +22,10 @@ button { padding: 8px 16px; cursor: pointer; }
   background: #e8f5e9; color: #2e7d32; vertical-align: middle; }
 .pool-banner { background: #fff8e1; border-left: 4px solid #ffb300; padding: 10px 14px;
   border-radius: 4px; margin: 8px 0; font-size: 0.9rem; }
+#pending-verdicts { background: #e3f2fd; border-left: 4px solid #1976d2; padding: 10px 14px;
+  border-radius: 4px; margin: 8px 0; font-size: 0.9rem; }
+.pending-row { display: flex; justify-content: space-between; align-items: center;
+  gap: 12px; padding: 4px 0; }
 
 /* --- top nav (shared across pages) --- */
 .topnav { background: #0f0f23; color: #fff; padding: 8px 20px; display: flex;

@@ -132,6 +132,45 @@ async function ingest() {
   setTimeout(loadNext, 1500);
 }
 
+async function ingestPending(sid) {
+  const r = await fetch("/api/verdict/ingest", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ session_id: sid }),
+  });
+  await r.json();
+  if (sid === localStorage.getItem("algotrainer.sessionId")) {
+    localStorage.removeItem("algotrainer.sessionId");
+    sessionId = null;
+    document.getElementById("ingest").disabled = true;
+    document.getElementById("copy-cmd").disabled = true;
+    clearInterval(pollTimer);
+  }
+  loadPending();
+  loadMastery();
+  loadDashboard();
+}
+
+async function loadPending() {
+  const r = await fetch("/api/verdicts/pending");
+  const { pending } = await r.json();
+  const el = document.getElementById("pending-verdicts");
+  el.textContent = "";
+  if (!pending.length) { el.hidden = true; return; }
+  el.hidden = false;
+  for (const item of pending) {
+    const row = document.createElement("div");
+    row.className = "pending-row";
+    const label = document.createElement("span");
+    label.textContent = `Un-ingested verdict for ${item.problem_id} (grade ${item.grade})`;
+    const btn = document.createElement("button");
+    btn.textContent = "Ingest";
+    btn.addEventListener("click", () => ingestPending(item.session_id));
+    row.appendChild(label);
+    row.appendChild(btn);
+    el.appendChild(row);
+  }
+}
+
 async function copyTutorCommand() {
   await navigator.clipboard.writeText(
     `Use the algotrainer-tutor skill to grade session ${sessionId}.`);
@@ -199,6 +238,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("copy-cmd").addEventListener("click", copyTutorCommand);
   await loadNext();
   restoreSession();
+  loadPending();
   loadMastery();
   loadDashboard();
 });

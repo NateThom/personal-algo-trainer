@@ -280,6 +280,20 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
         return {"hint": hints[body.tier], "tier": body.tier,
                 "has_more": body.tier + 1 < len(hints)}
 
+    @app.get("/api/verdicts/pending")
+    def verdicts_pending():
+        out = []
+        if session_dir.exists():
+            for path in sorted(session_dir.glob("verdict-*.json")):
+                sid = path.stem.removeprefix("verdict-")
+                try:
+                    v = read_verdict(session_dir, sid)
+                except Exception:
+                    continue  # malformed file: not ingestable, skip
+                if not store.attempt_has_review(v.attempt_id):
+                    out.append({"session_id": sid, "problem_id": v.problem_id, "grade": v.grade})
+        return {"pending": out}
+
     @app.get("/api/verdict/status")
     def verdict_status(session_id: str):
         return {"ready": (session_dir / f"verdict-{session_id}.json").exists()}

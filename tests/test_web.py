@@ -176,3 +176,51 @@ def test_verdict_status_ready_once_verdict_file_exists(tmp_path):
 def load_default_solution(problem_id: str) -> str:
     from algotrainer.content import load_problem
     return load_problem(problem_id).reference_solution
+
+
+def test_pending_verdicts_empty_when_session_dir_missing(tmp_path):
+    c = _client(tmp_path)
+    r = c.get("/api/verdicts/pending")
+    assert r.status_code == 200
+    assert r.json() == {"pending": []}
+
+
+def test_pending_verdicts_lists_only_non_ingested(tmp_path):
+    c, sess, session_dir, db_path = _run_full_loop_up_to_ingest(tmp_path)
+
+    # A second full loop produces another verdict that we leave un-ingested.
+    prob2 = c.get("/api/next").json()["problem"]
+    code2 = load_default_solution(prob2["id"])
+    judged2 = c.post("/api/judge", json={"problem_id": prob2["id"], "code": code2}).json()
+    from algotrainer.content import load_problem as _lp
+    sess2 = c.post("/api/session", json={
+        "problem_id": prob2["id"], "code": code2,
+        "recall": {"pattern": _lp(prob2["id"]).pattern, "approach": "x", "complexity": "O(n)"},
+        "judge_passed": judged2["passed"], "hints_used": 0,
+    }).json()
+    subprocess.run(
+        [sys.executable, "scripts/stub_tutor.py", str(session_dir), sess2["session_id"]],
+        check=True, cwd=Path(__file__).resolve().parent.parent,
+    )
+
+    # Ingest only the first session's verdict.
+    c.post("/api/verdict/ingest", json={"session_id": sess["session_id"]})
+
+    r = c.get("/api/verdicts/pending")
+    assert r.status_code == 200
+    pending = r.json()["pending"]
+    assert [p["session_id"] for p in pending] == [sess2["session_id"]]
+    assert pending[0]["problem_id"] == prob2["id"]
+    assert pending[0]["grade"] in {"again", "hard", "good", "easy"}
+
+
+def test_pending_verdicts_skips_malformed_file(tmp_path):
+    c, sess, session_dir, db_path = _run_full_loop_up_to_ingest(tmp_path)
+    c.post("/api/verdict/ingest", json={"session_id": sess["session_id"]})
+
+    bad_path = session_dir / "verdict-badsession.json"
+    bad_path.write_text("not valid json {{{")
+
+    r = c.get("/api/verdicts/pending")
+    assert r.status_code == 200
+    assert r.json() == {"pending": []}
