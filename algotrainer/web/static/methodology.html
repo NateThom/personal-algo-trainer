@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AlgoTrainer — Methodology</title>
+  <link rel="stylesheet" href="/static/app.css" />
+</head>
+<body>
+  <header><h1>Methodology — why it works this way</h1></header>
+  <main class="doc">
+    <section>
+      <p class="lede">Most prep tools are content-delivery or rep-volume machines: a huge problem bank and a
+      judge. They optimise for <em>doing more problems</em>. The evidence says that's the wrong target —
+      what builds durable, transferable skill is <strong>how</strong> you practise. AlgoTrainer is built
+      around that "how." Each mechanism below maps to a well-established finding in the learning-science and
+      interview-prep literature.</p>
+      <p class="callout">Many of these techniques deliberately make practice feel <em>harder</em> and slower
+      in the moment. That's the point — psychologists call them "desirable difficulties." Lower in-session
+      comfort, higher long-term retention and transfer. If it feels easy, you're probably not learning much.</p>
+    </section>
+
+    <section>
+      <h2>1. Patterns, not problems</h2>
+      <p>Interview questions are recombinations of a small, finite set of reusable <strong>patterns</strong>
+      (two pointers, sliding window, monotonic stack, BFS/DFS, backtracking, binary-search-on-answer, the DP
+      families, union-find, …). You learn the pattern once and recognise it across dozens of surface-different
+      problems. So the tool's unit of mastery is the <em>pattern</em>, and every problem is tagged with one.
+      The core skill it trains is recognising which pattern applies on a <em>cold, unlabelled</em> problem —
+      which is why problems are served without their pattern shown.</p>
+    </section>
+
+    <section>
+      <h2>2. Active recall (the recall gate)</h2>
+      <p>Retrieving an answer from memory strengthens it far more than re-reading — the "testing effect."
+      Passive review builds a comforting illusion of competence; retrieval builds the real thing. That's why,
+      <em>before you write any code</em>, the tool makes you name the pattern, state your approach, and predict
+      complexity. Each attempt is a retrieval event, logged whether or not your code compiles.</p>
+    </section>
+
+    <section>
+      <h2>3. Spaced repetition (FSRS)</h2>
+      <p>The same number of reps spaced over time beats massed cramming, because revisiting material just as
+      you're about to forget it interrupts the forgetting curve. AlgoTrainer schedules each pattern with
+      <strong>FSRS</strong> (the modern Free Spaced Repetition Scheduler): after each graded solve it computes
+      when you should next see that pattern, at expanding intervals. Reviews that are <em>due</em> are served
+      before brand-new material, so retention is never starved by novelty.</p>
+    </section>
+
+    <section>
+      <h2>4. Novel instances, never a re-run</h2>
+      <p>Re-solving the <em>same</em> problem measures episodic memory of that solution, not mastery of the
+      pattern. So when a pattern comes due, the tool prefers a problem you haven't seen — drawing on the
+      curated seed bank and on fresh AI-generated variants (each validated by executing its reference solution
+      against its own tests before it's ever served). Mastery is measured on held-out instances, never on
+      repeats.</p>
+    </section>
+
+    <section>
+      <h2>5. Interleaving vs. blocking</h2>
+      <p>Doing ten sliding-window problems in a row (blocking) feels productive but teaches you little about
+      <em>choosing</em> the pattern — you already know it's sliding window because that's the current chapter.
+      Interleaving — mixing patterns within a session — forces you to discriminate, which is exactly the
+      interview task. But interleaving too early, before the schema exists, backfires. So AlgoTrainer
+      <strong>blocks while you're acquiring a new pattern</strong>, then <strong>interleaves as it matures</strong>,
+      deliberately mixing <em>confusable</em> patterns (e.g. sliding-window vs. two-pointers, BFS vs. DFS,
+      backtracking vs. DP) to sharpen discrimination.</p>
+    </section>
+
+    <section>
+      <h2>6. Deliberate practice, aimed at your weaknesses</h2>
+      <p>Deliberate practice targets the edge of your ability with immediate, specific feedback — not
+      comfortable repetition of what you already do well. Every non-perfect attempt is coded with an
+      <strong>error taxonomy</strong> (pattern misidentification, execution bug, suboptimal complexity,
+      incomplete knowledge, stuck, careless). Those counts feed the scheduler, so the patterns you keep
+      getting wrong are surfaced first ("weakest-first").</p>
+    </section>
+
+    <section>
+      <h2>7. Mastery measured by transfer — with a memorization guard</h2>
+      <p>A pattern is "mastered" only when the evidence shows genuine schema knowledge, not one memorised
+      instance. The gate combines: <strong>transfer breadth</strong> (distinct novel problems solved unaided
+      and correctly), <strong>pattern-identification accuracy</strong> (did you name it right, especially when
+      interleaved), optimal-complexity-first, and retention across a real spacing gap (high FSRS stability).
+      Crucially, if your solve rate is high but your pattern-ID accuracy is low, you're flagged as
+      <em>"memorizing, not recognizing"</em> and the pattern is <strong>never</strong> counted as mastered —
+      the memorization trap that defeats grind-based prep.</p>
+    </section>
+
+    <section>
+      <h2>8. Socratic, graduated tutoring</h2>
+      <p>The strongest tutoring evidence favours guiding a learner to discover the answer over handing it
+      over. The tutor's hint ladder escalates only as far as you need (category → invariant → pseudocode →
+      worked step), and how much help you needed feeds back into your grade and schedule. Feedback comes
+      <em>after</em> a genuine attempt, not on demand — because effortful, mostly-successful retrieval is what
+      makes memory stick.</p>
+    </section>
+
+    <section>
+      <h2>Put it together</h2>
+      <p>Diagnose weak patterns → schedule spaced, interleaved re-solves of novel instances → grade
+      objectively → tutor Socratically → update a per-pattern mastery model → repeat. No single incumbent tool
+      closes that loop; assembling it is the whole point of AlgoTrainer.</p>
+      <p>Ready to practise? Head to the <a href="/">Solve</a> page, or re-read the
+      <a href="/guide">Guide</a> for the step-by-step workflow.</p>
+    </section>
+  </main>
+  <script src="/static/nav.js"></script>
+</body>
+</html>
