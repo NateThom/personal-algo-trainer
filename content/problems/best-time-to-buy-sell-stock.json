@@ -1,0 +1,20 @@
+{
+  "id": "best-time-to-buy-sell-stock",
+  "pattern": "sliding-window",
+  "title": "Best Time to Buy and Sell Stock",
+  "difficulty": "easy",
+  "statement": "You are given an array prices where prices[i] is the price of a stock on day i. Maximize profit by choosing a day to buy and a later day to sell. Return the max profit, or 0 if no profit is possible.",
+  "function_name": "max_profit",
+  "starter_code": "def max_profit(prices):\n    # your code here\n    pass\n",
+  "reference_solution": "def max_profit(prices):\n    best = 0\n    lo = float('inf')\n    for p in prices:\n        lo = min(lo, p)\n        best = max(best, p - lo)\n    return best\n",
+  "tests": [
+    {"args": [[7, 1, 5, 3, 6, 4]], "expected": 5},
+    {"args": [[7, 6, 4, 3, 1]], "expected": 0},
+    {"args": [[1]], "expected": 0}
+  ],
+  "hints": [
+    "Think of a window whose left edge is the cheapest price so far.",
+    "Track the running minimum price as you scan.",
+    "Profit at day i = price[i] - min_price_so_far; keep the max."
+  ]
+}

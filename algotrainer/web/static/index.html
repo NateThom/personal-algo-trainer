@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AlgoTrainer</title>
+  <link rel="stylesheet" href="/static/vendor/codemirror/codemirror.min.css" />
+  <link rel="stylesheet" href="/static/app.css" />
+</head>
+<body>
+  <header><h1>AlgoTrainer</h1><span id="pattern-badge"></span></header>
+  <main>
+    <section id="problem">
+      <h2 id="title">Loading…</h2>
+      <p id="statement"></p>
+    </section>
+    <section id="recall">
+      <h3>Before you code — recall gate</h3>
+      <label>Which pattern is this? <input id="r-pattern" /></label>
+      <label>Approach (2–4 sentences): <textarea id="r-approach"></textarea></label>
+      <label>Predicted time/space complexity: <input id="r-complexity" /></label>
+    </section>
+    <section id="editor-wrap">
+      <textarea id="editor"></textarea>
+      <div class="actions">
+        <button id="run">Run tests</button>
+        <button id="handoff" disabled>Send to tutor</button>
+        <button id="ingest" disabled>Ingest verdict</button>
+      </div>
+      <pre id="results"></pre>
+    </section>
+  </main>
+  <script src="/static/vendor/codemirror/codemirror.min.js"></script>
+  <script src="/static/vendor/codemirror/mode/python/python.min.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>
