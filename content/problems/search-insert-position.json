@@ -1,0 +1,20 @@
+{
+  "id": "search-insert-position",
+  "pattern": "binary-search",
+  "title": "Search Insert Position",
+  "difficulty": "easy",
+  "statement": "Given a sorted array of distinct integers nums and a target value, return the index if the target is found. If not, return the index where it would be if inserted in order.",
+  "function_name": "search_insert",
+  "starter_code": "def search_insert(nums, target):\n    # your code here\n    pass\n",
+  "reference_solution": "def search_insert(nums, target):\n    lo, hi = 0, len(nums)\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if nums[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid\n    return lo\n",
+  "tests": [
+    {"args": [[1, 3, 5, 6], 5], "expected": 2},
+    {"args": [[1, 3, 5, 6], 2], "expected": 1},
+    {"args": [[1, 3, 5, 6], 7], "expected": 4}
+  ],
+  "hints": [
+    "Binary search for the target or its insertion point.",
+    "Keep a half-open range [lo, hi) and narrow it based on comparisons.",
+    "When lo == hi, that index is the correct insertion point."
+  ]
+}

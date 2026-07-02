@@ -1,0 +1,20 @@
+{
+  "id": "valid-palindrome",
+  "pattern": "two-pointers",
+  "title": "Valid Palindrome",
+  "difficulty": "easy",
+  "statement": "Given a string s, return True if it is a palindrome considering only alphanumeric characters and ignoring case.",
+  "function_name": "is_palindrome",
+  "starter_code": "def is_palindrome(s):\n    # your code here\n    pass\n",
+  "reference_solution": "def is_palindrome(s):\n    t = [c.lower() for c in s if c.isalnum()]\n    return t == t[::-1]\n",
+  "tests": [
+    {"args": ["A man, a plan, a canal: Panama"], "expected": true},
+    {"args": ["race a car"], "expected": false},
+    {"args": [" "], "expected": true}
+  ],
+  "hints": [
+    "Two pointers from both ends, skipping non-alphanumeric.",
+    "Compare lowercased characters as the pointers converge.",
+    "Or filter to alphanumeric lowercase and compare with its reverse."
+  ]
+}

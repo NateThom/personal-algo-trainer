@@ -17,3 +17,4 @@ button { padding: 8px 16px; cursor: pointer; }
 #mastery .mtrap { color: #c62828; }
 #mastery .mgate { color: #2e7d32; font-weight: 600; }
 #mastery .mrow.mastered { background: #f1f8e9; }
+#stats { font-size: 0.9rem; opacity: 0.9; }

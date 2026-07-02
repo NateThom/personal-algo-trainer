@@ -1,0 +1,20 @@
+{
+  "id": "kth-largest-element",
+  "pattern": "heaps",
+  "title": "Kth Largest Element in an Array",
+  "difficulty": "medium",
+  "statement": "Given an integer array nums and an integer k, return the kth largest element in the array (the kth largest in sorted order, not the kth distinct element).",
+  "function_name": "find_kth_largest",
+  "starter_code": "def find_kth_largest(nums, k):\n    # your code here\n    pass\n",
+  "reference_solution": "import heapq\n\ndef find_kth_largest(nums, k):\n    heap = nums[:k]\n    heapq.heapify(heap)\n    for n in nums[k:]:\n        if n > heap[0]:\n            heapq.heapreplace(heap, n)\n    return heap[0]\n",
+  "tests": [
+    {"args": [[3, 2, 1, 5, 6, 4], 2], "expected": 5},
+    {"args": [[3, 2, 3, 1, 2, 4, 5, 5, 6], 4], "expected": 4},
+    {"args": [[1], 1], "expected": 1}
+  ],
+  "hints": [
+    "Maintain a min-heap of size k containing the k largest elements seen so far.",
+    "If a new element is larger than the heap's smallest, replace it.",
+    "The heap's top after processing all elements is the kth largest."
+  ]
+}

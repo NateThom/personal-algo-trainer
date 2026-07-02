@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 from algotrainer.models import Problem
+from algotrainer.validation import validate_problem_dict
 
 DEFAULT_CONTENT_DIR = Path(__file__).resolve().parent.parent / "content" / "problems"
 
@@ -9,16 +10,18 @@ DEFAULT_CONTENT_DIR = Path(__file__).resolve().parent.parent / "content" / "prob
 def _run_reference(problem: Problem) -> None:
     """Execute the reference solution against the problem's own tests in-process.
     Raises ValueError if any test fails — guarantees seed content is self-consistent."""
-    namespace: dict = {}
-    exec(problem.reference_solution, namespace)  # noqa: S102 - trusted repo content
-    fn = namespace[problem.function_name]
-    for tc in problem.tests:
-        got = fn(*tc.args)
-        if got != tc.expected:
-            raise ValueError(
-                f"Problem {problem.id}: reference solution returned {got!r} "
-                f"for args {tc.args!r}, expected {tc.expected!r}"
-            )
+    ok, reason = validate_problem_dict(
+        {
+            "id": problem.id, "pattern": problem.pattern, "title": problem.title,
+            "difficulty": problem.difficulty, "statement": problem.statement,
+            "function_name": problem.function_name, "starter_code": problem.starter_code,
+            "reference_solution": problem.reference_solution,
+            "tests": [{"args": t.args, "expected": t.expected} for t in problem.tests],
+            "hints": list(problem.hints),
+        }
+    )
+    if not ok:
+        raise ValueError(f"Problem {problem.id}: {reason}")
 
 
 def load_problem(problem_id: str, content_dir: Path = DEFAULT_CONTENT_DIR) -> Problem:

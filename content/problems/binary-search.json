@@ -1,0 +1,20 @@
+{
+  "id": "binary-search",
+  "pattern": "binary-search",
+  "title": "Binary Search",
+  "difficulty": "easy",
+  "statement": "Given a sorted array of distinct integers nums and a target value, return the index of target in nums, or -1 if it is not present.",
+  "function_name": "binary_search",
+  "starter_code": "def binary_search(nums, target):\n    # your code here\n    pass\n",
+  "reference_solution": "def binary_search(nums, target):\n    lo, hi = 0, len(nums) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if nums[mid] == target:\n            return mid\n        if nums[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return -1\n",
+  "tests": [
+    {"args": [[-1, 0, 3, 5, 9, 12], 9], "expected": 4},
+    {"args": [[-1, 0, 3, 5, 9, 12], 2], "expected": -1},
+    {"args": [[5], 5], "expected": 0}
+  ],
+  "hints": [
+    "Maintain a low and high pointer bounding the search space.",
+    "Compare the middle element to the target and halve the search space each time.",
+    "Stop when low exceeds high and return -1."
+  ]
+}

@@ -10,6 +10,7 @@ from pydantic import BaseModel
 from algotrainer import mastery as mastery_mod
 from algotrainer.composer import compose_order
 from algotrainer.content import DEFAULT_CONTENT_DIR, load_problems
+from algotrainer.generated import GENERATED_DIR, load_generated
 from algotrainer.handoff.files import read_verdict, write_session
 from algotrainer.handoff.schema import SessionFile
 from algotrainer.judge import run_submission
@@ -42,14 +43,26 @@ class HintBody(BaseModel):
     tier: int
 
 
-def create_app(db_path, content_dir, session_dir) -> FastAPI:
+def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI:
     content_dir = content_dir or DEFAULT_CONTENT_DIR
+    generated_dir = generated_dir or GENERATED_DIR
     session_dir = Path(session_dir)
     app = FastAPI(title="AlgoTrainer")
     app.mount("/static", StaticFiles(directory=_STATIC), name="static")
     store = Store(db_path)
     scheduler = SrsScheduler()
-    problems = {p.id: p for p in load_problems(content_dir)}
+    problems: dict = {}
+
+    def _reload_problems() -> int:
+        problems.clear()
+        for p in load_problems(content_dir):
+            problems[p.id] = p
+        for p in load_generated(generated_dir):
+            # seed ids win over generated on collision (setdefault keeps the seed)
+            problems.setdefault(p.id, p)
+        return len(problems)
+
+    _reload_problems()
 
     def _pattern_stability(pattern: str) -> float:
         from fsrs import Card
@@ -84,7 +97,14 @@ def create_app(db_path, content_dir, session_dir) -> FastAPI:
             ids, problem_pattern, immature, store.error_counts_by_pattern(),
             confusable_of=confusable_group,
         )
-        pid = plan.order[0]
+        # Every id in plan.order is due. Serve due REVIEWS (already-seen) before
+        # NOVEL instances, so an endless supply of new problems can't starve
+        # overdue reviews — retention (the point of spaced repetition) comes first.
+        # Within each class the composer's weakest-first/interleaved order is kept.
+        attempted = store.attempted_problem_ids()
+        reviews = [x for x in plan.order if x in attempted]
+        novel = [x for x in plan.order if x not in attempted]
+        pid = reviews[0] if reviews else (novel[0] if novel else plan.order[0])
         p = problems[pid]
         return {"problem": {
             "id": p.id, "title": p.title, "pattern": p.pattern,
@@ -92,8 +112,11 @@ def create_app(db_path, content_dir, session_dir) -> FastAPI:
             "function_name": p.function_name, "starter_code": p.starter_code,
         }}
 
-    @app.get("/api/mastery")
-    def mastery():
+    @app.post("/api/reload")
+    def reload():
+        return {"count": _reload_problems()}
+
+    def _mastery_list():
         out = []
         for pat in store.all_graded_patterns():
             m = _mastery_for(pat)
@@ -107,7 +130,23 @@ def create_app(db_path, content_dir, session_dir) -> FastAPI:
                 "mastery_score": m.mastery_score, "mastered": m.mastered,
             })
         out.sort(key=lambda e: roadmap_order(e["pattern"]))
-        return {"patterns": out}
+        return out
+
+    @app.get("/api/mastery")
+    def mastery():
+        return {"patterns": _mastery_list()}
+
+    @app.get("/api/dashboard")
+    def dashboard():
+        now = datetime.now(timezone.utc)
+        due_map = store.all_card_due(now)
+        due = scheduler.due_problem_ids(due_map, list(problems), now)
+        return {
+            "due_count": len(due),
+            "total_problems": len(problems),
+            "patterns": _mastery_list(),
+            "error_counts": store.error_counts_by_pattern(),
+        }
 
     @app.post("/api/judge")
     def judge(body: JudgeBody):

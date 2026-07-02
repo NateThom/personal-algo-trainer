@@ -78,6 +78,7 @@ async function ingest() {
   document.getElementById("results").textContent +=
     `\n\nGRADE: ${res.grade}\nNext due: ${res.next_due}\nTutor: ${res.feedback}`;
   loadMastery();
+  loadDashboard();
   setTimeout(loadNext, 1500);
 }
 
@@ -112,6 +113,14 @@ async function loadMastery() {
     `</div>`).join("");
 }
 
+async function loadDashboard() {
+  const r = await fetch("/api/dashboard");
+  const d = await r.json();
+  const mastered = d.patterns.filter(p => p.mastered).length;
+  document.getElementById("stats").textContent =
+    `${d.due_count} due · ${d.total_problems} problems · ${mastered}/${d.patterns.length} patterns mastered`;
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   editor = CodeMirror.fromTextArea(document.getElementById("editor"),
     { mode: "python", lineNumbers: true, indentUnit: 4 });
@@ -121,4 +130,5 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("ingest").addEventListener("click", ingest);
   loadNext();
   loadMastery();
+  loadDashboard();
 });

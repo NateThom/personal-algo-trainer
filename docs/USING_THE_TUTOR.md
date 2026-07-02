@@ -16,6 +16,12 @@ Ask: **"Use the algotrainer-tutor skill to hint session <id>."** It gives the ne
 tier only, never the full solution. (For quick pre-authored hints, use the
 **Get hint** button in the app instead.)
 
+## Generate a novel variant
+Ask: **"Use the algotrainer-tutor skill to generate an arrays-hashing variant
+(medium)."** The skill authors a fresh problem and saves it via
+`scripts/add_variant.py` (which rejects it unless its reference solution passes its
+own tests). Click **Reload problems** in the app to bring new variants into rotation.
+
 ## Offline / automated fallback
 `scripts/stub_tutor.py <session_dir> <session_id>` writes a mechanical verdict
 (used by the test suite and when you're away from Claude Code).

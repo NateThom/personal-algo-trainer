@@ -1,0 +1,20 @@
+{
+  "id": "two-sum-ii-sorted",
+  "pattern": "two-pointers",
+  "title": "Two Sum II - Input Array Is Sorted",
+  "difficulty": "medium",
+  "statement": "Given a 1-indexed sorted array of integers numbers and a target, return the 1-indexed indices [i, j] (i < j) of the two numbers that add up to target. Exactly one solution exists.",
+  "function_name": "two_sum_sorted",
+  "starter_code": "def two_sum_sorted(numbers, target):\n    # your code here\n    pass\n",
+  "reference_solution": "def two_sum_sorted(numbers, target):\n    lo, hi = 0, len(numbers) - 1\n    while lo < hi:\n        s = numbers[lo] + numbers[hi]\n        if s == target:\n            return [lo + 1, hi + 1]\n        if s < target:\n            lo += 1\n        else:\n            hi -= 1\n    return []\n",
+  "tests": [
+    {"args": [[2, 7, 11, 15], 9], "expected": [1, 2]},
+    {"args": [[2, 3, 4], 6], "expected": [1, 3]},
+    {"args": [[-1, 0], -1], "expected": [1, 2]}
+  ],
+  "hints": [
+    "Use two pointers starting at both ends of the sorted array.",
+    "If the sum is too small, move the left pointer right; if too large, move the right pointer left.",
+    "Return 1-indexed positions once the sum matches the target."
+  ]
+}
