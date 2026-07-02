@@ -7,21 +7,24 @@ from dataclasses import dataclass
 from algotrainer.models import TestCase
 
 # Runner executed in a child process. Reads {code, function_name, tests} as JSON
-# on argv[1], prints a JSON result on stdout.
+# from stdin, prints a JSON result on stdout. The learner's own stdout (e.g.
+# stray print calls) is swallowed so it can't corrupt the result JSON.
 _RUNNER = r'''
-import json, sys
-payload = json.loads(sys.argv[1])
+import json, sys, io, contextlib
+payload = json.loads(sys.stdin.read())
 ns = {}
 cases = []
 try:
-    exec(payload["code"], ns)
+    with contextlib.redirect_stdout(io.StringIO()):
+        exec(payload["code"], ns)
     fn = ns[payload["function_name"]]
 except Exception as e:  # compile/def error -> whole submission fails
     print(json.dumps({"fatal": f"{type(e).__name__}: {e}"}))
     sys.exit(0)
 for tc in payload["tests"]:
     try:
-        got = fn(*tc["args"])
+        with contextlib.redirect_stdout(io.StringIO()):
+            got = fn(*tc["args"])
         cases.append({"args": tc["args"], "expected": tc["expected"],
                       "got": got, "passed": got == tc["expected"], "error": None})
     except Exception as e:
@@ -61,7 +64,8 @@ def run_submission(
     start = time.perf_counter()
     try:
         proc = subprocess.run(
-            [sys.executable, "-c", _RUNNER, payload],
+            [sys.executable, "-c", _RUNNER],
+            input=payload,
             capture_output=True,
             text=True,
             timeout=timeout_s,
@@ -69,6 +73,9 @@ def run_submission(
     except subprocess.TimeoutExpired:
         elapsed = (time.perf_counter() - start) * 1000
         return JudgeResult(False, [], f"Timed out after {timeout_s}s", elapsed)
+    except Exception as e:
+        elapsed = (time.perf_counter() - start) * 1000
+        return JudgeResult(False, [], f"Subprocess failed: {type(e).__name__}: {e}", elapsed)
 
     elapsed = (time.perf_counter() - start) * 1000
     if proc.returncode != 0:

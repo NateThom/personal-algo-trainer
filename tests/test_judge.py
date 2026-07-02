@@ -44,3 +44,20 @@ def test_infinite_loop_times_out():
     r = run_submission(loop, "two_sum", TESTS, timeout_s=1.0)
     assert r.passed is False
     assert r.error is not None
+
+
+def test_submission_with_print_still_passes():
+    noisy = (
+        "def two_sum(nums, target):\n"
+        "    print('debug')\n"
+        "    seen = {}\n"
+        "    for i, n in enumerate(nums):\n"
+        "        if target - n in seen:\n"
+        "            return [seen[target - n], i]\n"
+        "        seen[n] = i\n"
+        "    return []\n"
+    )
+    r = run_submission(noisy, "two_sum", TESTS)
+    assert r.passed is True
+    assert all(c.passed for c in r.cases)
+    assert r.error is None
