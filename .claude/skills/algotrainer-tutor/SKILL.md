@@ -1,6 +1,6 @@
 ---
 name: algotrainer-tutor
-description: Use when tutoring or grading an AlgoTrainer practice session — reads a session-<id>.json the web app wrote, then either grades the attempt (writing a schema-valid verdict) or gives the next graduated hint. Invoke with the session id (and session dir if not ./sessions).
+description: Use when tutoring or grading an AlgoTrainer practice session — reads a session-<id>.json the web app wrote, then grades the attempt (writing a schema-valid verdict). Invoke with the session id (and session dir if not ./sessions).
 ---
 
 # AlgoTrainer Tutor
@@ -20,7 +20,7 @@ spaced-repetition schedule.
   - `attempt`: `{code, judge_passed}` (the learner's code and whether tests passed)
   - `recall`: `{pattern, approach, complexity}` (what the learner stated BEFORE coding)
   - `hints_used`: integer
-  - `request`: `"grade"` (default) or `"hint"`
+  - `request`: `"grade"` (default, and only supported value)
 
 Load the grading rubric and error taxonomy from `references/rubric.md` in this
 skill directory before grading — follow it exactly.
@@ -48,13 +48,6 @@ skill directory before grading — follow it exactly.
    retry — a malformed verdict must never be left unwritten-around.
 5. Tell the learner their grade and feedback in the chat, and remind them to click
    "Ingest verdict" in the web app.
-
-## If request is "hint"
-
-Give ONLY the next graduated hint tier — category → invariant → pseudocode →
-single worked step — based on `hints_used` (which tells you how many tiers they
-have already seen). NEVER reveal the full solution. Do not write a verdict for a
-hint request; just respond in the chat.
 
 ## If asked to generate a variant
 

@@ -12,7 +12,7 @@ class SessionFile(BaseModel):
     attempt: dict
     recall: dict
     hints_used: int = 0
-    request: str = "grade"
+    request: Literal["grade"] = "grade"
 
 
 class Verdict(BaseModel):

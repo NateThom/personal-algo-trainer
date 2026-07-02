@@ -22,8 +22,8 @@ def test_skill_references_write_verdict_and_grades():
 
 
 def test_skill_preserves_critical_guardrails():
-    """Guard the two instructions an accidental edit must never weaken:
-    hint-secrecy and the hint-penalty hard rule."""
+    """Guard the instruction an accidental edit must never weaken:
+    the hint-penalty hard rule (mid-solve hints are the app's own feature,
+    not this skill's — see request: Literal["grade"])."""
     text = SKILL.read_text().lower()
-    assert "never reveal the full solution" in text
     assert "at most" in text and "hard" in text  # hints_used>=1 -> at most hard
