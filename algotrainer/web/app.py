@@ -235,7 +235,9 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
 
     @app.post("/api/judge")
     def judge(body: JudgeBody):
-        p = problems[body.problem_id]
+        p = problems.get(body.problem_id)
+        if p is None:
+            raise HTTPException(status_code=404, detail="unknown problem")
         r = run_submission(body.code, p.function_name, p.tests)
         return {
             "passed": r.passed, "error": r.error, "runtime_ms": r.runtime_ms,
@@ -247,6 +249,9 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
 
     @app.post("/api/session")
     def session(body: SessionBody):
+        p = problems.get(body.problem_id)
+        if p is None:
+            raise HTTPException(status_code=404, detail="unknown problem")
         now = datetime.now(timezone.utc)
         attempt_id = store.record_attempt(
             body.problem_id, body.code, body.recall.get("pattern"),
@@ -254,7 +259,6 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
             body.judge_passed, body.hints_used, now,
         )
         sid = uuid.uuid4().hex[:12]
-        p = problems[body.problem_id]
         sf = SessionFile(
             session_id=sid, attempt_id=attempt_id,
             problem={"id": p.id, "title": p.title, "pattern": p.pattern,

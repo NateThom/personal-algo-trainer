@@ -82,6 +82,19 @@ def test_judge_endpoint_runs_code(tmp_path):
     assert r.json()["passed"] is True
 
 
+def test_judge_unknown_problem_404(tmp_path):
+    c = _client(tmp_path)
+    r = c.post("/api/judge", json={"problem_id": "nope", "code": "x = 1"})
+    assert r.status_code == 404
+
+
+def test_session_unknown_problem_404(tmp_path):
+    c = _client(tmp_path)
+    r = c.post("/api/session", json={
+        "problem_id": "nope", "code": "x", "recall": {}, "judge_passed": False})
+    assert r.status_code == 404
+
+
 def test_full_loop_with_stub_tutor(tmp_path):
     session_dir = tmp_path / "sessions"
     app = create_app(db_path=tmp_path / "t.db", content_dir=None, session_dir=session_dir)
