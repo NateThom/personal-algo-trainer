@@ -138,6 +138,7 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
             "id": p.id, "title": p.title, "pattern": p.pattern,
             "difficulty": p.difficulty, "statement": p.statement,
             "function_name": p.function_name, "starter_code": p.starter_code,
+            "seen_count": store.attempt_count_for_problem(p.id),
         }}
 
     @app.post("/api/reload")

@@ -11,11 +11,15 @@ async function loadNext() {
   if (!problem) {
     document.getElementById("title").textContent = "Nothing due — you're caught up!";
     document.getElementById("statement").textContent = "";
+    document.getElementById("seen-badge").textContent = "";
     return;
   }
   document.getElementById("title").textContent = problem.title;
   document.getElementById("statement").textContent = problem.statement;
   document.getElementById("pattern-badge").textContent = "";  // pattern hidden on purpose
+  document.getElementById("seen-badge").textContent = problem.seen_count === 0
+    ? "🆕 New"
+    : `🔁 Review · seen ${problem.seen_count}×`;
   editor.setValue(problem.starter_code);
   document.getElementById("results").textContent = "";
   document.getElementById("handoff").disabled = true;

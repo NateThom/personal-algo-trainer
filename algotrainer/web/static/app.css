@@ -18,6 +18,8 @@ button { padding: 8px 16px; cursor: pointer; }
 #mastery .mgate { color: #2e7d32; font-weight: 600; }
 #mastery .mrow.mastered { background: #f1f8e9; }
 #stats { font-size: 0.9rem; opacity: 0.9; }
+#seen-badge { font-size: 0.8rem; font-weight: 600; padding: 2px 8px; border-radius: 10px;
+  background: #e8f5e9; color: #2e7d32; vertical-align: middle; }
 
 /* --- top nav (shared across pages) --- */
 .topnav { background: #0f0f23; color: #fff; padding: 8px 20px; display: flex;
