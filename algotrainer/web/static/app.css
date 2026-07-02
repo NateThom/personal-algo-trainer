@@ -12,3 +12,8 @@ button { padding: 8px 16px; cursor: pointer; }
   white-space: pre-wrap; border-radius: 6px; }
 #hints { margin-top: 10px; display: grid; gap: 6px; }
 .hint-item { background: #fff8e1; border-left: 3px solid #ffb300; padding: 8px; border-radius: 4px; }
+#mastery .mrow { display: flex; gap: 14px; padding: 6px 0; border-bottom: 1px solid #eee; align-items: center; }
+#mastery .mname { font-weight: 600; min-width: 160px; }
+#mastery .mtrap { color: #c62828; }
+#mastery .mgate { color: #2e7d32; font-weight: 600; }
+#mastery .mrow.mastered { background: #f1f8e9; }

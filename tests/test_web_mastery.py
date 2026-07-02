@@ -39,3 +39,30 @@ def test_ingest_writes_graded_attempt_and_pattern_card(tmp_path):
     assert len(ga) == 1
     assert ga[0][0] == prob["pattern"]
     assert (prob["pattern"],) in pc
+
+
+def test_mastery_endpoint_reports_pattern(tmp_path):
+    session_dir = tmp_path / "sessions"
+    db_path = tmp_path / "t.db"
+    c = TestClient(create_app(db_path=db_path, content_dir=None, session_dir=session_dir))
+    prob = _solve_and_grade(c, session_dir, db_path)
+
+    r = c.get("/api/mastery")
+    assert r.status_code == 200
+    pats = {p["pattern"]: p for p in r.json()["patterns"]}
+    assert prob["pattern"] in pats
+    entry = pats[prob["pattern"]]
+    assert entry["attempts"] >= 1
+    assert "mastery_score" in entry and "mastered" in entry
+    assert entry["transfer_breadth"] >= 1  # solved unaided
+
+
+def test_next_uses_composer_without_crashing(tmp_path):
+    # smoke: after grading one problem, /api/next still returns a due problem or null
+    session_dir = tmp_path / "sessions"
+    db_path = tmp_path / "t.db"
+    c = TestClient(create_app(db_path=db_path, content_dir=None, session_dir=session_dir))
+    _solve_and_grade(c, session_dir, db_path)
+    r = c.get("/api/next")
+    assert r.status_code == 200
+    assert "problem" in r.json()
