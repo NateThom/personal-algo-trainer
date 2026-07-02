@@ -10,6 +10,7 @@ from pydantic import BaseModel
 from algotrainer import mastery as mastery_mod
 from algotrainer.composer import compose_order
 from algotrainer.content import DEFAULT_CONTENT_DIR, load_problems
+from algotrainer.generated import load_generated
 from algotrainer.handoff.files import read_verdict, write_session
 from algotrainer.handoff.schema import SessionFile
 from algotrainer.judge import run_submission
@@ -49,7 +50,17 @@ def create_app(db_path, content_dir, session_dir) -> FastAPI:
     app.mount("/static", StaticFiles(directory=_STATIC), name="static")
     store = Store(db_path)
     scheduler = SrsScheduler()
-    problems = {p.id: p for p in load_problems(content_dir)}
+    problems: dict = {}
+
+    def _reload_problems() -> int:
+        problems.clear()
+        for p in load_problems(content_dir):
+            problems[p.id] = p
+        for p in load_generated():
+            problems[p.id] = p
+        return len(problems)
+
+    _reload_problems()
 
     def _pattern_stability(pattern: str) -> float:
         from fsrs import Card
@@ -84,13 +95,18 @@ def create_app(db_path, content_dir, session_dir) -> FastAPI:
             ids, problem_pattern, immature, store.error_counts_by_pattern(),
             confusable_of=confusable_group,
         )
-        pid = plan.order[0]
+        attempted = store.attempted_problem_ids()
+        pid = next((x for x in plan.order if x not in attempted), plan.order[0])
         p = problems[pid]
         return {"problem": {
             "id": p.id, "title": p.title, "pattern": p.pattern,
             "difficulty": p.difficulty, "statement": p.statement,
             "function_name": p.function_name, "starter_code": p.starter_code,
         }}
+
+    @app.post("/api/reload")
+    def reload():
+        return {"count": _reload_problems()}
 
     @app.get("/api/mastery")
     def mastery():

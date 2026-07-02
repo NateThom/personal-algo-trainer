@@ -222,5 +222,12 @@ class Store:
             ).fetchall()
         return [r[0] for r in rows]
 
+    def attempted_problem_ids(self) -> set[str]:
+        with self._lock:
+            rows = self._conn.execute(
+                "SELECT DISTINCT problem_id FROM graded_attempt"
+            ).fetchall()
+        return {r[0] for r in rows}
+
     def close(self) -> None:
         self._conn.close()
