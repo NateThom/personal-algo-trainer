@@ -3,7 +3,7 @@ import json
 import pytest
 from pydantic import ValidationError
 
-from algotrainer.handoff.schema import SessionFile, Verdict
+from algotrainer.handoff.schema import SessionFile
 from algotrainer.handoff.files import write_session, read_verdict
 
 
