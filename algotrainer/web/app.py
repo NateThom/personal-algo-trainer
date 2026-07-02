@@ -14,7 +14,10 @@ from algotrainer.generated import GENERATED_DIR, load_generated
 from algotrainer.handoff.files import read_verdict, write_session
 from algotrainer.handoff.schema import SessionFile
 from algotrainer.judge import run_submission
-from algotrainer.patterns import confusable_group, pattern_meta, roadmap_order
+from algotrainer.pattern_docs import load_all_pattern_docs, load_pattern_doc
+from algotrainer.patterns import (
+    PATTERNS, confusable_group, pattern_meta, roadmap_order,
+)
 from algotrainer.scheduler import RATING_BY_NAME, SrsScheduler
 from algotrainer.store import Store
 
@@ -73,6 +76,17 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
         rows = store.graded_attempts_by_pattern(pattern)
         return mastery_mod.compute_pattern_mastery(pattern, rows, _pattern_stability(pattern))
 
+    def _pattern_pool(pattern: str) -> dict:
+        total = sum(1 for p in problems.values() if p.pattern == pattern)
+        seen = sum(
+            1 for pid in store.attempted_problem_ids()
+            if pid in problems and problems[pid].pattern == pattern
+        )
+        return {
+            "pattern": pattern, "total": total, "unseen": total - seen,
+            "needs_more": max(0, mastery_mod.GATE_BREADTH - total),
+        }
+
     @app.get("/")
     def index():
         return FileResponse(_STATIC / "index.html")
@@ -88,6 +102,14 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
     @app.get("/methodology")
     def methodology_page():
         return FileResponse(_STATIC / "methodology.html")
+
+    @app.get("/patterns")
+    def patterns_page():
+        return FileResponse(_STATIC / "patterns.html")
+
+    @app.get("/patterns/{pattern_id}")
+    def patterns_detail_page(pattern_id: str):
+        return FileResponse(_STATIC / "patterns_detail.html")
 
     @app.post("/api/reset")
     def reset():
@@ -127,6 +149,8 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
             "id": p.id, "title": p.title, "pattern": p.pattern,
             "difficulty": p.difficulty, "statement": p.statement,
             "function_name": p.function_name, "starter_code": p.starter_code,
+            "seen_count": store.attempt_count_for_problem(p.id),
+            "pattern_pool": _pattern_pool(p.pattern),
         }}
 
     @app.post("/api/reload")
@@ -138,6 +162,7 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
         for pat in store.all_graded_patterns():
             m = _mastery_for(pat)
             meta = pattern_meta(pat)
+            instances = sum(1 for p in problems.values() if p.pattern == pat)
             out.append({
                 "pattern": pat, "name": meta.name if meta else pat,
                 "attempts": m.attempts, "transfer_breadth": m.transfer_breadth,
@@ -145,6 +170,8 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
                 "optimal_rate": m.optimal_rate, "stability": m.stability,
                 "memorization_trap": m.memorization_trap,
                 "mastery_score": m.mastery_score, "mastered": m.mastered,
+                "instances": instances,
+                "needs_more": max(0, mastery_mod.GATE_BREADTH - instances),
             })
         out.sort(key=lambda e: roadmap_order(e["pattern"]))
         return out
@@ -152,6 +179,47 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
     @app.get("/api/mastery")
     def mastery():
         return {"patterns": _mastery_list()}
+
+    @app.get("/api/patterns")
+    def patterns_list():
+        docs = load_all_pattern_docs()
+        out = []
+        for meta in PATTERNS:
+            doc = docs.get(meta.id)
+            out.append({
+                "id": meta.id, "name": meta.name, "order": meta.order,
+                "summary": doc["summary"] if doc else "",
+                "has_doc": doc is not None,
+                "confusable": sorted(confusable_group(meta.id) - {meta.id}),
+            })
+        out.sort(key=lambda e: e["order"])
+        return {"patterns": out}
+
+    @app.get("/api/patterns/{pattern_id}")
+    def pattern_detail(pattern_id: str):
+        meta = pattern_meta(pattern_id)
+        if meta is None:
+            raise HTTPException(status_code=404, detail="unknown pattern")
+        doc = load_pattern_doc(pattern_id)
+        confusable_names = sorted(
+            pattern_meta(pid).name
+            for pid in confusable_group(pattern_id) - {pattern_id}
+            if pattern_meta(pid) is not None
+        )
+        seed_examples = sorted(
+            pid for pid, p in problems.items() if p.pattern == pattern_id
+        )
+        return {
+            "id": meta.id, "name": meta.name, "order": meta.order,
+            "summary": doc["summary"] if doc else "",
+            "recognize_when": doc["recognize_when"] if doc else [],
+            "complexity": doc["complexity"] if doc else {},
+            "template": doc["template"] if doc else "",
+            "gotchas": doc.get("gotchas", []) if doc else [],
+            "examples": doc.get("examples", []) if doc else [],
+            "confusable": confusable_names,
+            "seed_examples": seed_examples,
+        }
 
     @app.get("/api/dashboard")
     def dashboard():

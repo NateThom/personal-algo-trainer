@@ -222,6 +222,13 @@ class Store:
             ).fetchall()
         return [r[0] for r in rows]
 
+    def attempt_count_for_problem(self, problem_id: str) -> int:
+        with self._lock:
+            row = self._conn.execute(
+                "SELECT COUNT(*) FROM graded_attempt WHERE problem_id = ?", (problem_id,)
+            ).fetchone()
+        return row[0] if row else 0
+
     def attempted_problem_ids(self) -> set[str]:
         with self._lock:
             rows = self._conn.execute(

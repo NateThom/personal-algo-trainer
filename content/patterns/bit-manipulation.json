@@ -1,0 +1,23 @@
+{
+  "id": "bit-manipulation",
+  "summary": "Use bitwise operators (XOR, AND, OR, shifts) to exploit binary structure for O(1) per-element tricks, avoiding extra space that a hash set or sort would require.",
+  "recognize_when": [
+    "The problem involves finding a single/odd-occurring element among duplicates (XOR cancels pairs)",
+    "You need to count set bits, check powers of two, or manipulate individual bits of a number",
+    "Constraints ask for O(1) extra space where a hash-based solution would use O(n)",
+    "The problem mentions binary representation directly, or subsets/masks over a small fixed number of elements",
+    "You need to swap, toggle, isolate, or clear specific bits without arithmetic overflow concerns"
+  ],
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(1)",
+    "notes": "Each element or bit is processed in a single pass with constant-time bitwise operations; no auxiliary data structure is needed."
+  },
+  "template": "def bit_manipulation(nums):\n    result = 0\n    for num in nums:\n        result ^= num  # XOR cancels out pairs, leaving the unpaired value\n    return result\n\n\ndef count_bits(n):\n    count = 0\n    while n:\n        n &= n - 1  # clears the lowest set bit\n        count += 1\n    return count\n",
+  "gotchas": [
+    "Assuming XOR-based tricks work when there are more than one unpaired element (need extra partitioning logic)",
+    "Forgetting Python ints are arbitrary precision, so masking with & 0xFFFFFFFF is needed to simulate fixed-width overflow",
+    "Confusing bitwise operators (&, |, ^) with logical ones (and, or) or misusing signed right shift on negative numbers"
+  ],
+  "examples": ["Single Number", "Counting Bits", "Number of 1 Bits", "Sum of Two Integers"]
+}

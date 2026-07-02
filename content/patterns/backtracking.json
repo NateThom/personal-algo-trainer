@@ -1,0 +1,9 @@
+{
+  "id": "backtracking",
+  "summary": "Explore all candidate solutions via recursive choose/explore/un-choose, pruning branches that can't lead to a valid answer.",
+  "recognize_when": ["asked to generate all combinations/permutations/subsets", "need to enumerate valid configurations under constraints (N-Queens, Sudoku)", "problem says 'find all' or 'return all possible'", "decision tree with a choice at each step that can be undone", "brute force with pruning is acceptable given small input size"],
+  "complexity": {"time": "O(b^d)", "space": "O(d)", "notes": "b = branching factor, d = max depth; recursion stack plus path storage, pruning reduces the effective branching factor"},
+  "template": "def backtrack(path, choices):\n    if is_solution(path):\n        results.append(path[:])\n        return\n    for choice in choices:\n        if not is_valid(choice, path):\n            continue\n        path.append(choice)          # choose\n        backtrack(path, next_choices(choices, choice))  # explore\n        path.pop()                   # un-choose\n",
+  "gotchas": ["forgetting to copy path (path[:]) when appending to results, so all results alias the same mutated list", "not undoing state changes (visited sets, used flags) after the recursive call returns", "missing pruning/validity checks leads to exponential blowup or infinite recursion on cyclic choices"],
+  "examples": ["Permutations", "Subsets", "N-Queens", "Combination Sum", "Word Search"]
+}

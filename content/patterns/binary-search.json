@@ -1,0 +1,23 @@
+{
+  "id": "binary-search",
+  "summary": "Repeatedly halve a monotonic search space by comparing the midpoint against a condition, discarding the half that cannot contain the answer, to find a target or boundary in logarithmic time.",
+  "recognize_when": [
+    "The input is sorted, or the answer space is monotonic even if the input array isn't (binary search on the answer)",
+    "You need to find an exact value, insertion point, or boundary (first/last occurrence) faster than O(n)",
+    "The problem asks to minimize/maximize a value subject to a feasibility check that gets easier or harder monotonically (e.g. 'minimum capacity to ship in D days')",
+    "Constraints mention array sizes up to 10^5-10^7 with an expected O(log n) or O(n log n) solution",
+    "Searching in a rotated sorted array or a 2D matrix sorted row-wise and column-wise"
+  ],
+  "complexity": {
+    "time": "O(log n)",
+    "space": "O(1)",
+    "notes": "Each iteration eliminates half the remaining search space; iterative implementation needs no extra memory (recursive would add O(log n) call-stack space)."
+  },
+  "template": "def binary_search(arr, target):\n    left, right = 0, len(arr) - 1\n    while left <= right:\n        mid = left + (right - left) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    return -1\n",
+  "gotchas": [
+    "Using (left + right) // 2 instead of left + (right - left) // 2, which can overflow in other languages and is worth the habit in Python too",
+    "Infinite loops from an incorrect boundary update (e.g. right = mid instead of right = mid - 1) when searching for a boundary rather than an exact match",
+    "Applying binary search to an array that isn't actually sorted/monotonic in the property being tested"
+  ],
+  "examples": ["Binary Search", "Search in Rotated Sorted Array", "Find First and Last Position of Element in Sorted Array", "Koko Eating Bananas"]
+}

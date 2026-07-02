@@ -1,0 +1,23 @@
+{
+  "id": "linked-list",
+  "summary": "Manipulate nodes via pointers instead of indices, using dummy heads and multi-pointer techniques (fast/slow, prev/curr) to reverse, merge, or detect structure in O(1) extra space.",
+  "recognize_when": [
+    "Problem is phrased in terms of a singly or doubly linked list, not an array",
+    "You need to reverse, reorder, or splice nodes in place without extra storage",
+    "Cycle detection or finding the middle/kth-from-end node is required",
+    "Merging two or more sorted lists",
+    "In-place operations are required so an O(n) array conversion is disallowed"
+  ],
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(1)",
+    "notes": "A single pass (or two, for fast/slow techniques) with a constant number of pointers; no auxiliary array or hash map needed unless the variant requires one (e.g. cycle start with a hash set)."
+  },
+  "template": "class ListNode:\n    def __init__(self, val=0, next=None):\n        self.val = val\n        self.next = next\n\n\ndef reverse_list(head):\n    prev = None\n    curr = head\n    while curr:\n        next_node = curr.next\n        curr.next = prev\n        prev = curr\n        curr = next_node\n    return prev\n\n\ndef has_cycle(head):\n    slow = fast = head\n    while fast and fast.next:\n        slow = slow.next\n        fast = fast.next.next\n        if slow is fast:\n            return True\n    return False\n",
+  "gotchas": [
+    "Losing the reference to the rest of the list before reassigning next (always save next_node first)",
+    "Forgetting a dummy/sentinel head node when the result's head may change (e.g. merging, removing the first node)",
+    "Off-by-one when using fast/slow pointers to find the middle (decide up front whether you want the first or second middle for even-length lists)"
+  ],
+  "examples": ["Reverse Linked List", "Merge Two Sorted Lists", "Linked List Cycle", "Remove Nth Node From End of List"]
+}

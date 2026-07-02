@@ -25,7 +25,7 @@ async function loadDashboard() {
 
   const rows = document.getElementById("mastery-rows");
   if (!d.patterns.length) {
-    rows.innerHTML = `<tr><td colspan="7">No data yet — solve a problem.</td></tr>`;
+    rows.innerHTML = `<tr><td colspan="8">No data yet — solve a problem.</td></tr>`;
   } else {
     rows.innerHTML = d.patterns.map((p) =>
       `<tr class="${p.mastered ? "mastered" : ""}">` +
@@ -35,6 +35,9 @@ async function loadDashboard() {
       `<td>${(p.pattern_id_accuracy * 100).toFixed(0)}%</td>` +
       `<td>${(p.optimal_rate * 100).toFixed(0)}%</td>` +
       `<td>${p.attempts}</td>` +
+      `<td>${p.instances}` +
+      (p.needs_more > 0 ? ` <span class="mgenmore" title="Needs ${p.needs_more} more instance(s) to reach the mastery gate">⚙ generate more</span>` : "") +
+      `</td>` +
       `<td>${statusCell(p)}</td>` +
       `</tr>`).join("");
   }

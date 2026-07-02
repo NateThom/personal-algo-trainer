@@ -18,6 +18,10 @@ button { padding: 8px 16px; cursor: pointer; }
 #mastery .mgate { color: #2e7d32; font-weight: 600; }
 #mastery .mrow.mastered { background: #f1f8e9; }
 #stats { font-size: 0.9rem; opacity: 0.9; }
+#seen-badge { font-size: 0.8rem; font-weight: 600; padding: 2px 8px; border-radius: 10px;
+  background: #e8f5e9; color: #2e7d32; vertical-align: middle; }
+.pool-banner { background: #fff8e1; border-left: 4px solid #ffb300; padding: 10px 14px;
+  border-radius: 4px; margin: 8px 0; font-size: 0.9rem; }
 
 /* --- top nav (shared across pages) --- */
 .topnav { background: #0f0f23; color: #fff; padding: 8px 20px; display: flex;
@@ -38,6 +42,7 @@ button.danger:hover { background: #a33; }
 #mastery-table th, #mastery-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #eee; }
 #mastery-table tr.mastered { background: #f1f8e9; }
 .mprog { color: #666; }
+.mgenmore { color: #e65100; font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
 .erow { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #eee; }
 
 /* --- first-run pointer on the solve page --- */
@@ -60,3 +65,22 @@ main.doc code { background: #f2f2f7; padding: 1px 5px; border-radius: 4px; }
 .topnav .navactions { display: flex; gap: 8px; }
 #reload-btn { background: #16213e; color: #fff; border: 1px solid #3a4a7a; }
 #reload-btn:hover { background: #24345e; }
+
+/* --- pattern library (index + detail) --- */
+.pattern-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px; margin-top: 16px; }
+.pattern-card { display: block; border: 1px solid #ddd; border-radius: 8px; padding: 14px 16px;
+  text-decoration: none; color: inherit; background: #fff; transition: box-shadow 0.15s, border-color 0.15s; }
+.pattern-card:hover { border-color: #6be675; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.pattern-card h3 { margin: 0 0 6px; font-size: 1.05rem; }
+.pattern-card-summary { margin: 0 0 10px; font-size: 0.9rem; color: #444; line-height: 1.4; }
+.tag { display: inline-block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.03em; padding: 2px 8px; border-radius: 10px; }
+.tag-documented { background: #e8f5e9; color: #2e7d32; }
+.tag-stub { background: #fff3e0; color: #e65100; }
+main.doc .code-template { background: #0f0f23; color: #6be675; padding: 12px 14px;
+  border-radius: 6px; font-family: ui-monospace, monospace; overflow-x: auto; white-space: pre; }
+.confusable-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.confusable-links a, .confusable-links span { background: #f2f2f7; padding: 4px 10px;
+  border-radius: 14px; font-size: 0.85rem; text-decoration: none; color: #333; }
+.confusable-links a:hover { background: #e0e0f0; }

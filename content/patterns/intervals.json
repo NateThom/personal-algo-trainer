@@ -1,0 +1,9 @@
+{
+  "id": "intervals",
+  "summary": "Sort intervals by start time, then sweep once to merge overlaps or insert a new interval in place.",
+  "recognize_when": ["input is a list of [start, end] ranges", "asking to merge, insert, or find overlapping intervals", "scheduling/meeting-room style conflict checks", "need to find free/busy time gaps", "'overlap' or 'conflict' appears in the problem statement"],
+  "complexity": {"time": "O(n log n)", "space": "O(n)", "notes": "dominated by the sort; the merge sweep itself is O(n)"},
+  "template": "def merge_intervals(intervals):\n    intervals.sort(key=lambda iv: iv[0])\n    merged = []\n    for start, end in intervals:\n        if merged and start <= merged[-1][1]:\n            merged[-1][1] = max(merged[-1][1], end)\n        else:\n            merged.append([start, end])\n    return merged\n",
+  "gotchas": ["forgetting to sort first (or sorting by end instead of start)", "using < instead of <= when checking overlap, mishandling touching intervals like [1,2] and [2,3]", "mutating the input list's inner lists when tuples were expected, or not copying before mutating"],
+  "examples": ["Merge Intervals", "Insert Interval", "Non-overlapping Intervals", "Meeting Rooms II"]
+}

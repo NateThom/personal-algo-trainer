@@ -8,6 +8,21 @@ def test_seed_patterns_present():
     assert {"arrays-hashing", "sliding-window", "two-pointers"} <= ids
 
 
+def test_canonical_taxonomy_of_18():
+    ids = {p.id for p in PATTERNS}
+    assert len(PATTERNS) == 18
+    # the five patterns added to complete the canonical set
+    assert {"prefix-sum", "intervals", "union-find",
+            "topological-sort", "bit-manipulation"} <= ids
+
+
+def test_graph_family_confusable_symmetric():
+    assert "union-find" in confusable_group("graphs")
+    assert "graphs" in confusable_group("union-find")
+    assert "topological-sort" in confusable_group("graphs")
+    assert "graphs" in confusable_group("topological-sort")
+
+
 def test_orders_are_unique_and_ascending_start():
     orders = [p.order for p in PATTERNS]
     assert len(orders) == len(set(orders))  # unique
