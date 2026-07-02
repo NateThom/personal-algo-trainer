@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AlgoTrainer — Guide</title>
+  <link rel="stylesheet" href="/static/app.css" />
+</head>
+<body>
+  <header><h1>Guide — how to use AlgoTrainer</h1></header>
+  <main class="doc">
+    <section>
+      <p class="lede">AlgoTrainer is a closed learning loop for one motivated learner. It doesn't just hand
+      you problems — it diagnoses your weak patterns, schedules spaced re-practice of <em>novel</em>
+      instances, grades you honestly, tutors you Socratically, and tracks genuine mastery. The whole
+      loop is:</p>
+      <p class="loop">cold problem → recall gate → judge → tutor grade/hint → reschedule → mastery update → repeat</p>
+    </section>
+
+    <section>
+      <h2>The tutor is Claude Code, not a paid API</h2>
+      <p>The Socratic tutor and grader is a <strong>Claude Code skill committed inside this repo</strong>
+      (<code>.claude/skills/algotrainer-tutor/</code>). The web app and Claude Code share the filesystem:
+      the app writes a session file describing your attempt, you ask Claude Code to grade it, and it writes
+      a verdict the app reads back. This uses your Claude <em>subscription</em> — there is no per-call API
+      cost — and keeps the tutor a version-controlled part of the project. The trade-off is one deliberate
+      seam: you step over to the Claude Code pane for the grade/hint moments. For a learner already living
+      in Claude Code, that's a natural boundary.</p>
+    </section>
+
+    <section>
+      <h2>A single practice session, step by step</h2>
+      <ol class="steps">
+        <li><strong>Get a problem.</strong> On the <a href="/">Solve</a> page a problem is served
+          <em>cold</em> — deliberately with <u>no pattern label</u>. Recognising the pattern yourself is the
+          skill interviews test.</li>
+        <li><strong>Recall gate (before you code).</strong> Name the pattern, sketch your approach in a
+          sentence or two, and predict time/space complexity. This forces active retrieval — the single
+          highest-value habit — and it's scored (naming the wrong pattern is what surfaces the
+          "memorizing, not recognizing" flag later).</li>
+        <li><strong>Write your solution</strong> in the editor.</li>
+        <li><strong>Get a hint (optional).</strong> The <em>Get hint</em> button reveals one graduated tier
+          at a time: category → invariant → pseudocode → worked step. Using any hint caps your grade at
+          <em>hard</em> — hints are a safety net, not a shortcut.</li>
+        <li><strong>Run tests.</strong> Your code runs in a sandboxed judge against the problem's tests.</li>
+        <li><strong>Send to tutor.</strong> This saves <code>sessions/session-&lt;id&gt;.json</code> and shows
+          you the session id.</li>
+        <li><strong>Grade it in Claude Code.</strong> In this repo, say:
+          <div class="cmd">Use the algotrainer-tutor skill to grade session &lt;id&gt;</div>
+          The skill reads your attempt and the reference solution, then decides a grade
+          (<code>again / hard / good / easy</code>), the approach you actually used, an error-taxonomy code,
+          whether your complexity was optimal, a self-explanation score, and short Socratic feedback — and
+          writes <code>sessions/verdict-&lt;id&gt;.json</code>.</li>
+        <li><strong>Ingest verdict.</strong> Back in the app, click <em>Ingest verdict</em>. This updates
+          your spaced-repetition schedule (FSRS), your per-pattern mastery, and the error journal.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>The three ways to use the tutor skill</h2>
+      <table class="modes">
+        <thead><tr><th>Ask Claude Code…</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><em>"grade session &lt;id&gt;"</em></td><td>Reads the session, writes a schema-valid verdict the app ingests.</td></tr>
+          <tr><td><em>"hint session &lt;id&gt;"</em></td><td>Gives the next graduated hint only — never the full solution. (For quick pre-authored hints, use the in-app <em>Get hint</em> button instead.)</td></tr>
+          <tr><td><em>"generate an arrays-hashing variant (medium)"</em></td><td>Authors a brand-new problem for that pattern and saves it (only if its reference solution passes its own tests). Click <em>Reload problems</em> in the nav to bring it into rotation.</td></tr>
+        </tbody>
+      </table>
+      <p class="note">Offline / automated fallback: <code>python scripts/stub_tutor.py sessions &lt;id&gt;</code>
+      writes a mechanical verdict when you're away from Claude Code (this is what the test suite uses).</p>
+    </section>
+
+    <section>
+      <h2>The rhythm that actually builds skill</h2>
+      <ul>
+        <li><strong>Come back regularly.</strong> The scheduler decides what's <em>due</em> — it resurfaces
+          patterns at expanding intervals, right as you're about to forget them. Short, frequent sessions
+          beat marathons.</li>
+        <li><strong>Trust the order.</strong> The app serves due <em>reviews</em> before brand-new material
+          (retention first), starts a new pattern in a focused block, then interleaves it with confusable
+          patterns once it matures.</li>
+        <li><strong>Watch the <a href="/dashboard">Dashboard</a>.</strong> It shows mastery per pattern,
+          what's due, and your error trends — your map of where to push next.</li>
+        <li><strong>Reset</strong> (top-right) wipes your progress to start fresh; your problems and any
+          generated variants are kept.</li>
+      </ul>
+      <p>Want to understand <em>why</em> the tool works this way? Read the
+      <a href="/methodology">Methodology</a>.</p>
+    </section>
+  </main>
+  <script src="/static/nav.js"></script>
+</body>
+</html>

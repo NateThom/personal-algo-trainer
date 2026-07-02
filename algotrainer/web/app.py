@@ -81,6 +81,14 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
     def dashboard_page():
         return FileResponse(_STATIC / "dashboard.html")
 
+    @app.get("/guide")
+    def guide_page():
+        return FileResponse(_STATIC / "guide.html")
+
+    @app.get("/methodology")
+    def methodology_page():
+        return FileResponse(_STATIC / "methodology.html")
+
     @app.post("/api/reset")
     def reset():
         store.reset_progress()
