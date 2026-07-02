@@ -1,6 +1,8 @@
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
+
+from algotrainer.errors import is_valid_error_code
 
 
 class SessionFile(BaseModel):
@@ -23,3 +25,10 @@ class Verdict(BaseModel):
     complexity_ok: bool | None = None
     self_explanation_score: int | None = None
     feedback: str = ""
+
+    @field_validator("error_code")
+    @classmethod
+    def _check_error_code(cls, v: str | None) -> str | None:
+        if not is_valid_error_code(v):
+            raise ValueError(f"unknown error_code: {v!r}")
+        return v

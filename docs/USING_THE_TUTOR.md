@@ -1,0 +1,21 @@
+# Using the AlgoTrainer tutor
+
+The tutor is a Claude Code skill committed at `.claude/skills/algotrainer-tutor/`.
+When you work in this repo with Claude Code, it is auto-discoverable.
+
+## Grade a session
+1. In the web app: solve a problem, click **Run tests**, then **Send to tutor**.
+   Note the session id shown in the results pane (e.g. `a1b2c3d4e5f6`).
+2. In Claude Code (in this repo), say: **"Use the algotrainer-tutor skill to grade
+   session a1b2c3d4e5f6."** The skill reads `sessions/session-a1b2c3d4e5f6.json`,
+   grades it, and writes `sessions/verdict-a1b2c3d4e5f6.json`.
+3. Back in the web app, click **Ingest verdict** to update your schedule.
+
+## Get an adaptive hint
+Ask: **"Use the algotrainer-tutor skill to hint session <id>."** It gives the next
+tier only, never the full solution. (For quick pre-authored hints, use the
+**Get hint** button in the app instead.)
+
+## Offline / automated fallback
+`scripts/stub_tutor.py <session_dir> <session_id>` writes a mechanical verdict
+(used by the test suite and when you're away from Claude Code).
