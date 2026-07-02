@@ -322,6 +322,9 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
             judge_passed=(attempt or {}).get("judge_passed", False),
             grade=verdict.grade, complexity_ok=verdict.complexity_ok,
             error_code=verdict.error_code, reviewed_at=now,
+            approach_used=verdict.approach_used,
+            self_explanation_score=verdict.self_explanation_score,
+            feedback=verdict.feedback,
         )
 
         return {"grade": verdict.grade, "next_due": next_due.isoformat(),
