@@ -9,6 +9,9 @@ dependencies = [
     "fsrs>=5.0",
 ]
 
+[project.scripts]
+algotrainer = "algotrainer.__main__:main"
+
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "httpx>=0.27", "ruff>=0.4"]
 
