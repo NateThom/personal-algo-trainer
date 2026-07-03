@@ -137,11 +137,14 @@ async function ingestPending(sid) {
     method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ session_id: sid }),
   });
+  if (!r.ok) { loadPending(); return; }
   await r.json();
   if (sid === localStorage.getItem("algotrainer.sessionId")) {
     localStorage.removeItem("algotrainer.sessionId");
     sessionId = null;
-    document.getElementById("ingest").disabled = true;
+    const ingestBtn = document.getElementById("ingest");
+    ingestBtn.disabled = true;
+    ingestBtn.textContent = "Ingest verdict";
     document.getElementById("copy-cmd").disabled = true;
     clearInterval(pollTimer);
   }
