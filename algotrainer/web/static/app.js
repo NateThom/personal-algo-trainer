@@ -244,4 +244,5 @@ window.addEventListener("DOMContentLoaded", async () => {
   loadPending();
   loadMastery();
   loadDashboard();
+  setInterval(loadDashboard, 60_000);
 });

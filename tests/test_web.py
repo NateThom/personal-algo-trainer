@@ -1,5 +1,6 @@
 import subprocess
 import sys
+from datetime import datetime
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -224,3 +225,21 @@ def test_pending_verdicts_skips_malformed_file(tmp_path):
     r = c.get("/api/verdicts/pending")
     assert r.status_code == 200
     assert r.json() == {"pending": []}
+
+
+def test_dashboard_next_review_due_is_none_for_fresh_db(tmp_path):
+    c = _client(tmp_path)
+    r = c.get("/api/dashboard")
+    assert r.status_code == 200
+    assert r.json()["next_review_due"] is None
+
+
+def test_dashboard_next_review_due_is_parseable_after_ingest(tmp_path):
+    c, sess, session_dir, db_path = _run_full_loop_up_to_ingest(tmp_path)
+    c.post("/api/verdict/ingest", json={"session_id": sess["session_id"]})
+
+    r = c.get("/api/dashboard")
+    assert r.status_code == 200
+    next_review_due = r.json()["next_review_due"]
+    assert next_review_due is not None
+    datetime.fromisoformat(next_review_due)

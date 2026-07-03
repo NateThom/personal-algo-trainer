@@ -231,6 +231,7 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
             "total_problems": len(problems),
             "patterns": _mastery_list(),
             "error_counts": store.error_counts_by_pattern(),
+            "next_review_due": min(due_map.values()).isoformat() if due_map else None,
         }
 
     @app.post("/api/judge")
