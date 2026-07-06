@@ -120,6 +120,11 @@ async function ingest() {
     document.getElementById("ingest").disabled = false;
     return;
   }
+  if (!r.ok) {
+    document.getElementById("results").textContent += "\n\nIngest failed — check the verdict file and retry.";
+    document.getElementById("ingest").disabled = false;
+    return;
+  }
   const res = await r.json();
   document.getElementById("results").textContent +=
     `\n\nGRADE: ${res.grade}\nNext due: ${res.next_due}\nTutor: ${res.feedback}`;
@@ -127,6 +132,7 @@ async function ingest() {
   sessionId = null;
   clearInterval(pollTimer);
   document.getElementById("copy-cmd").disabled = true;
+  loadPending();
   loadMastery();
   loadDashboard();
   setTimeout(loadNext, 1500);
