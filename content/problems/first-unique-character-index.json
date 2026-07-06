@@ -1,0 +1,22 @@
+{
+  "id": "first-unique-character-index",
+  "pattern": "arrays-hashing",
+  "title": "First Unique Character Index",
+  "difficulty": "easy",
+  "statement": "Given a string s consisting of lowercase English letters, return the index of the first character that does not repeat anywhere else in the string. If every character repeats, return -1.",
+  "function_name": "first_unique_char",
+  "starter_code": "def first_unique_char(s):\n    # your code here\n    pass\n",
+  "reference_solution": "def first_unique_char(s):\n    counts = {}\n    for ch in s:\n        counts[ch] = counts.get(ch, 0) + 1\n    for i, ch in enumerate(s):\n        if counts[ch] == 1:\n            return i\n    return -1\n",
+  "tests": [
+    {"args": ["leetcode"], "expected": 0},
+    {"args": ["loveleetcode"], "expected": 2},
+    {"args": ["aabb"], "expected": -1},
+    {"args": ["z"], "expected": 0},
+    {"args": ["cccbde"], "expected": 3}
+  ],
+  "hints": [
+    "Counting how many times each character occurs is a job for a hash map, and it lets you avoid rescanning the string for every character.",
+    "First build a frequency map of every character in one pass, then scan the string again looking for the first character whose count is exactly 1.",
+    "counts = {}; for ch in s: counts[ch] = counts.get(ch, 0) + 1. Then for i, ch in enumerate(s): if counts[ch] == 1: return i. Return -1 if the loop finishes."
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "remove-duplicate-letters",
+  "pattern": "stack",
+  "title": "Remove Duplicate Letters",
+  "difficulty": "medium",
+  "statement": "Given a string s containing only lowercase English letters, remove duplicate letters so that every letter appears exactly once, and the result is the lexicographically smallest possible string among all valid results, subject to the requirement that the relative order of the remaining letters must match their relative order in s.",
+  "function_name": "remove_duplicate_letters",
+  "starter_code": "def remove_duplicate_letters(s):\n    # your code here\n    pass\n",
+  "reference_solution": "def remove_duplicate_letters(s):\n    last_occurrence = {c: i for i, c in enumerate(s)}\n    stack = []\n    in_stack = set()\n    for i, c in enumerate(s):\n        if c in in_stack:\n            continue\n        while stack and stack[-1] > c and last_occurrence[stack[-1]] > i:\n            removed = stack.pop()\n            in_stack.discard(removed)\n        stack.append(c)\n        in_stack.add(c)\n    return ''.join(stack)\n",
+  "tests": [
+    {"args": ["bcabc"], "expected": "abc"},
+    {"args": ["cbacdcbc"], "expected": "acdb"},
+    {"args": ["a"], "expected": "a"},
+    {"args": ["ecbacba"], "expected": "eacb"}
+  ],
+  "hints": [
+    "This is a monotonic-stack problem: build the answer on a stack, keeping letters in increasing order when it is safe to do so.",
+    "Precompute the last index at which each letter appears; you may only pop a letter off the stack if it reappears later in the string.",
+    "Scan left to right, skip letters already on the stack, and while the top of the stack is larger than the current letter and still appears later, pop it before pushing the current letter."
+  ]
+}

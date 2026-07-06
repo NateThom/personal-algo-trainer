@@ -1,0 +1,21 @@
+{
+  "id": "first-bad-version",
+  "pattern": "binary-search",
+  "title": "First Bad Version",
+  "difficulty": "medium",
+  "statement": "You are a quality-control engineer testing n versions of a product, numbered 1 to n in the order they were released. At some unknown version, the product became bad, and every version released after it is also bad. You are given n and the index bad (1-indexed) of the first bad version. Using only the fact that calling an internal check on version v tells you whether v is bad (v >= bad) or good (v < bad), find and return the smallest version number that is bad. You must not simply return bad directly from the input; instead, simulate calling the checker function isBadVersion(v) := v >= bad at most O(log n) times to locate the boundary via binary search on the answer.",
+  "function_name": "first_bad_version",
+  "starter_code": "def first_bad_version(n, bad):\n    # your code here\n    # Simulate the checker: is_bad(v) is True iff v >= bad.\n    # Use binary search over [1, n] to find the smallest v with is_bad(v) == True.\n    pass\n",
+  "reference_solution": "def first_bad_version(n, bad):\n    def is_bad(v):\n        return v >= bad\n\n    lo, hi = 1, n\n    while lo < hi:\n        mid = lo + (hi - lo) // 2\n        if is_bad(mid):\n            hi = mid\n        else:\n            lo = mid + 1\n    return lo\n",
+  "tests": [
+    {"args": [5, 4], "expected": 4},
+    {"args": [1, 1], "expected": 1},
+    {"args": [10, 1], "expected": 1},
+    {"args": [2000000000, 1999999999], "expected": 1999999999}
+  ],
+  "hints": [
+    "This is a 'binary search on the answer' problem: the search space is versions 1..n, not array indices into a data array.",
+    "The predicate is_bad(v) is monotonic — once it becomes True it stays True for all larger v — so binary search can find the boundary.",
+    "Keep a half-open range [lo, hi]; if mid is bad move hi down to mid, otherwise move lo up to mid + 1, until lo == hi."
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "shortest-path-unweighted-graph",
+  "pattern": "graphs",
+  "title": "Shortest Hop Count Between Two Servers",
+  "difficulty": "easy",
+  "statement": "A network of n servers, labeled 0 to n-1, is described by a list of undirected edges, where each edge is a list [u, v] meaning server u and server v have a direct link. Given n, the list of edges, a source server, and a destination server, return the minimum number of hops (edges) needed to travel from source to destination. If destination is unreachable from source, return -1. If source equals destination, return 0.",
+  "function_name": "shortest_hop_count",
+  "starter_code": "def shortest_hop_count(n, edges, source, destination):\n    # your code here\n    pass\n",
+  "reference_solution": "from collections import deque, defaultdict\n\ndef shortest_hop_count(n, edges, source, destination):\n    if source == destination:\n        return 0\n    adj = defaultdict(list)\n    for u, v in edges:\n        adj[u].append(v)\n        adj[v].append(u)\n    visited = {source}\n    queue = deque([(source, 0)])\n    while queue:\n        node, dist = queue.popleft()\n        for neighbor in adj[node]:\n            if neighbor == destination:\n                return dist + 1\n            if neighbor not in visited:\n                visited.add(neighbor)\n                queue.append((neighbor, dist + 1))\n    return -1\n",
+  "tests": [
+    {"args": [6, [[0, 1], [1, 2], [2, 3], [3, 4], [0, 5]], 0, 4], "expected": 4},
+    {"args": [4, [[0, 1], [2, 3]], 0, 3], "expected": -1},
+    {"args": [3, [[0, 1], [1, 2]], 2, 2], "expected": 0},
+    {"args": [5, [[0, 1], [0, 2], [1, 3], [2, 3], [3, 4]], 0, 4], "expected": 3}
+  ],
+  "hints": [
+    "Unweighted shortest path in a graph is a classic BFS application, not DFS or Dijkstra.",
+    "Build an adjacency list from the edge list, then explore level by level from the source, since BFS visits nodes in increasing order of distance.",
+    "Track visited nodes and their distance; return as soon as you dequeue or discover the destination, or -1 if the queue empties first."
+  ]
+}

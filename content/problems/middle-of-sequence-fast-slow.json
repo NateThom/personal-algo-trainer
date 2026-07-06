@@ -1,0 +1,22 @@
+{
+  "id": "middle-of-sequence-fast-slow",
+  "pattern": "linked-list",
+  "title": "Middle of a Sensor Reading Sequence",
+  "difficulty": "easy",
+  "statement": "A sensor streams readings that can only be consumed one at a time, in order, like a singly linked list (you cannot index into the middle directly or ask for the length up front). Given the readings as a plain list `readings`, return the value of the middle reading. If there is an even number of readings, return the value of the second of the two middle readings (i.e., act as if you walked the list with a fast pointer moving two steps for every one step of a slow pointer). You must find the middle using a single pass with two pointers (fast/slow), not by computing len(readings) directly.",
+  "function_name": "middle_reading",
+  "starter_code": "def middle_reading(readings):\n    # your code here\n    pass\n",
+  "reference_solution": "def middle_reading(readings):\n    slow = 0\n    fast = 0\n    n = len(readings)\n    while fast < n and fast + 1 < n:\n        slow += 1\n        fast += 2\n    return readings[slow]\n",
+  "tests": [
+    {"args": [[1, 2, 3, 4, 5]], "expected": 3},
+    {"args": [[1, 2, 3, 4, 5, 6]], "expected": 4},
+    {"args": [[7]], "expected": 7},
+    {"args": [[7, 9]], "expected": 9},
+    {"args": [[10, 20, 30, 40, 50, 60, 70]], "expected": 40}
+  ],
+  "hints": [
+    "This is the fast/slow pointer technique for finding the middle of a linked list, applied to a sequence you may only walk one step at a time.",
+    "Advance a fast pointer two steps for every one step of a slow pointer; when the fast pointer reaches the end, the slow pointer sits on the middle.",
+    "Loop while fast has at least one more step available (fast + 1 < n): increment slow by 1 and fast by 2 each iteration, then return readings[slow]."
+  ]
+}

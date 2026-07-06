@@ -1,0 +1,21 @@
+{
+  "id": "prefix-count-queries",
+  "pattern": "tries",
+  "title": "Prefix Count Queries",
+  "difficulty": "easy",
+  "statement": "Given a list of lowercase words and a list of query strings, return a list of integers where each entry is the number of words in the word list that start with the corresponding query string (a word counts as starting with the query if the query is a prefix of the word, including the case where the query equals the word). Return the counts in the same order as the queries.",
+  "function_name": "prefix_count_queries",
+  "starter_code": "def prefix_count_queries(words, queries):\n    # your code here\n    pass\n",
+  "reference_solution": "def prefix_count_queries(words, queries):\n    root = {}\n    COUNT = \"$count\"\n    for word in words:\n        node = root\n        for ch in word:\n            node = node.setdefault(ch, {})\n            node[COUNT] = node.get(COUNT, 0) + 1\n\n    result = []\n    for q in queries:\n        if not q:\n            result.append(len(words))\n            continue\n        node = root\n        found = True\n        for ch in q:\n            if ch not in node:\n                found = False\n                break\n            node = node[ch]\n        result.append(node.get(COUNT, 0) if found else 0)\n    return result\n",
+  "tests": [
+    {"args": [["apple", "app", "application", "banana"], ["app", "appl", "ban", "cat", ""]], "expected": [3, 2, 1, 0, 4]},
+    {"args": [[], ["a"]], "expected": [0]},
+    {"args": [["a", "a", "a"], ["a"]], "expected": [3]},
+    {"args": [["dog", "cat"], ["d", "c", "do", "dog"]], "expected": [1, 1, 1, 1]}
+  ],
+  "hints": [
+    "Repeatedly scanning every word for every query is O(words * queries * length); a trie lets you answer each query in time proportional only to its own length.",
+    "Build a trie over all words where every node tracks how many words pass through it; then a prefix query is just a walk down the trie reading off the count stored at the final node.",
+    "Insert each word character by character, incrementing a counter stored at every node visited. For a query, walk the same path; if you fall off the trie the answer is 0, otherwise it's the counter at the node you land on (empty query means all words)."
+  ]
+}

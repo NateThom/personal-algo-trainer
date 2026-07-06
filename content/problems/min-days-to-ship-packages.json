@@ -1,0 +1,21 @@
+{
+  "id": "min-days-to-ship-packages",
+  "pattern": "binary-search",
+  "title": "Minimum Days to Ship Packages Within D Days",
+  "difficulty": "medium",
+  "statement": "A conveyor belt has packages that must be shipped from one port to another within days days. The ith package has weight weights[i]. Each day, packages are loaded onto a ship in the given order, one after another, up to the ship's maximum weight capacity per day. Packages cannot be split across days. Return the least weight capacity of the ship that will result in all packages being shipped within days days.",
+  "function_name": "ship_within_days",
+  "starter_code": "def ship_within_days(weights, days):\n    # your code here\n    pass\n",
+  "reference_solution": "def ship_within_days(weights, days):\n    def days_needed(capacity):\n        needed = 1\n        current = 0\n        for w in weights:\n            if current + w > capacity:\n                needed += 1\n                current = 0\n            current += w\n        return needed\n\n    lo, hi = max(weights), sum(weights)\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if days_needed(mid) <= days:\n            hi = mid\n        else:\n            lo = mid + 1\n    return lo\n",
+  "tests": [
+    {"args": [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5], "expected": 15},
+    {"args": [[3, 2, 2, 4, 1, 4], 3], "expected": 6},
+    {"args": [[1, 2, 3, 1, 1], 4], "expected": 3},
+    {"args": [[5], 1], "expected": 5}
+  ],
+  "hints": [
+    "This is a 'binary search on the answer' problem: binary search over the possible ship capacities, not over the weights array itself.",
+    "For a fixed capacity, greedily simulate loading packages day by day to count how many days are needed; that count decreases as capacity increases.",
+    "Binary search capacity in [max(weights), sum(weights)], keeping the smallest capacity whose simulated day count is <= days."
+  ]
+}

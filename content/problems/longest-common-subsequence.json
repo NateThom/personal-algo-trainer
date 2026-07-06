@@ -1,0 +1,22 @@
+{
+  "id": "longest-common-subsequence",
+  "pattern": "dp-2d",
+  "title": "Longest Common Subsequence",
+  "difficulty": "medium",
+  "statement": "Given two strings text1 and text2, return the length of their longest common subsequence — a sequence of characters that appears in both strings in the same relative order, but not necessarily contiguously. If the strings share no common subsequence, return 0.",
+  "function_name": "longest_common_subsequence",
+  "starter_code": "def longest_common_subsequence(text1, text2):\n    # your code here\n    pass\n",
+  "reference_solution": "def longest_common_subsequence(text1, text2):\n    m, n = len(text1), len(text2)\n    dp = [[0] * (n + 1) for _ in range(m + 1)]\n    for i in range(1, m + 1):\n        for j in range(1, n + 1):\n            if text1[i - 1] == text2[j - 1]:\n                dp[i][j] = dp[i - 1][j - 1] + 1\n            else:\n                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])\n    return dp[m][n]\n",
+  "tests": [
+    {"args": ["", "abc"], "expected": 0},
+    {"args": ["abc", "def"], "expected": 0},
+    {"args": ["abcde", "ace"], "expected": 3},
+    {"args": ["abc", "abc"], "expected": 3},
+    {"args": ["bsbininm", "jmjkbkjkv"], "expected": 1}
+  ],
+  "hints": [
+    "Checking every possible subsequence pair is exponential; instead reason about matching prefixes of the two strings, which points toward a table indexed by (i, j).",
+    "Let dp[i][j] be the LCS length of text1[:i] and text2[:j]. If the last characters match, extend the best subsequence found without them by one; otherwise take the best of dropping the last character of either string.",
+    "Build dp of size (m+1) x (n+1) initialized to 0; for i from 1 to m and j from 1 to n, set dp[i][j] = dp[i-1][j-1] + 1 when text1[i-1] == text2[j-1], else max(dp[i-1][j], dp[i][j-1]); return dp[m][n]."
+  ]
+}

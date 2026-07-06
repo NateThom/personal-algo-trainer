@@ -1,0 +1,22 @@
+{
+  "id": "grid-word-search",
+  "pattern": "backtracking",
+  "title": "Word Search in Grid",
+  "difficulty": "medium",
+  "statement": "Given a 2-D grid of single-character strings (a list of lists of length-1 strings) and a target word, determine whether the word can be formed by a path of adjacent cells. Adjacent means sharing an edge (up, down, left, or right); the same cell may not be used more than once within a single path. Return True if such a path exists, otherwise False.",
+  "function_name": "word_exists_in_grid",
+  "starter_code": "def word_exists_in_grid(grid, word):\n    # your code here\n    pass\n",
+  "reference_solution": "def word_exists_in_grid(grid, word):\n    if not word:\n        return True\n    if not grid or not grid[0]:\n        return False\n    rows, cols = len(grid), len(grid[0])\n\n    def backtrack(r, c, i, visited):\n        if grid[r][c] != word[i]:\n            return False\n        if i == len(word) - 1:\n            return True\n        visited.add((r, c))\n        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < rows and 0 <= nc < cols and (nr, nc) not in visited:\n                if backtrack(nr, nc, i + 1, visited):\n                    visited.discard((r, c))\n                    return True\n        visited.discard((r, c))\n        return False\n\n    for r in range(rows):\n        for c in range(cols):\n            if backtrack(r, c, 0, set()):\n                return True\n    return False\n",
+  "tests": [
+    {"args": [[["A", "B", "C", "E"], ["S", "F", "C", "S"], ["A", "D", "E", "E"]], "ABCCED"], "expected": true},
+    {"args": [[["A", "B", "C", "E"], ["S", "F", "C", "S"], ["A", "D", "E", "E"]], "SEE"], "expected": true},
+    {"args": [[["A", "B", "C", "E"], ["S", "F", "C", "S"], ["A", "D", "E", "E"]], "ABCB"], "expected": false},
+    {"args": [[["A"]], "A"], "expected": true},
+    {"args": [[["A"]], "AA"], "expected": false}
+  ],
+  "hints": [
+    "This is a backtracking search over grid paths: try starting the word at every cell and explore neighbors depth-first.",
+    "Track visited cells for the current path only (not globally) so a path can revisit a cell after backtracking away from a dead end, and prune as soon as a cell's letter doesn't match the expected character.",
+    "For each starting cell, run backtrack(r, c, i, visited): if grid[r][c] != word[i] return False; if i is the last index return True; else mark (r,c) visited, try the 4 neighbors recursing with i+1, unmark before returning. Return True if any start succeeds."
+  ]
+}

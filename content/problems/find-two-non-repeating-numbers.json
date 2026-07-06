@@ -1,0 +1,22 @@
+{
+  "id": "find-two-non-repeating-numbers",
+  "pattern": "bit-manipulation",
+  "title": "Find Two Non-Repeating Numbers",
+  "difficulty": "medium",
+  "statement": "Given an integer array nums in which exactly two elements appear exactly once and every other element appears exactly twice, return the two single elements as a list sorted in ascending order. Your solution must run in linear time and use only constant extra space (besides the two-element output).",
+  "function_name": "single_number_pair",
+  "starter_code": "def single_number_pair(nums):\n    # your code here\n    pass\n",
+  "reference_solution": "def single_number_pair(nums):\n    xor_all = 0\n    for num in nums:\n        xor_all ^= num\n    diff_bit = xor_all & (-xor_all)\n    a = 0\n    for num in nums:\n        if num & diff_bit:\n            a ^= num\n    b = xor_all ^ a\n    return sorted([a, b])\n",
+  "tests": [
+    {"args": [[1, 2, 1, 3, 2, 5]], "expected": [3, 5]},
+    {"args": [[4, 1, 4, 2]], "expected": [1, 2]},
+    {"args": [[-1, 0]], "expected": [-1, 0]},
+    {"args": [[7, 3, 7, 9]], "expected": [3, 9]},
+    {"args": [[10, 20, 10, 30, 40, 30]], "expected": [20, 40]}
+  ],
+  "hints": [
+    "XORing all elements together cancels the duplicates but mixes the two unique numbers; you need a way to separate them.",
+    "The XOR of the two unique numbers is nonzero, so it has some bit set; that bit must differ between the two numbers, giving you a way to partition all numbers into two groups.",
+    "Isolate the lowest set bit of the total XOR with diff_bit = xor_all & (-xor_all), split nums into two groups based on that bit, and XOR each group independently to recover the two answers; sort them before returning."
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "insert-interval",
+  "pattern": "intervals",
+  "title": "Insert Interval",
+  "difficulty": "medium",
+  "statement": "You are given a list of non-overlapping intervals sorted by start value, where each interval is [start, end], and a new interval new_interval = [start, end]. Insert new_interval into the list so the result remains sorted by start and merge any intervals that now overlap. Two intervals overlap if they share at least one point. Return the resulting list of intervals sorted by start value ascending.",
+  "function_name": "insert_interval",
+  "starter_code": "def insert_interval(intervals, new_interval):\n    # your code here\n    pass\n",
+  "reference_solution": "def insert_interval(intervals, new_interval):\n    result = []\n    i, n = 0, len(intervals)\n    start, end = new_interval\n    while i < n and intervals[i][1] < start:\n        result.append(intervals[i])\n        i += 1\n    while i < n and intervals[i][0] <= end:\n        start = min(start, intervals[i][0])\n        end = max(end, intervals[i][1])\n        i += 1\n    result.append([start, end])\n    while i < n:\n        result.append(intervals[i])\n        i += 1\n    return result\n",
+  "tests": [
+    {"args": [[[1, 3], [6, 9]], [2, 5]], "expected": [[1, 5], [6, 9]]},
+    {"args": [[[1, 2], [3, 5], [6, 7], [8, 10], [12, 16]], [4, 8]], "expected": [[1, 2], [3, 10], [12, 16]]},
+    {"args": [[], [5, 7]], "expected": [[5, 7]]},
+    {"args": [[[1, 5]], [6, 8]], "expected": [[1, 5], [6, 8]]},
+    {"args": [[[1, 5]], [0, 0]], "expected": [[0, 0], [1, 5]]}
+  ],
+  "hints": [
+    "Re-sorting the whole list after inserting is O(n log n); since the input is already sorted you can do this in a single O(n) pass.",
+    "Split the work into three phases: intervals entirely before the new one, intervals that overlap and must be merged into it, and intervals entirely after it.",
+    "Append intervals ending before new_interval.start untouched. While the current interval's start is <= the (growing) new_interval's end, absorb it by expanding new_interval's start/end. Append the merged interval, then append all remaining intervals."
+  ]
+}

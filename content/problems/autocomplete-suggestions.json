@@ -1,0 +1,21 @@
+{
+  "id": "autocomplete-suggestions",
+  "pattern": "tries",
+  "title": "Autocomplete Suggestions",
+  "difficulty": "medium",
+  "statement": "You are given a list of distinct lowercase words (the dictionary) and a list of prefix query strings. For each query, return the list of dictionary words that start with that query string, sorted lexicographically. If no word starts with the query, return an empty list for it. Return a list containing one such list per query, in the same order as the queries.",
+  "function_name": "autocomplete_suggestions",
+  "starter_code": "def autocomplete_suggestions(words, queries):\n    # your code here\n    pass\n",
+  "reference_solution": "def autocomplete_suggestions(words, queries):\n    trie = {}\n    WORDS = \"$words\"\n    for word in sorted(words):\n        node = trie\n        node.setdefault(WORDS, []).append(word)\n        for ch in word:\n            node = node.setdefault(ch, {})\n            node.setdefault(WORDS, []).append(word)\n\n    result = []\n    for q in queries:\n        node = trie\n        found = True\n        for ch in q:\n            if ch not in node:\n                found = False\n                break\n            node = node[ch]\n        result.append(list(node.get(WORDS, [])) if found else [])\n    return result\n",
+  "tests": [
+    {"args": [["cat", "car", "care", "dog", "card"], ["ca", "car", "do", "z", ""]], "expected": [["car", "card", "care", "cat"], ["car", "card", "care"], ["dog"], [], ["car", "card", "care", "cat", "dog"]]},
+    {"args": [[], ["a"]], "expected": [[]]},
+    {"args": [["apple"], ["app", "apple", "appleseed"]], "expected": [["apple"], ["apple"], []]},
+    {"args": [["ant", "anthem", "antler"], ["ant"]], "expected": [["ant", "anthem", "antler"]]}
+  ],
+  "hints": [
+    "Scanning the whole dictionary for every query is O(queries * words * length); a trie lets each query walk only its own characters and then read off a precomputed list.",
+    "At every trie node, keep the list of dictionary words that pass through that node (i.e. words having the path-so-far as a prefix); inserting words in sorted order keeps each node's list already lexicographically sorted.",
+    "Insert each word (iterate words in sorted order) into a dict-based trie, appending the word to a list stored at every node visited including the root. For a query, walk the same path; if you fall off the trie return [], otherwise return the list stored at the final node."
+  ]
+}

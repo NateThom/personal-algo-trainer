@@ -1,0 +1,23 @@
+{
+  "id": "count-subsets-with-even-xor",
+  "pattern": "bit-manipulation",
+  "title": "Count Subsets With Even XOR",
+  "difficulty": "medium",
+  "statement": "Given a list of distinct non-negative integers nums (with 0 <= len(nums) <= 20), consider every possible subset of nums, including the empty subset (there are 2^len(nums) subsets total). Define the XOR of the empty subset to be 0. Return the number of subsets whose elements XOR together to an even value.",
+  "function_name": "count_even_xor_subsets",
+  "starter_code": "def count_even_xor_subsets(nums):\n    # your code here\n    pass\n",
+  "reference_solution": "def count_even_xor_subsets(nums):\n    n = len(nums)\n    count = 0\n    for mask in range(1 << n):\n        xor_val = 0\n        m = mask\n        idx = 0\n        while m:\n            if m & 1:\n                xor_val ^= nums[idx]\n            m >>= 1\n            idx += 1\n        if xor_val % 2 == 0:\n            count += 1\n    return count\n",
+  "tests": [
+    {"args": [[]], "expected": 1},
+    {"args": [[1]], "expected": 1},
+    {"args": [[2]], "expected": 2},
+    {"args": [[1, 2]], "expected": 2},
+    {"args": [[1, 2, 3]], "expected": 4},
+    {"args": [[2, 4, 6]], "expected": 8}
+  ],
+  "hints": [
+    "There are 2^n subsets; think about representing each subset as an n-bit bitmask from 0 to 2^n - 1.",
+    "For a bitmask, bit j being set means nums[j] is included in that subset; you can compute each subset's XOR by scanning the set bits of the mask.",
+    "Loop mask from 0 to (1 << n) - 1, use mask & 1 and mask >>= 1 (or (mask >> j) & 1) to find included elements, XOR them together, and count masks whose XOR is even."
+  ]
+}

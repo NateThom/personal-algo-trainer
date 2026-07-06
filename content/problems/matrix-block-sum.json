@@ -1,0 +1,21 @@
+{
+  "id": "matrix-block-sum",
+  "pattern": "prefix-sum",
+  "title": "Range Sum Query Immutable",
+  "difficulty": "medium",
+  "statement": "Given an array of integers nums and a list of queries where each query is [left, right] (0-indexed, inclusive), return a list containing, for each query, the sum of nums[left..right]. Return the results in the same order as the input queries.",
+  "function_name": "range_sums",
+  "starter_code": "def range_sums(nums, queries):\n    # your code here\n    pass\n",
+  "reference_solution": "def range_sums(nums, queries):\n    prefix = [0] * (len(nums) + 1)\n    for i, n in enumerate(nums):\n        prefix[i + 1] = prefix[i] + n\n    return [prefix[r + 1] - prefix[l] for l, r in queries]\n",
+  "tests": [
+    {"args": [[-2, 0, 3, -5, 2, -1], [[0, 2], [2, 5], [0, 5]]], "expected": [1, -1, -3]},
+    {"args": [[1, 2, 3, 4, 5], [[0, 0], [4, 4], [1, 3]]], "expected": [1, 5, 9]},
+    {"args": [[7], [[0, 0]]], "expected": [7]},
+    {"args": [[1, 1, 1, 1], []], "expected": []}
+  ],
+  "hints": [
+    "Answering each query by summing a slice directly is O(n) per query; with many queries that's slow.",
+    "Precompute a prefix-sum array once so that any range sum can be answered in O(1) using prefix[right+1] - prefix[left].",
+    "Build prefix where prefix[0] = 0 and prefix[i+1] = prefix[i] + nums[i]. For each query [l, r], the answer is prefix[r+1] - prefix[l]."
+  ]
+}

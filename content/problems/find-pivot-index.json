@@ -1,0 +1,22 @@
+{
+  "id": "find-pivot-index",
+  "pattern": "prefix-sum",
+  "title": "Find Pivot Index",
+  "difficulty": "easy",
+  "statement": "Given an array of integers nums, return the leftmost index where the sum of all elements to the left of that index equals the sum of all elements to the right of that index. The element at the pivot index itself is not included in either sum. If no such index exists, return -1.",
+  "function_name": "pivot_index",
+  "starter_code": "def pivot_index(nums):\n    # your code here\n    pass\n",
+  "reference_solution": "def pivot_index(nums):\n    total = sum(nums)\n    left = 0\n    for i, n in enumerate(nums):\n        right = total - left - n\n        if left == right:\n            return i\n        left += n\n    return -1\n",
+  "tests": [
+    {"args": [[1, 7, 3, 6, 5, 6]], "expected": 3},
+    {"args": [[1, 2, 3]], "expected": -1},
+    {"args": [[2, 1, -1]], "expected": 0},
+    {"args": [[0, 0, 0]], "expected": 0},
+    {"args": [[5]], "expected": 0}
+  ],
+  "hints": [
+    "Computing left and right sums independently for every index gives O(n^2); there's a way to do it in one or two passes.",
+    "Once you know the total sum, you can derive the right-side sum at index i as total - leftSum - nums[i], updating leftSum incrementally as you scan.",
+    "Precompute total = sum(nums). Walk left to right maintaining leftSum starting at 0; at each i compare leftSum to total - leftSum - nums[i], returning i on the first match, then add nums[i] to leftSum."
+  ]
+}

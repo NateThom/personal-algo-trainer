@@ -1,0 +1,22 @@
+{
+  "id": "level-order-sums",
+  "pattern": "trees",
+  "title": "Level Sums of a Tournament Bracket Tree",
+  "difficulty": "easy",
+  "statement": "A tournament bracket is represented as a binary tree given in level-order array form: `tree` is a list where tree[0] is the root and the tree is reconstructed by scanning the array left to right, assigning each successive value as the left then right child of the next node still waiting for children (missing children are the value null). Return a list containing the sum of node values at each depth level of the tree, ordered from the root's level (index 0) down to the deepest level. An empty list represents an empty tree and should return an empty list.",
+  "function_name": "level_sums",
+  "starter_code": "def level_sums(tree):\n    # your code here\n    pass\n",
+  "reference_solution": "def _build(tree):\n    if not tree or tree[0] is None:\n        return None\n    nodes = [None if v is None else {'val': v, 'left': None, 'right': None} for v in tree]\n    kids = iter(range(1, len(nodes)))\n    for node in nodes:\n        if node is None:\n            continue\n        for side in ('left', 'right'):\n            idx = next(kids, None)\n            if idx is not None and idx < len(nodes) and nodes[idx] is not None:\n                node[side] = nodes[idx]\n    return nodes[0]\n\n\ndef level_sums(tree):\n    root = _build(tree)\n    if root is None:\n        return []\n    result = []\n    level = [root]\n    while level:\n        result.append(sum(n['val'] for n in level))\n        nxt = []\n        for n in level:\n            if n['left']:\n                nxt.append(n['left'])\n            if n['right']:\n                nxt.append(n['right'])\n        level = nxt\n    return result\n",
+  "tests": [
+    {"args": [[3, 9, 20, null, null, 15, 7]], "expected": [3, 29, 22]},
+    {"args": [[1, 2, 3, 4, 5]], "expected": [1, 5, 9]},
+    {"args": [[]], "expected": []},
+    {"args": [[1]], "expected": [1]},
+    {"args": [[1, 2, 3, 4, null, null, null, 5]], "expected": [1, 5, 4, 5]}
+  ],
+  "hints": [
+    "This is a breadth-first traversal problem: process the tree one full level at a time and accumulate a running sum per level.",
+    "Use a queue (BFS) and, for each iteration, sum all values currently in the queue before pushing that level's children for the next round.",
+    "Rebuild the level-order array into linked nodes, then loop: `level = [root]`; while level is non-empty, append sum of values in `level` to the result, and set `level` to the concatenation of all non-null children of nodes in `level`."
+  ]
+}
