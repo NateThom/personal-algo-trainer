@@ -3,6 +3,22 @@
 The tutor is a Claude Code skill committed at `.claude/skills/algotrainer-tutor/`.
 When you work in this repo with Claude Code, it is auto-discoverable.
 
+## Run it
+
+Activate `.venv`, then run:
+
+```bash
+algotrainer
+```
+
+Or without the console script entry point:
+
+```bash
+python -m algotrainer
+```
+
+The app opens at `http://127.0.0.1:8000`.
+
 ## Grade a session
 1. In the web app: solve a problem, click **Run tests**, then **Send to tutor**.
    Note the session id shown in the results pane (e.g. `a1b2c3d4e5f6`).
@@ -11,10 +27,8 @@ When you work in this repo with Claude Code, it is auto-discoverable.
    grades it, and writes `sessions/verdict-a1b2c3d4e5f6.json`.
 3. Back in the web app, click **Ingest verdict** to update your schedule.
 
-## Get an adaptive hint
-Ask: **"Use the algotrainer-tutor skill to hint session <id>."** It gives the next
-tier only, never the full solution. (For quick pre-authored hints, use the
-**Get hint** button in the app instead.)
+Mid-solve hints come from the app's own **Get hint** button (pre-authored,
+graduated tiers) — the tutor skill only grades and generates variants.
 
 ## Generate a novel variant
 Ask: **"Use the algotrainer-tutor skill to generate an arrays-hashing variant

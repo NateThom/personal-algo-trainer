@@ -1,0 +1,21 @@
+{
+  "id": "unique-permutations-sorted",
+  "pattern": "backtracking",
+  "title": "Unique Permutations, Sorted",
+  "difficulty": "medium",
+  "statement": "Given a list of integers nums that may contain duplicates, return all distinct permutations of nums. Return the permutations as a list of lists, sorted lexicographically (each permutation is a list of integers; compare permutations element by element as lists to determine sort order).",
+  "function_name": "unique_permutations_sorted",
+  "starter_code": "def unique_permutations_sorted(nums):\n    # your code here\n    pass\n",
+  "reference_solution": "def unique_permutations_sorted(nums):\n    nums = sorted(nums)\n    n = len(nums)\n    used = [False] * n\n    result = []\n    path = []\n\n    def backtrack():\n        if len(path) == n:\n            result.append(path[:])\n            return\n        for i in range(n):\n            if used[i]:\n                continue\n            if i > 0 and nums[i] == nums[i - 1] and not used[i - 1]:\n                continue\n            used[i] = True\n            path.append(nums[i])\n            backtrack()\n            path.pop()\n            used[i] = False\n\n    backtrack()\n    return result\n",
+  "tests": [
+    {"args": [[1]], "expected": [[1]]},
+    {"args": [[1, 2]], "expected": [[1, 2], [2, 1]]},
+    {"args": [[1, 1, 2]], "expected": [[1, 1, 2], [1, 2, 1], [2, 1, 1]]},
+    {"args": [[2, 2, 1, 1]], "expected": [[1, 1, 2, 2], [1, 2, 1, 2], [1, 2, 2, 1], [2, 1, 1, 2], [2, 1, 2, 1], [2, 2, 1, 1]]}
+  ],
+  "hints": [
+    "This is a backtracking enumeration over permutations; duplicates in the input require extra care to avoid emitting the same permutation twice.",
+    "Sort nums first, then at each recursion level skip a candidate value if an identical value earlier in the sorted array hasn't been used yet in this branch — that's the standard duplicate-skip invariant.",
+    "backtrack(): if path length equals n, record a copy. Otherwise for i in range(n): skip if used[i], skip if nums[i]==nums[i-1] and not used[i-1]; else mark used, append, recurse, then undo."
+  ]
+}

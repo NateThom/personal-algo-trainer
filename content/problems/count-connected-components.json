@@ -1,0 +1,21 @@
+{
+  "id": "count-connected-components",
+  "pattern": "union-find",
+  "title": "Count Connected Components in a Network",
+  "difficulty": "easy",
+  "statement": "You are given n computers labeled 0 to n-1 and a list of undirected connections, where each connection is a list [a, b] meaning computers a and b can communicate directly (and transitively through other connected computers). Given n and the list of connections, return the number of distinct connected groups of computers.",
+  "function_name": "count_components",
+  "starter_code": "def count_components(n, connections):\n    # your code here\n    pass\n",
+  "reference_solution": "def count_components(n, connections):\n    parent = list(range(n))\n    rank = [0] * n\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a, b):\n        ra, rb = find(a), find(b)\n        if ra == rb:\n            return\n        if rank[ra] < rank[rb]:\n            ra, rb = rb, ra\n        parent[rb] = ra\n        if rank[ra] == rank[rb]:\n            rank[ra] += 1\n\n    for a, b in connections:\n        union(a, b)\n\n    return len({find(x) for x in range(n)})\n",
+  "tests": [
+    {"args": [5, [[0, 1], [1, 2], [3, 4]]], "expected": 2},
+    {"args": [4, []], "expected": 4},
+    {"args": [1, []], "expected": 1},
+    {"args": [6, [[0, 1], [1, 2], [2, 0], [3, 4], [4, 5], [5, 3]]], "expected": 2}
+  ],
+  "hints": [
+    "This is asking how many groups exist under a transitive 'connected to' relation, a natural fit for the union-find (disjoint set) pattern.",
+    "Each connection merges two computers' groups; the final answer is the number of distinct group representatives (roots) across all n computers.",
+    "Initialize each computer as its own parent, union every connected pair with path compression and union by rank, then count the number of distinct find(x) results for x in range(n)."
+  ]
+}

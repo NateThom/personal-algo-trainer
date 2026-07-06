@@ -1,0 +1,21 @@
+{
+  "id": "max-sum-subarray-fixed-size",
+  "pattern": "sliding-window",
+  "title": "Maximum Sum Subarray of Fixed Size",
+  "difficulty": "easy",
+  "statement": "Given an integer array nums and an integer k, return the maximum sum of any contiguous subarray of length exactly k. It is guaranteed that 1 <= k <= len(nums).",
+  "function_name": "max_sum_fixed_window",
+  "starter_code": "def max_sum_fixed_window(nums, k):\n    # your code here\n    pass\n",
+  "reference_solution": "def max_sum_fixed_window(nums, k):\n    window_sum = sum(nums[:k])\n    best = window_sum\n    for i in range(k, len(nums)):\n        window_sum += nums[i] - nums[i - k]\n        best = max(best, window_sum)\n    return best\n",
+  "tests": [
+    {"args": [[2, 1, 5, 1, 3, 2], 3], "expected": 9},
+    {"args": [[1, 1, 1, 1, 1], 2], "expected": 2},
+    {"args": [[5], 1], "expected": 5},
+    {"args": [[-2, -1, -3, -4], 2], "expected": -3}
+  ],
+  "hints": [
+    "You need the sum of every contiguous block of k elements; recomputing each sum from scratch is wasteful.",
+    "Maintain a running window sum: as the window slides right by one, add the new element and subtract the one that fell out of the window.",
+    "Initialize window_sum to the sum of the first k elements, then for i from k to len(nums)-1 do window_sum += nums[i] - nums[i-k] and track the max."
+  ]
+}

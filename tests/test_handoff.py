@@ -45,3 +45,12 @@ def test_malformed_verdict_rejected(tmp_path):
     }))
     with pytest.raises(ValidationError):
         read_verdict(tmp_path, "bad")
+
+
+def test_session_request_hint_rejected():
+    with pytest.raises(ValidationError):
+        _session(request="hint")
+
+
+def test_session_request_grade_valid():
+    assert _session(request="grade").request == "grade"

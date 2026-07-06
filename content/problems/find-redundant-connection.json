@@ -1,0 +1,20 @@
+{
+  "id": "find-redundant-connection",
+  "pattern": "union-find",
+  "title": "Find the Redundant Connection",
+  "difficulty": "medium",
+  "statement": "A tree is an undirected graph with n nodes labeled 1 to n where there is exactly one path between any two nodes. You are given a list of n edges (each edge a list [u, v]) that was originally a tree on n nodes but has one extra edge added, making the graph contain exactly one cycle. The edges are given in the order they were added, one per line. Return the edge (as a list [u, v]) that, if removed, turns the graph back into a tree. If multiple such edges exist, return the last one to appear in the input list.",
+  "function_name": "find_redundant_connection",
+  "starter_code": "def find_redundant_connection(edges):\n    # your code here\n    pass\n",
+  "reference_solution": "def find_redundant_connection(edges):\n    n = len(edges)\n    parent = list(range(n + 1))\n    rank = [0] * (n + 1)\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a, b):\n        ra, rb = find(a), find(b)\n        if ra == rb:\n            return False\n        if rank[ra] < rank[rb]:\n            ra, rb = rb, ra\n        parent[rb] = ra\n        if rank[ra] == rank[rb]:\n            rank[ra] += 1\n        return True\n\n    answer = None\n    for u, v in edges:\n        if not union(u, v):\n            answer = [u, v]\n    return answer\n",
+  "tests": [
+    {"args": [[[1, 2], [1, 3], [2, 3]]], "expected": [2, 3]},
+    {"args": [[[1, 2], [2, 3], [3, 4], [1, 4], [1, 5]]], "expected": [1, 4]},
+    {"args": [[[1, 2], [2, 3], [3, 1]]], "expected": [3, 1]}
+  ],
+  "hints": [
+    "Adding an edge to a tree creates exactly one cycle; the extra edge is the one that first connects two nodes already in the same component.",
+    "Process edges in order, using union-find to track which nodes are already connected; the redundant edge is the first union that fails because both endpoints share a root.",
+    "For each edge [u, v], call find on u and v; if they already have the same root, this edge is redundant and (if multiple are redundant) keep updating your answer so you return the last such edge in the input order."
+  ]
+}

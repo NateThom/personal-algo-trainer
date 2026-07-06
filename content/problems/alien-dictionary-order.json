@@ -1,0 +1,22 @@
+{
+  "id": "alien-dictionary-order",
+  "pattern": "topological-sort",
+  "title": "Lexicographically Smallest Build Order",
+  "difficulty": "medium",
+  "statement": "A software project has n modules labeled 0 to n - 1. You are given dependencies, a list of pairs [a, b] meaning module a must be built before module b. Return the lexicographically smallest valid build order as a list of module labels (i.e. among all valid topological orders, the one that is smallest when compared as a sequence of numbers). If no valid build order exists because of a cyclic dependency, return an empty list.",
+  "function_name": "build_order",
+  "starter_code": "def build_order(n, dependencies):\n    # your code here\n    pass\n",
+  "reference_solution": "import heapq\n\n\ndef build_order(n, dependencies):\n    adj = [[] for _ in range(n)]\n    indegree = [0] * n\n    for a, b in dependencies:\n        adj[a].append(b)\n        indegree[b] += 1\n    heap = [i for i in range(n) if indegree[i] == 0]\n    heapq.heapify(heap)\n    order = []\n    while heap:\n        node = heapq.heappop(heap)\n        order.append(node)\n        for nxt in adj[node]:\n            indegree[nxt] -= 1\n            if indegree[nxt] == 0:\n                heapq.heappush(heap, nxt)\n    if len(order) != n:\n        return []\n    return order\n",
+  "tests": [
+    {"args": [4, [[0, 1], [0, 2], [1, 3], [2, 3]]], "expected": [0, 1, 2, 3]},
+    {"args": [3, []], "expected": [0, 1, 2]},
+    {"args": [2, [[0, 1], [1, 0]]], "expected": []},
+    {"args": [1, []], "expected": [0]},
+    {"args": [5, [[2, 3], [2, 4], [0, 2], [1, 2]]], "expected": [0, 1, 2, 3, 4]}
+  ],
+  "hints": [
+    "This is a topological sort problem, but plain BFS order is not unique, so you need a way to always break ties consistently.",
+    "Use Kahn's algorithm but keep the set of available (indegree-0) nodes in a min-heap instead of a plain queue, always picking the smallest available label next.",
+    "Pop the smallest node from the heap, append it to the order, decrement indegree of its neighbors, and push any that reach indegree 0. If the final order has fewer than n nodes, a cycle exists and you must return []."
+  ]
+}

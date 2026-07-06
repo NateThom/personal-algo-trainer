@@ -1,0 +1,22 @@
+{
+  "id": "successor-array-cycle-detection",
+  "pattern": "linked-list",
+  "title": "Successor Array Cycle Detection",
+  "difficulty": "easy",
+  "statement": "A company's task scheduler links tasks together using a successor array `next`, where `next[i]` is the index of the task that runs after task i, or -1 if task i is the last task. Starting from task index `start`, determine whether following the chain of successors ever revisits a task (a cycle), which would mean the scheduler is stuck in an infinite loop. Return true if a cycle is reachable from `start`, or false if the chain terminates at -1. Use O(1) extra space (a fast/slow pointer walk), not a visited set.",
+  "function_name": "has_cycle_from_start",
+  "starter_code": "def has_cycle_from_start(next, start):\n    # your code here\n    pass\n",
+  "reference_solution": "def has_cycle_from_start(next, start):\n    slow = start\n    fast = start\n    while fast != -1 and next[fast] != -1:\n        slow = next[slow]\n        fast = next[next[fast]]\n        if slow == fast:\n            return True\n    return False\n",
+  "tests": [
+    {"args": [[1, 2, 3, -1], 0], "expected": false},
+    {"args": [[1, 2, 0], 0], "expected": true},
+    {"args": [[-1], 0], "expected": false},
+    {"args": [[1, 2, 3, 1], 0], "expected": true},
+    {"args": [[2, 3, 4, -1, 1], 0], "expected": false}
+  ],
+  "hints": [
+    "This is the classic linked-list cycle problem, just with the 'next pointer' stored as an array index instead of a node reference.",
+    "Move two pointers through the array at different speeds; if there's a cycle they must eventually land on the same index.",
+    "slow moves one step (next[slow]), fast moves two steps (next[next[fast]]); stop early if fast hits -1 or next[fast] is -1; return True if slow ever equals fast."
+  ]
+}

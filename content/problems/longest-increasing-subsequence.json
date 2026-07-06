@@ -1,0 +1,22 @@
+{
+  "id": "longest-increasing-subsequence",
+  "pattern": "dp-1d",
+  "title": "Longest Increasing Subsequence",
+  "difficulty": "medium",
+  "statement": "Given an integer list nums, return the length of the longest strictly increasing subsequence — a sequence of elements picked from nums in order (not necessarily contiguous) where each element is strictly greater than the previous one. An empty list has an answer of 0.",
+  "function_name": "length_of_lis",
+  "starter_code": "def length_of_lis(nums):\n    # your code here\n    pass\n",
+  "reference_solution": "import bisect\n\ndef length_of_lis(nums):\n    tails = []\n    for x in nums:\n        i = bisect.bisect_left(tails, x)\n        if i == len(tails):\n            tails.append(x)\n        else:\n            tails[i] = x\n    return len(tails)\n",
+  "tests": [
+    {"args": [[]], "expected": 0},
+    {"args": [[7, 7, 7, 7]], "expected": 1},
+    {"args": [[10, 9, 2, 5, 3, 7, 101, 18]], "expected": 4},
+    {"args": [[0, 1, 0, 3, 2, 3]], "expected": 4},
+    {"args": [[1, 2, 3, 4, 5]], "expected": 5}
+  ],
+  "hints": [
+    "The naive 1-D dp where dp[i] is the longest increasing subsequence ending at i takes O(n^2); there is a faster O(n log n) approach worth reaching for.",
+    "Maintain an array 'tails' where tails[k] is the smallest possible tail value of any increasing subsequence of length k+1 seen so far; tails stays sorted, so each new number can be placed with binary search.",
+    "For each x in nums, binary-search for the leftmost position in tails that is >= x; if x extends past the end, append it (a new longest length), otherwise overwrite that position; the final length of tails is the answer."
+  ]
+}

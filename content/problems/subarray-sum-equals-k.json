@@ -1,0 +1,23 @@
+{
+  "id": "subarray-sum-equals-k",
+  "pattern": "prefix-sum",
+  "title": "Subarray Sum Equals K",
+  "difficulty": "medium",
+  "statement": "Given an array of integers nums and an integer k, return the total number of contiguous subarrays whose elements sum to exactly k. Elements can be negative, zero, or positive.",
+  "function_name": "subarray_sum",
+  "starter_code": "def subarray_sum(nums, k):\n    # your code here\n    pass\n",
+  "reference_solution": "def subarray_sum(nums, k):\n    counts = {0: 1}\n    prefix = 0\n    total = 0\n    for n in nums:\n        prefix += n\n        total += counts.get(prefix - k, 0)\n        counts[prefix] = counts.get(prefix, 0) + 1\n    return total\n",
+  "tests": [
+    {"args": [[1, 1, 1], 2], "expected": 2},
+    {"args": [[1, 2, 3], 3], "expected": 2},
+    {"args": [[1, -1, 0], 0], "expected": 3},
+    {"args": [[3, 4, 7, 2, -3, 1, 4, 2], 7], "expected": 4},
+    {"args": [[], 0], "expected": 0},
+    {"args": [[5], 5], "expected": 1}
+  ],
+  "hints": [
+    "Brute-force checking every subarray is O(n^2); think about prefix sums to get O(n).",
+    "If prefix[j] - prefix[i] == k, then the subarray between i+1 and j sums to k. Track how many times each prefix sum value has occurred so far.",
+    "Use a hashmap counts initialized to {0: 1}. For each running prefix sum, add counts.get(prefix - k, 0) to the answer, then increment counts[prefix]."
+  ]
+}

@@ -21,7 +21,9 @@ async function loadDashboard() {
     tile("Due now", d.due_count) +
     tile("Problems", d.total_problems) +
     tile("Patterns tracked", d.patterns.length) +
-    tile("Patterns mastered", mastered);
+    tile("Patterns mastered", mastered) +
+    tile("Next review due", d.next_review_due
+      ? new Date(d.next_review_due).toLocaleString() : "—");
 
   const rows = document.getElementById("mastery-rows");
   if (!d.patterns.length) {
@@ -51,3 +53,4 @@ async function loadDashboard() {
 }
 
 window.addEventListener("DOMContentLoaded", loadDashboard);
+setInterval(loadDashboard, 60_000);

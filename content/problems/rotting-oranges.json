@@ -1,0 +1,21 @@
+{
+  "id": "rotting-oranges",
+  "pattern": "graphs",
+  "title": "Minutes Until All Oranges Rot",
+  "difficulty": "medium",
+  "statement": "You are given a grid of integers representing a box of oranges: 0 = empty cell, 1 = a fresh orange, 2 = a rotten orange, given as a list of lists grid[row][col]. Every minute, any fresh orange that is horizontally or vertically adjacent to a rotten orange becomes rotten. Return the minimum number of minutes that must elapse until no cell has a fresh orange. If this is impossible (some fresh orange can never rot), return -1.",
+  "function_name": "oranges_rotting",
+  "starter_code": "def oranges_rotting(grid):\n    # your code here\n    pass\n",
+  "reference_solution": "from collections import deque\n\ndef oranges_rotting(grid):\n    if not grid or not grid[0]:\n        return 0\n    rows, cols = len(grid), len(grid[0])\n    queue = deque()\n    fresh = 0\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] == 2:\n                queue.append((r, c, 0))\n            elif grid[r][c] == 1:\n                fresh += 1\n    if fresh == 0:\n        return 0\n    minutes = 0\n    visited_fresh = 0\n    while queue:\n        r, c, t = queue.popleft()\n        minutes = max(minutes, t)\n        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == 1:\n                grid[nr][nc] = 2\n                visited_fresh += 1\n                queue.append((nr, nc, t + 1))\n    return minutes if visited_fresh == fresh else -1\n",
+  "tests": [
+    {"args": [[[2, 1, 1], [1, 1, 0], [0, 1, 1]]], "expected": 4},
+    {"args": [[[2, 1, 1], [0, 1, 1], [1, 0, 1]]], "expected": -1},
+    {"args": [[[0, 2]]], "expected": 0},
+    {"args": [[[0, 0, 0]]], "expected": 0}
+  ],
+  "hints": [
+    "Think of every rotten orange as a source; this is a multi-source shortest-path/BFS-levels problem.",
+    "Push all initially rotten oranges into a BFS queue at time 0, then expand outward one minute (one BFS layer) at a time.",
+    "Track how many fresh oranges you infect; after BFS completes, if any fresh orange was never reached, return -1, otherwise return the max time recorded."
+  ]
+}

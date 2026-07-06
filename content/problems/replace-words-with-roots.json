@@ -1,0 +1,22 @@
+{
+  "id": "replace-words-with-roots",
+  "pattern": "tries",
+  "title": "Replace Words With Shortest Root",
+  "difficulty": "medium",
+  "statement": "You are given a list of root words and a sentence (a single string of space-separated lowercase words). For each word in the sentence, if some root in the list is a prefix of that word, replace the word with the shortest such root. If several roots of that same shortest length are prefixes of the word, use the lexicographically smallest one. If no root is a prefix of the word, leave the word unchanged. Return the resulting sentence as a single space-separated string.",
+  "function_name": "replace_words_with_roots",
+  "starter_code": "def replace_words_with_roots(roots, sentence):\n    # your code here\n    pass\n",
+  "reference_solution": "def replace_words_with_roots(roots, sentence):\n    trie = {}\n    END = \"$end\"\n    for root in roots:\n        node = trie\n        for ch in root:\n            node = node.setdefault(ch, {})\n        node[END] = True\n\n    def shortest_root(word):\n        node = trie\n        for i, ch in enumerate(word):\n            if ch not in node:\n                return word\n            node = node[ch]\n            if node.get(END):\n                return word[: i + 1]\n        return word\n\n    return \" \".join(shortest_root(w) for w in sentence.split(\" \"))\n",
+  "tests": [
+    {"args": [["cat", "bat", "rat"], "the cattle was rattled by the battery"], "expected": "the cat was rat by the bat"},
+    {"args": [["a", "b", "c"], "aadsfasf absbs bbab cadsfafs"], "expected": "a a b c"},
+    {"args": [[], "the quick brown fox"], "expected": "the quick brown fox"},
+    {"args": [["ab", "abc"], "abcdef"], "expected": "ab"},
+    {"args": [["cat"], "cat"], "expected": "cat"}
+  ],
+  "hints": [
+    "Checking each word against every root directly is O(words * roots * length); inserting all roots into a trie lets you find the shortest matching root for a word in time proportional to the word's length.",
+    "Because insertion visits characters in order and you stop at the first node marked as the end of a root, walking a trie built from all roots naturally finds the shortest prefix match, and ties on length are broken correctly if you insert roots without worrying about order (shortest match is found by position, not iteration order).",
+    "Build a trie from roots marking end-of-root nodes. For each sentence word, walk the trie character by character; as soon as you hit a node flagged as an end-of-root, return the prefix consumed so far. If you fall off the trie or never hit an end marker, return the original word."
+  ]
+}

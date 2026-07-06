@@ -1,0 +1,22 @@
+{
+  "id": "max-depth-of-binary-tree",
+  "pattern": "trees",
+  "title": "Maximum Depth of an Org Chart",
+  "difficulty": "easy",
+  "statement": "A company's org chart is given as a binary tree in level-order (breadth-first) array form: `tree` is a list where tree[0] is the root, and for a node at array position i (using the standard level-order encoding with null placeholders for missing children), its children appear later in the array; missing children are represented by the value null. Concretely, the tree is built level by level: read the array left to right, and for each non-null node consumed, its next two not-yet-assigned children slots (in the order they appear) are its left and right child. Return the maximum depth of the tree, defined as the number of nodes on the longest path from the root down to the farthest leaf. An empty list represents an empty tree with depth 0.",
+  "function_name": "max_depth",
+  "starter_code": "def max_depth(tree):\n    # your code here\n    pass\n",
+  "reference_solution": "def _build(tree):\n    if not tree or tree[0] is None:\n        return None\n    nodes = [None if v is None else {'val': v, 'left': None, 'right': None} for v in tree]\n    kids = iter(range(1, len(nodes)))\n    for node in nodes:\n        if node is None:\n            continue\n        for side in ('left', 'right'):\n            idx = next(kids, None)\n            if idx is not None and idx < len(nodes) and nodes[idx] is not None:\n                node[side] = nodes[idx]\n    return nodes[0]\n\n\ndef max_depth(tree):\n    root = _build(tree)\n\n    def depth(node):\n        if node is None:\n            return 0\n        return 1 + max(depth(node['left']), depth(node['right']))\n\n    return depth(root)\n",
+  "tests": [
+    {"args": [[3, 9, 20, null, null, 15, 7]], "expected": 3},
+    {"args": [[1, null, 2]], "expected": 2},
+    {"args": [[]], "expected": 0},
+    {"args": [[1]], "expected": 1},
+    {"args": [[1, 2, 3, 4, null, null, null, 5]], "expected": 4}
+  ],
+  "hints": [
+    "This is a straightforward tree-depth problem: rebuild the binary tree from the level-order array, then explore it with DFS or BFS.",
+    "The depth of a node is 1 plus the larger of its two children's depths (0 for a missing child); the answer is the depth of the root.",
+    "Recursively compute depth(node) = 0 if node is None else 1 + max(depth(left), depth(right)), after reconstructing the level-order array into linked node objects with left/right pointers."
+  ]
+}

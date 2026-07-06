@@ -1,0 +1,20 @@
+{
+  "id": "merge-user-account-groups",
+  "pattern": "union-find",
+  "title": "Merge Duplicate User Accounts",
+  "difficulty": "medium",
+  "statement": "A service has accounts, each represented as a list of strings where the first element is the account owner's name and the remaining elements are email addresses registered to that account. Two accounts belong to the same person if they share at least one email address (this relation is transitive: if account A shares an email with B, and B shares an email with C, then A, B, and C all belong to the same person, even if A and C share no email directly). Given a list of accounts, merge all accounts belonging to the same person into one account, listing that person's name followed by all their unique emails sorted alphabetically. Return the merged list, sorted by the person's name first (alphabetically), and for accounts with the same name, sorted by their first (alphabetically smallest) email.",
+  "function_name": "merge_accounts",
+  "starter_code": "def merge_accounts(accounts):\n    # your code here\n    pass\n",
+  "reference_solution": "def merge_accounts(accounts):\n    n = len(accounts)\n    parent = list(range(n))\n    rank = [0] * n\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a, b):\n        ra, rb = find(a), find(b)\n        if ra == rb:\n            return\n        if rank[ra] < rank[rb]:\n            ra, rb = rb, ra\n        parent[rb] = ra\n        if rank[ra] == rank[rb]:\n            rank[ra] += 1\n\n    email_to_index = {}\n    for i, account in enumerate(accounts):\n        for email in account[1:]:\n            if email in email_to_index:\n                union(i, email_to_index[email])\n            else:\n                email_to_index[email] = i\n\n    groups = {}\n    for email, idx in email_to_index.items():\n        root = find(idx)\n        groups.setdefault(root, set()).add(email)\n\n    result = []\n    for root, emails in groups.items():\n        name = accounts[root][0]\n        sorted_emails = sorted(emails)\n        result.append([name] + sorted_emails)\n\n    result.sort(key=lambda acc: (acc[0], acc[1]))\n    return result\n",
+  "tests": [
+    {"args": [[["John", "johnsmith@mail.com", "john_newyork@mail.com"], ["John", "johnsmith@mail.com", "john00@mail.com"], ["Mary", "mary@mail.com"], ["John", "johnnybravo@mail.com"]]], "expected": [["John", "john00@mail.com", "john_newyork@mail.com", "johnsmith@mail.com"], ["John", "johnnybravo@mail.com"], ["Mary", "mary@mail.com"]]},
+    {"args": [[["Alice", "a1@mail.com"], ["Alice", "a2@mail.com"]]], "expected": [["Alice", "a1@mail.com"], ["Alice", "a2@mail.com"]]},
+    {"args": [[["Bob", "b@mail.com", "c@mail.com"], ["Bob", "c@mail.com", "d@mail.com"], ["Bob", "d@mail.com", "e@mail.com"]]], "expected": [["Bob", "b@mail.com", "c@mail.com", "d@mail.com", "e@mail.com"]]}
+  ],
+  "hints": [
+    "Treat each account index as a node; two accounts that share an email belong in the same connected component, so union-find is a natural fit.",
+    "Map each email to the first account index that registered it; when a later account reuses that email, union the two account indices together.",
+    "After unioning all accounts, group emails by their root account, collect each group's unique emails sorted alphabetically, then sort the final list of [name, ...emails] by name and then by first email."
+  ]
+}

@@ -43,7 +43,10 @@ CREATE TABLE IF NOT EXISTS graded_attempt (
     grade TEXT NOT NULL,
     complexity_ok INTEGER,
     error_code TEXT,
-    reviewed_at TEXT NOT NULL
+    reviewed_at TEXT NOT NULL,
+    approach_used TEXT,
+    self_explanation_score INTEGER,
+    feedback TEXT NOT NULL DEFAULT ''
 );
 """
 
@@ -62,6 +65,15 @@ class Store:
         self._conn = sqlite3.connect(str(db_path), check_same_thread=False)
         self._lock = threading.Lock()
         self._conn.executescript(_SCHEMA)
+        for stmt in (
+            "ALTER TABLE graded_attempt ADD COLUMN approach_used TEXT",
+            "ALTER TABLE graded_attempt ADD COLUMN self_explanation_score INTEGER",
+            "ALTER TABLE graded_attempt ADD COLUMN feedback TEXT NOT NULL DEFAULT ''",
+        ):
+            try:
+                self._conn.execute(stmt)
+            except sqlite3.OperationalError:
+                pass  # column already exists
         self._conn.commit()
 
     def get_card(self, problem_id: str) -> str | None:
@@ -127,15 +139,6 @@ class Store:
         assert cur.lastrowid is not None
         return cur.lastrowid
 
-    def record_review(self, attempt_id: int, problem_id: str, rating: int, review_log_json: str, reviewed_at: datetime) -> None:
-        with self._lock:
-            self._conn.execute(
-                "INSERT INTO review(attempt_id, problem_id, rating, review_log_json, reviewed_at) "
-                "VALUES(?,?,?,?,?)",
-                (attempt_id, problem_id, rating, review_log_json, _iso(reviewed_at)),
-            )
-            self._conn.commit()
-
     def ingest_verdict(
         self, attempt_id: int, problem_id: str, rating: int, card_json: str, next_due: datetime, review_log_json: str, reviewed_at: datetime,
     ) -> None:
@@ -179,17 +182,21 @@ class Store:
         self, attempt_id: int, problem_id: str, pattern: str, recall_pattern: str | None,
         hints_used: int, judge_passed: bool, grade: str, complexity_ok: bool | None,
         error_code: str | None, reviewed_at: datetime,
+        approach_used: str | None = None, self_explanation_score: int | None = None,
+        feedback: str = "",
     ) -> None:
         with self._lock:
             self._conn.execute(
                 "INSERT INTO graded_attempt(attempt_id, problem_id, pattern, recall_pattern, "
-                "hints_used, judge_passed, grade, complexity_ok, error_code, reviewed_at) "
-                "VALUES(?,?,?,?,?,?,?,?,?,?) "
+                "hints_used, judge_passed, grade, complexity_ok, error_code, reviewed_at, "
+                "approach_used, self_explanation_score, feedback) "
+                "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?) "
                 "ON CONFLICT(attempt_id) DO NOTHING",
                 (attempt_id, problem_id, pattern, recall_pattern, hints_used,
                  int(judge_passed), grade,
                  None if complexity_ok is None else int(complexity_ok),
-                 error_code, _iso(reviewed_at)),
+                 error_code, _iso(reviewed_at),
+                 approach_used, self_explanation_score, feedback),
             )
             self._conn.commit()
 
@@ -197,13 +204,15 @@ class Store:
         with self._lock:
             rows = self._conn.execute(
                 "SELECT problem_id, recall_pattern, hints_used, judge_passed, grade, "
-                "complexity_ok, error_code FROM graded_attempt WHERE pattern = ? "
+                "complexity_ok, error_code, approach_used, self_explanation_score, feedback "
+                "FROM graded_attempt WHERE pattern = ? "
                 "ORDER BY attempt_id", (pattern,),
             ).fetchall()
         return [
             {"problem_id": r[0], "recall_pattern": r[1], "hints_used": r[2],
              "judge_passed": bool(r[3]), "grade": r[4],
-             "complexity_ok": None if r[5] is None else bool(r[5]), "error_code": r[6]}
+             "complexity_ok": None if r[5] is None else bool(r[5]), "error_code": r[6],
+             "approach_used": r[7], "self_explanation_score": r[8], "feedback": r[9]}
             for r in rows
         ]
 

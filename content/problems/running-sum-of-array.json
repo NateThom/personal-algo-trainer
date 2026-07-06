@@ -1,0 +1,22 @@
+{
+  "id": "running-sum-of-array",
+  "pattern": "prefix-sum",
+  "title": "Running Sum of Array",
+  "difficulty": "easy",
+  "statement": "Given an array of integers nums, return an array result of the same length where result[i] is the sum of nums[0..i] (inclusive). This is known as the running sum of the array.",
+  "function_name": "running_sum",
+  "starter_code": "def running_sum(nums):\n    # your code here\n    pass\n",
+  "reference_solution": "def running_sum(nums):\n    result = []\n    total = 0\n    for n in nums:\n        total += n\n        result.append(total)\n    return result\n",
+  "tests": [
+    {"args": [[1, 2, 3, 4]], "expected": [1, 3, 6, 10]},
+    {"args": [[1, 1, 1, 1, 1]], "expected": [1, 2, 3, 4, 5]},
+    {"args": [[3, 1, 2, 10, 1]], "expected": [3, 4, 6, 16, 17]},
+    {"args": [[5]], "expected": [5]},
+    {"args": [[]], "expected": []}
+  ],
+  "hints": [
+    "Think about how the sum of a prefix relates to the sum of the previous prefix.",
+    "You only need to remember the running total as you scan left to right, not recompute each sum from scratch.",
+    "Keep a variable total = 0; for each element, add it to total, then append total to the result list."
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "reverse-in-k-groups",
+  "pattern": "linked-list",
+  "title": "Reverse a Playlist in Groups of K",
+  "difficulty": "medium",
+  "statement": "A playlist is represented as a plain list `songs` in play order, conceptually chained like a singly linked list where each song only knows the one after it. Reverse the order of songs in each consecutive group of k songs. If the number of remaining songs at the end is fewer than k, leave that final partial group in its original order. Return the resulting playlist as a list. Solve it using the in-place linked-list group-reversal technique (reverse pointers within each window using O(1) extra space per group, not by slicing and calling a built-in reverse on the whole structure).",
+  "function_name": "reverse_k_group",
+  "starter_code": "def reverse_k_group(songs, k):\n    # your code here\n    pass\n",
+  "reference_solution": "def reverse_k_group(songs, k):\n    n = len(songs)\n    result = list(songs)\n    for start in range(0, n, k):\n        end = start + k\n        if end > n:\n            break\n        left, right = start, end - 1\n        while left < right:\n            result[left], result[right] = result[right], result[left]\n            left += 1\n            right -= 1\n    return result\n",
+  "tests": [
+    {"args": [[1, 2, 3, 4, 5], 2], "expected": [2, 1, 4, 3, 5]},
+    {"args": [[1, 2, 3, 4, 5], 3], "expected": [3, 2, 1, 4, 5]},
+    {"args": [[1, 2, 3, 4, 5, 6], 2], "expected": [2, 1, 4, 3, 6, 5]},
+    {"args": [[1, 2, 3], 1], "expected": [1, 2, 3]},
+    {"args": [[1], 5], "expected": [1]},
+    {"args": [[1, 2, 3, 4, 5, 6], 6], "expected": [6, 5, 4, 3, 2, 1]}
+  ],
+  "hints": [
+    "This is the k-group reversal variant of the linked-list reversal pattern: reverse each full window of k nodes and leave a trailing short group untouched.",
+    "Only reverse a window if it has exactly k elements remaining; a shorter trailing window stays in its original order.",
+    "For each window [start, start+k), swap elements symmetrically from both ends inward (two-pointer in-place reversal) instead of building a new list with slicing."
+  ]
+}

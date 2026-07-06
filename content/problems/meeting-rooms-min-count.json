@@ -1,0 +1,23 @@
+{
+  "id": "meeting-rooms-min-count",
+  "pattern": "intervals",
+  "title": "Minimum Meeting Rooms",
+  "difficulty": "medium",
+  "statement": "You are given a list of meeting time intervals where each interval is [start, end] (a meeting occupies the half-open range [start, end)). Return the minimum number of conference rooms required to hold all the meetings without any overlap.",
+  "function_name": "min_meeting_rooms",
+  "starter_code": "def min_meeting_rooms(intervals):\n    # your code here\n    pass\n",
+  "reference_solution": "def min_meeting_rooms(intervals):\n    if not intervals:\n        return 0\n    starts = sorted(i[0] for i in intervals)\n    ends = sorted(i[1] for i in intervals)\n    rooms = 0\n    max_rooms = 0\n    s = e = 0\n    n = len(intervals)\n    while s < n:\n        if starts[s] < ends[e]:\n            rooms += 1\n            s += 1\n            max_rooms = max(max_rooms, rooms)\n        else:\n            rooms -= 1\n            e += 1\n    return max_rooms\n",
+  "tests": [
+    {"args": [[[0, 30], [5, 10], [15, 20]]], "expected": 2},
+    {"args": [[[7, 10], [2, 4]]], "expected": 1},
+    {"args": [[[1, 5], [5, 10], [10, 15]]], "expected": 1},
+    {"args": [[]], "expected": 0},
+    {"args": [[[1, 10], [2, 6], [3, 5], [4, 7]]], "expected": 4},
+    {"args": [[[1, 4]]], "expected": 1}
+  ],
+  "hints": [
+    "Think about tracking, at every moment in time, how many meetings are currently in progress simultaneously.",
+    "Sorting starts and ends separately lets you sweep through time events in order without building a full timeline.",
+    "Sort start times and end times independently. Walk through starts with a pointer; whenever the next start is before the earliest unfreed end, you need a new room (increment and track the max); otherwise a room frees up (advance the end pointer) before adding the new meeting."
+  ]
+}

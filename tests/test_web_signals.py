@@ -27,7 +27,7 @@ def _solve_and_grade(c, session_dir):
     judged = c.post("/api/judge", json={"problem_id": prob["id"], "code": code}).json()
     sess = c.post("/api/session", json={
         "problem_id": prob["id"], "code": code,
-        "recall": {"pattern": prob["pattern"], "approach": "x", "complexity": "O(n)"},
+        "recall": {"pattern": load_problem(prob["id"]).pattern, "approach": "x", "complexity": "O(n)"},
         "judge_passed": judged["passed"], "hints_used": 0,
     }).json()
     subprocess.run([sys.executable, "scripts/stub_tutor.py", str(session_dir),
@@ -95,8 +95,7 @@ def test_next_includes_pattern_pool_with_expected_keys(tmp_path):
     problem = c.get("/api/next").json()["problem"]
     assert problem is not None
     pool = problem["pattern_pool"]
-    assert set(pool.keys()) == {"pattern", "total", "unseen", "needs_more"}
-    assert pool["pattern"] == problem["pattern"]
+    assert set(pool.keys()) == {"total", "unseen", "needs_more"}
     assert pool["total"] >= 1
     assert pool["unseen"] == pool["total"]  # nothing attempted yet
     assert pool["needs_more"] == max(0, mastery_mod.GATE_BREADTH - pool["total"])
@@ -109,7 +108,7 @@ def test_next_pattern_pool_unseen_decreases_after_grading(tmp_path):
 
     r = c.get("/api/next")
     problem = r.json()["problem"]
-    if problem is not None and problem["pattern"] == prob["pattern"]:
+    if problem is not None and load_problem(problem["id"]).pattern == load_problem(prob["id"]).pattern:
         pool = problem["pattern_pool"]
         assert pool["unseen"] == pool["total"] - 1
 
@@ -124,8 +123,9 @@ def test_dashboard_patterns_include_instances_and_needs_more(tmp_path):
     r = c.get("/api/dashboard")
     assert r.status_code == 200
     pats = {p["pattern"]: p for p in r.json()["patterns"]}
-    assert prob["pattern"] in pats
-    entry = pats[prob["pattern"]]
+    expected_pattern = load_problem(prob["id"]).pattern
+    assert expected_pattern in pats
+    entry = pats[expected_pattern]
     assert "instances" in entry
     assert "needs_more" in entry
     assert entry["instances"] >= 1

@@ -1,0 +1,21 @@
+{
+  "id": "combination-sum-sorted",
+  "pattern": "backtracking",
+  "title": "Combination Sum, Sorted",
+  "difficulty": "medium",
+  "statement": "Given a list of distinct positive integers candidates and a positive integer target, find all unique combinations of candidates that sum to target. The same number may be chosen from candidates an unlimited number of times. Return the combinations as a list of lists, where each combination's numbers are listed in non-decreasing order, and the overall list of combinations is sorted lexicographically (comparing combinations element by element as lists).",
+  "function_name": "combination_sum_sorted",
+  "starter_code": "def combination_sum_sorted(candidates, target):\n    # your code here\n    pass\n",
+  "reference_solution": "def combination_sum_sorted(candidates, target):\n    candidates = sorted(candidates)\n    result = []\n    path = []\n\n    def backtrack(start, remaining):\n        if remaining == 0:\n            result.append(path[:])\n            return\n        for i in range(start, len(candidates)):\n            c = candidates[i]\n            if c > remaining:\n                break\n            path.append(c)\n            backtrack(i, remaining - c)\n            path.pop()\n\n    backtrack(0, target)\n    result.sort()\n    return result\n",
+  "tests": [
+    {"args": [[2, 3, 6, 7], 7], "expected": [[2, 2, 3], [7]]},
+    {"args": [[2, 3, 5], 8], "expected": [[2, 2, 2, 2], [2, 3, 3], [3, 5]]},
+    {"args": [[2], 1], "expected": []},
+    {"args": [[5], 5], "expected": [[5]]}
+  ],
+  "hints": [
+    "This is a backtracking enumeration problem where each candidate can be reused, so the recursion should not simply move to the next index after choosing an element.",
+    "Sort candidates first; recurse with a start index that allows re-choosing candidates[start] itself (to allow reuse) but never an earlier index (to avoid duplicate combinations like [2,3] and [3,2]), and prune once the remaining target goes negative.",
+    "backtrack(start, remaining): if remaining == 0, record path; for i from start to end, if candidates[i] > remaining break (sorted, so no smaller candidate ahead will fit either); else append candidates[i], recurse with (i, remaining - candidates[i]), then pop."
+  ]
+}

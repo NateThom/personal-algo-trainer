@@ -1,0 +1,22 @@
+{
+  "id": "longest-common-prefix-trie",
+  "pattern": "tries",
+  "title": "Longest Common Prefix of Word Group",
+  "difficulty": "easy",
+  "statement": "Given a list of lowercase words, return the longest string that is a prefix of every word in the list. If the list is empty or the words share no common prefix, return an empty string.",
+  "function_name": "longest_common_prefix",
+  "starter_code": "def longest_common_prefix(words):\n    # your code here\n    pass\n",
+  "reference_solution": "def longest_common_prefix(words):\n    if not words:\n        return \"\"\n    root = {}\n    END = \"$end\"\n    for word in words:\n        node = root\n        node[\"$cnt\"] = node.get(\"$cnt\", 0) + 1\n        for ch in word:\n            node = node.setdefault(ch, {})\n            node[\"$cnt\"] = node.get(\"$cnt\", 0) + 1\n        node[END] = True\n\n    n = len(words)\n    prefix_chars = []\n    node = root\n    for ch in words[0]:\n        child = node.get(ch)\n        if child is None or child.get(\"$cnt\", 0) != n:\n            break\n        prefix_chars.append(ch)\n        node = child\n    return \"\".join(prefix_chars)\n",
+  "tests": [
+    {"args": [["flower", "flow", "flight"]], "expected": "fl"},
+    {"args": [["dog", "racecar", "car"]], "expected": ""},
+    {"args": [["single"]], "expected": "single"},
+    {"args": [[]], "expected": ""},
+    {"args": [["interspecies", "interstellar", "interstate"]], "expected": "inters"}
+  ],
+  "hints": [
+    "Comparing every pair of words directly works but a trie makes the shared-prefix structure explicit: build one trie over all words and walk down while every word is still represented.",
+    "Track, at each trie node, how many of the input words pass through it. The longest common prefix is the path from the root for as long as that count stays equal to the total number of words.",
+    "Insert all words into a dict-based trie while incrementing a counter at every visited node. Then walk from the root along the first word's characters, stopping as soon as a child's counter is less than len(words); join the visited characters."
+  ]
+}

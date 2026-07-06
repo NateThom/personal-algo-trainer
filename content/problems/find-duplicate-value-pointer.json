@@ -1,0 +1,22 @@
+{
+  "id": "find-duplicate-value-pointer",
+  "pattern": "linked-list",
+  "title": "Find the Duplicate Value via Pointer Chasing",
+  "difficulty": "medium",
+  "statement": "You are given a list `nums` of n + 1 integers where every value is in the range [1, n]. Exactly one value appears at least twice while every other value appears exactly once. Treat each value as a 'pointer': from index i you may jump to index nums[i]. Because two different indices point to the duplicate value, following these jumps starting at index 0 eventually enters a cycle, and the entry point of that cycle is the duplicate value. Return the duplicate value. You must not modify the input list and must use O(1) extra space (no visited set) and O(n) time.",
+  "function_name": "find_duplicate",
+  "starter_code": "def find_duplicate(nums):\n    # your code here\n    pass\n",
+  "reference_solution": "def find_duplicate(nums):\n    slow = nums[0]\n    fast = nums[nums[0]]\n    while slow != fast:\n        slow = nums[slow]\n        fast = nums[nums[fast]]\n    slow = 0\n    while slow != fast:\n        slow = nums[slow]\n        fast = nums[fast]\n    return slow\n",
+  "tests": [
+    {"args": [[1, 3, 4, 2, 2]], "expected": 2},
+    {"args": [[3, 1, 3, 4, 2]], "expected": 3},
+    {"args": [[1, 1]], "expected": 1},
+    {"args": [[2, 2, 2, 2, 2]], "expected": 2},
+    {"args": [[1, 2, 3, 4, 4]], "expected": 4}
+  ],
+  "hints": [
+    "This is a disguised linked-list cycle problem: index i has an implicit 'next pointer' equal to nums[i], and the duplicate value creates two indices pointing at the same place, which forms a cycle.",
+    "Use Floyd's tortoise-and-hare: the entrance to the cycle in this pointer graph is exactly the duplicate value.",
+    "Phase 1: advance slow by one hop (slow = nums[slow]) and fast by two hops (fast = nums[nums[fast]]) starting from nums[0] until they meet. Phase 2: reset slow to 0 and advance both one hop at a time until they meet again; that meeting index is the answer."
+  ]
+}

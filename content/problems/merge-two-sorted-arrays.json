@@ -1,0 +1,22 @@
+{
+  "id": "merge-two-sorted-arrays",
+  "pattern": "two-pointers",
+  "title": "Merge Two Sorted Arrays",
+  "difficulty": "easy",
+  "statement": "Given two arrays a and b, each sorted in non-decreasing order, return a single array containing all elements of both, sorted in non-decreasing order.",
+  "function_name": "merge_sorted",
+  "starter_code": "def merge_sorted(a, b):\n    # your code here\n    pass\n",
+  "reference_solution": "def merge_sorted(a, b):\n    i, j = 0, 0\n    merged = []\n    while i < len(a) and j < len(b):\n        if a[i] <= b[j]:\n            merged.append(a[i])\n            i += 1\n        else:\n            merged.append(b[j])\n            j += 1\n    merged.extend(a[i:])\n    merged.extend(b[j:])\n    return merged\n",
+  "tests": [
+    {"args": [[1, 3, 5], [2, 4, 6]], "expected": [1, 2, 3, 4, 5, 6]},
+    {"args": [[], [1, 2, 3]], "expected": [1, 2, 3]},
+    {"args": [[1, 1, 1], [1, 1]], "expected": [1, 1, 1, 1, 1]},
+    {"args": [[5, 9], []], "expected": [5, 9]},
+    {"args": [[-3, 0, 4], [-2, -1, 7]], "expected": [-3, -2, -1, 0, 4, 7]}
+  ],
+  "hints": [
+    "Both arrays are already sorted, so you never need to sort the combined result from scratch.",
+    "Walk both arrays at once with a pointer each, always taking the smaller of the two current elements next.",
+    "While i < len(a) and j < len(b): compare a[i] and b[j], append the smaller and advance its pointer; once one array is exhausted, append the remainder of the other."
+  ]
+}

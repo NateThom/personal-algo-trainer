@@ -1,0 +1,21 @@
+{
+  "id": "count-islands",
+  "pattern": "graphs",
+  "title": "Count Islands",
+  "difficulty": "medium",
+  "statement": "You are given a 2D grid of 0s and 1s representing land (1) and water (0). An island is a group of 1s connected horizontally or vertically (not diagonally). The grid is given as a list of lists of integers, grid[row][col]. Return the number of distinct islands in the grid.",
+  "function_name": "count_islands",
+  "starter_code": "def count_islands(grid):\n    # your code here\n    pass\n",
+  "reference_solution": "def count_islands(grid):\n    if not grid or not grid[0]:\n        return 0\n    rows, cols = len(grid), len(grid[0])\n    visited = [[False] * cols for _ in range(rows)]\n    count = 0\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] == 1 and not visited[r][c]:\n                count += 1\n                stack = [(r, c)]\n                visited[r][c] = True\n                while stack:\n                    cr, cc = stack.pop()\n                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                        nr, nc = cr + dr, cc + dc\n                        if 0 <= nr < rows and 0 <= nc < cols and not visited[nr][nc] and grid[nr][nc] == 1:\n                            visited[nr][nc] = True\n                            stack.append((nr, nc))\n    return count\n",
+  "tests": [
+    {"args": [[[1, 1, 0, 0, 0], [1, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 1]]], "expected": 3},
+    {"args": [[[0, 0, 0], [0, 0, 0]]], "expected": 0},
+    {"args": [[[1]]], "expected": 1},
+    {"args": [[[1, 0, 1, 0, 1]]], "expected": 3}
+  ],
+  "hints": [
+    "This is a connected-components problem on a grid; each cell is a node connected to its up/down/left/right neighbors.",
+    "Use a visited set/array so each land cell is only counted once, and flood-fill outward from every unvisited land cell you find.",
+    "Iterate every cell; when you find an unvisited 1, increment your island count and run BFS/DFS marking all reachable 1s as visited before continuing the scan."
+  ]
+}

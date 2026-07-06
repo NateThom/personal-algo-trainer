@@ -1,0 +1,21 @@
+{
+  "id": "flood-fill-region",
+  "pattern": "graphs",
+  "title": "Flood Fill",
+  "difficulty": "easy",
+  "statement": "You are given an image as a grid of integers, where image[r][c] is the pixel's color, plus a starting pixel (sr, sc) and a new color. Repaint the starting pixel and every pixel connected to it 4-directionally (up/down/left/right) through pixels of the starting pixel's original color, using the new color. Return the resulting image as a list of lists. If the starting pixel already has the new color, return the image unchanged.",
+  "function_name": "flood_fill",
+  "starter_code": "def flood_fill(image, sr, sc, new_color):\n    # your code here\n    pass\n",
+  "reference_solution": "def flood_fill(image, sr, sc, new_color):\n    old = image[sr][sc]\n    if old == new_color:\n        return image\n    rows, cols = len(image), len(image[0])\n    stack = [(sr, sc)]\n    while stack:\n        r, c = stack.pop()\n        if 0 <= r < rows and 0 <= c < cols and image[r][c] == old:\n            image[r][c] = new_color\n            stack.extend([(r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)])\n    return image\n",
+  "tests": [
+    {"args": [[[1, 1, 1], [1, 1, 0], [1, 0, 1]], 1, 1, 2], "expected": [[2, 2, 2], [2, 2, 0], [2, 0, 1]]},
+    {"args": [[[0, 0, 0], [0, 0, 0]], 0, 0, 0], "expected": [[0, 0, 0], [0, 0, 0]]},
+    {"args": [[[5]], 0, 0, 9], "expected": [[9]]},
+    {"args": [[[1, 2], [2, 1]], 0, 0, 3], "expected": [[3, 2], [2, 1]]}
+  ],
+  "hints": [
+    "Treat the grid as a graph: pixels are nodes, 4-directional neighbors of the same color are edges.",
+    "Record the starting pixel's original color first; only spread onto pixels that still have exactly that color, and guard the old == new case to avoid infinite spreading.",
+    "DFS or BFS from (sr, sc): pop a cell, if in bounds and still the old color, repaint it and push its four neighbors."
+  ]
+}

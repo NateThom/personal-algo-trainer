@@ -1,0 +1,22 @@
+{
+  "id": "longest-substring-without-repeating",
+  "pattern": "sliding-window",
+  "title": "Longest Substring Without Repeating Characters",
+  "difficulty": "medium",
+  "statement": "Given a string s, return the length of the longest contiguous substring that contains no repeated characters.",
+  "function_name": "longest_unique_substring",
+  "starter_code": "def longest_unique_substring(s):\n    # your code here\n    pass\n",
+  "reference_solution": "def longest_unique_substring(s):\n    last_seen = {}\n    left = 0\n    best = 0\n    for right, ch in enumerate(s):\n        if ch in last_seen and last_seen[ch] >= left:\n            left = last_seen[ch] + 1\n        last_seen[ch] = right\n        best = max(best, right - left + 1)\n    return best\n",
+  "tests": [
+    {"args": ["abcabcbb"], "expected": 3},
+    {"args": ["bbbbb"], "expected": 1},
+    {"args": ["pwwkew"], "expected": 3},
+    {"args": [""], "expected": 0},
+    {"args": ["dvdf"], "expected": 3}
+  ],
+  "hints": [
+    "Grow a window over the string and shrink it from the left whenever a duplicate character appears.",
+    "Track the last index at which each character was seen so you know exactly how far to move the left edge.",
+    "For each right pointer, if s[right] was last seen at or after left, set left = last_seen[s[right]] + 1; then update last_seen and the best length as right - left + 1."
+  ]
+}

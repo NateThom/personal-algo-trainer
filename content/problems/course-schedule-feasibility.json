@@ -1,0 +1,22 @@
+{
+  "id": "course-schedule-feasibility",
+  "pattern": "topological-sort",
+  "title": "Course Schedule Feasibility",
+  "difficulty": "medium",
+  "statement": "There are num_courses courses labeled 0 to num_courses - 1. You are given prerequisites, a list of pairs [a, b] meaning you must take course b before course a. Return true if it is possible to finish all courses (i.e. the prerequisite graph contains no cycle), or false otherwise.",
+  "function_name": "can_finish",
+  "starter_code": "def can_finish(num_courses, prerequisites):\n    # your code here\n    pass\n",
+  "reference_solution": "from collections import deque\n\n\ndef can_finish(num_courses, prerequisites):\n    adj = [[] for _ in range(num_courses)]\n    indegree = [0] * num_courses\n    for a, b in prerequisites:\n        adj[b].append(a)\n        indegree[a] += 1\n    queue = deque(i for i in range(num_courses) if indegree[i] == 0)\n    visited = 0\n    while queue:\n        node = queue.popleft()\n        visited += 1\n        for nxt in adj[node]:\n            indegree[nxt] -= 1\n            if indegree[nxt] == 0:\n                queue.append(nxt)\n    return visited == num_courses\n",
+  "tests": [
+    {"args": [2, [[1, 0]]], "expected": true},
+    {"args": [2, [[1, 0], [0, 1]]], "expected": false},
+    {"args": [4, [[1, 0], [2, 0], [3, 1], [3, 2]]], "expected": true},
+    {"args": [1, []], "expected": true},
+    {"args": [3, [[0, 1], [1, 2], [2, 0]]], "expected": false}
+  ],
+  "hints": [
+    "Model courses as a directed graph and think about what a cycle would mean for finishing all courses.",
+    "Use Kahn's algorithm: repeatedly remove nodes with indegree 0 and decrement their neighbors' indegree.",
+    "Count how many nodes you manage to process this way; if it is less than num_courses, a cycle exists so return false, otherwise return true."
+  ]
+}

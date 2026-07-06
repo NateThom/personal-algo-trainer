@@ -1,0 +1,23 @@
+{
+  "id": "merge-intervals",
+  "pattern": "intervals",
+  "title": "Merge Intervals",
+  "difficulty": "medium",
+  "statement": "Given a list of intervals where each interval is [start, end] with start <= end, merge all overlapping intervals and return the resulting list of non-overlapping intervals that cover all the intervals in the input. Two intervals overlap if they share at least one point (e.g. [1,3] and [3,5] overlap and should merge into [1,5]). Return the merged intervals sorted by start value ascending.",
+  "function_name": "merge_intervals",
+  "starter_code": "def merge_intervals(intervals):\n    # your code here\n    pass\n",
+  "reference_solution": "def merge_intervals(intervals):\n    if not intervals:\n        return []\n    ordered = sorted(intervals, key=lambda x: x[0])\n    merged = [list(ordered[0])]\n    for start, end in ordered[1:]:\n        last = merged[-1]\n        if start <= last[1]:\n            last[1] = max(last[1], end)\n        else:\n            merged.append([start, end])\n    return merged\n",
+  "tests": [
+    {"args": [[[1, 3], [2, 6], [8, 10], [15, 18]]], "expected": [[1, 6], [8, 10], [15, 18]]},
+    {"args": [[[1, 4], [4, 5]]], "expected": [[1, 5]]},
+    {"args": [[[1, 4], [0, 4]]], "expected": [[0, 4]]},
+    {"args": [[]], "expected": []},
+    {"args": [[[5, 10]]], "expected": [[5, 10]]},
+    {"args": [[[1, 2], [3, 4], [5, 6]]], "expected": [[1, 2], [3, 4], [5, 6]]}
+  ],
+  "hints": [
+    "Comparing every pair of intervals for overlap is O(n^2); sorting first makes a single linear pass sufficient.",
+    "Once sorted by start, an interval only needs to be compared against the last merged interval, since anything earlier is already resolved.",
+    "Sort by start. Keep a merged list; for each interval, if its start is <= the end of the last merged interval, extend that interval's end to the max of the two ends, otherwise append it as a new interval."
+  ]
+}

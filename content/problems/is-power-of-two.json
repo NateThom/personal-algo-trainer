@@ -1,0 +1,23 @@
+{
+  "id": "is-power-of-two",
+  "pattern": "bit-manipulation",
+  "title": "Is Power of Two",
+  "difficulty": "easy",
+  "statement": "Given an integer n, return true if n is a power of two (i.e. n = 2^k for some non-negative integer k), and false otherwise. n may be negative, zero, or positive. Solve it using a constant-time bit trick rather than looping or using logarithms.",
+  "function_name": "is_power_of_two",
+  "starter_code": "def is_power_of_two(n):\n    # your code here\n    pass\n",
+  "reference_solution": "def is_power_of_two(n):\n    return n > 0 and (n & (n - 1)) == 0\n",
+  "tests": [
+    {"args": [1], "expected": true},
+    {"args": [16], "expected": true},
+    {"args": [3], "expected": false},
+    {"args": [0], "expected": false},
+    {"args": [-4], "expected": false},
+    {"args": [1024], "expected": true}
+  ],
+  "hints": [
+    "Think about what the binary representation of a power of two looks like compared to other numbers.",
+    "A power of two has exactly one bit set; subtracting 1 from it flips that bit and all bits below it (which there are none).",
+    "Check n > 0 and that n & (n - 1) equals 0, which is true only when n has a single set bit."
+  ]
+}

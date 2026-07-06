@@ -1,0 +1,22 @@
+{
+  "id": "zero-one-knapsack",
+  "pattern": "dp-2d",
+  "title": "0/1 Knapsack",
+  "difficulty": "medium",
+  "statement": "You are given a list weights and a list values of equal length, where item i has weight weights[i] and value values[i], plus an integer capacity for a knapsack. Each item may be used at most once (0/1 knapsack). Return the maximum total value achievable without the total weight exceeding capacity. If there are no items or capacity is 0, the answer is 0.",
+  "function_name": "knapsack",
+  "starter_code": "def knapsack(weights, values, capacity):\n    # your code here\n    pass\n",
+  "reference_solution": "def knapsack(weights, values, capacity):\n    n = len(weights)\n    dp = [[0] * (capacity + 1) for _ in range(n + 1)]\n    for i in range(1, n + 1):\n        w, v = weights[i - 1], values[i - 1]\n        for c in range(capacity + 1):\n            dp[i][c] = dp[i - 1][c]\n            if w <= c:\n                dp[i][c] = max(dp[i][c], dp[i - 1][c - w] + v)\n    return dp[n][capacity]\n",
+  "tests": [
+    {"args": [[], [], 10], "expected": 0},
+    {"args": [[1, 3, 4, 5], [1, 4, 5, 7], 0], "expected": 0},
+    {"args": [[1, 3, 4, 5], [1, 4, 5, 7], 7], "expected": 9},
+    {"args": [[2, 3, 4, 5], [3, 4, 5, 6], 5], "expected": 7},
+    {"args": [[5, 4, 6, 3], [10, 40, 30, 50], 10], "expected": 90}
+  ],
+  "hints": [
+    "For each item you only have two choices — leave it out or take it — and taking it uses up part of the remaining capacity, so track best value as a function of both how many items you've considered and how much capacity remains.",
+    "Let dp[i][c] be the best value achievable using the first i items with capacity c. dp[i][c] = dp[i-1][c] (skip item i) or, if it fits, dp[i-1][c-weight[i]] + value[i] (take item i) — take the max of the two.",
+    "Build a table dp of size (n+1) x (capacity+1) initialized to 0; for each item i from 1 to n, for each capacity c from 0 to capacity, set dp[i][c] = dp[i-1][c], and if weights[i-1] <= c also compare against dp[i-1][c-weights[i-1]] + values[i-1]; return dp[n][capacity]."
+  ]
+}

@@ -57,12 +57,12 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
     problems: dict = {}
 
     def _reload_problems() -> int:
-        problems.clear()
-        for p in load_problems(content_dir):
-            problems[p.id] = p
+        nonlocal problems
+        new_map = {p.id: p for p in load_problems(content_dir)}
         for p in load_generated(generated_dir):
             # seed ids win over generated on collision (setdefault keeps the seed)
-            problems.setdefault(p.id, p)
+            new_map.setdefault(p.id, p)
+        problems = new_map
         return len(problems)
 
     _reload_problems()
@@ -83,7 +83,7 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
             if pid in problems and problems[pid].pattern == pattern
         )
         return {
-            "pattern": pattern, "total": total, "unseen": total - seen,
+            "total": total, "unseen": total - seen,
             "needs_more": max(0, mastery_mod.GATE_BREADTH - total),
         }
 
@@ -146,7 +146,7 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
         pid = reviews[0] if reviews else (novel[0] if novel else plan.order[0])
         p = problems[pid]
         return {"problem": {
-            "id": p.id, "title": p.title, "pattern": p.pattern,
+            "id": p.id, "title": p.title,
             "difficulty": p.difficulty, "statement": p.statement,
             "function_name": p.function_name, "starter_code": p.starter_code,
             "seen_count": store.attempt_count_for_problem(p.id),
@@ -231,11 +231,14 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
             "total_problems": len(problems),
             "patterns": _mastery_list(),
             "error_counts": store.error_counts_by_pattern(),
+            "next_review_due": min(due_map.values()).isoformat() if due_map else None,
         }
 
     @app.post("/api/judge")
     def judge(body: JudgeBody):
-        p = problems[body.problem_id]
+        p = problems.get(body.problem_id)
+        if p is None:
+            raise HTTPException(status_code=404, detail="unknown problem")
         r = run_submission(body.code, p.function_name, p.tests)
         return {
             "passed": r.passed, "error": r.error, "runtime_ms": r.runtime_ms,
@@ -247,6 +250,9 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
 
     @app.post("/api/session")
     def session(body: SessionBody):
+        p = problems.get(body.problem_id)
+        if p is None:
+            raise HTTPException(status_code=404, detail="unknown problem")
         now = datetime.now(timezone.utc)
         attempt_id = store.record_attempt(
             body.problem_id, body.code, body.recall.get("pattern"),
@@ -254,7 +260,6 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
             body.judge_passed, body.hints_used, now,
         )
         sid = uuid.uuid4().hex[:12]
-        p = problems[body.problem_id]
         sf = SessionFile(
             session_id=sid, attempt_id=attempt_id,
             problem={"id": p.id, "title": p.title, "pattern": p.pattern,
@@ -275,6 +280,24 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
             return {"hint": None, "tier": body.tier, "has_more": False}
         return {"hint": hints[body.tier], "tier": body.tier,
                 "has_more": body.tier + 1 < len(hints)}
+
+    @app.get("/api/verdicts/pending")
+    def verdicts_pending():
+        out = []
+        if session_dir.exists():
+            for path in sorted(session_dir.glob("verdict-*.json")):
+                sid = path.stem.removeprefix("verdict-")
+                try:
+                    v = read_verdict(session_dir, sid)
+                except Exception:
+                    continue  # malformed file: not ingestable, skip
+                if not store.attempt_has_review(v.attempt_id):
+                    out.append({"session_id": sid, "problem_id": v.problem_id, "grade": v.grade})
+        return {"pending": out}
+
+    @app.get("/api/verdict/status")
+    def verdict_status(session_id: str):
+        return {"ready": (session_dir / f"verdict-{session_id}.json").exists()}
 
     @app.post("/api/verdict/ingest")
     def ingest(body: IngestBody):
@@ -318,6 +341,9 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
             judge_passed=(attempt or {}).get("judge_passed", False),
             grade=verdict.grade, complexity_ok=verdict.complexity_ok,
             error_code=verdict.error_code, reviewed_at=now,
+            approach_used=verdict.approach_used,
+            self_explanation_score=verdict.self_explanation_score,
+            feedback=verdict.feedback,
         )
 
         return {"grade": verdict.grade, "next_due": next_due.isoformat(),

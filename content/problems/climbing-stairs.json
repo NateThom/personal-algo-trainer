@@ -1,0 +1,22 @@
+{
+  "id": "climbing-stairs",
+  "pattern": "dp-1d",
+  "title": "Climbing Stairs",
+  "difficulty": "easy",
+  "statement": "You are climbing a staircase that has n steps. Each move, you can climb either 1 step or 2 steps. Given an integer n (0 <= n <= 45), return the number of distinct ways you can climb to the top. n = 0 counts as exactly one way (you are already at the top, so there is one 'empty' sequence of moves).",
+  "function_name": "climb_stairs",
+  "starter_code": "def climb_stairs(n):\n    # your code here\n    pass\n",
+  "reference_solution": "def climb_stairs(n):\n    if n <= 1:\n        return 1\n    prev2, prev1 = 1, 1\n    for _ in range(2, n + 1):\n        prev2, prev1 = prev1, prev2 + prev1\n    return prev1\n",
+  "tests": [
+    {"args": [0], "expected": 1},
+    {"args": [1], "expected": 1},
+    {"args": [2], "expected": 2},
+    {"args": [5], "expected": 8},
+    {"args": [10], "expected": 89}
+  ],
+  "hints": [
+    "Think about the last move you make: it is either a single step from n-1, or a double step from n-2.",
+    "The number of ways to reach step n is the sum of the ways to reach step n-1 and step n-2 — this is a 1-D recurrence with only two prior states needed.",
+    "Keep two running variables prev2, prev1 for ways(n-2) and ways(n-1); iterate from 2 to n updating prev2, prev1 = prev1, prev2 + prev1, and handle n <= 1 as a base case returning 1."
+  ]
+}

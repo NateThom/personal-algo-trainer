@@ -1,9 +1,11 @@
 import subprocess
 import sys
+from datetime import datetime
 from pathlib import Path
 
 from fastapi.testclient import TestClient
 
+from algotrainer.content import load_problem
 from algotrainer.handoff.schema import Verdict
 from algotrainer.web.app import create_app
 
@@ -35,7 +37,7 @@ def _run_full_loop_up_to_ingest(tmp_path):
     judged = c.post("/api/judge", json={"problem_id": prob["id"], "code": code}).json()
     sess = c.post("/api/session", json={
         "problem_id": prob["id"], "code": code,
-        "recall": {"pattern": prob["pattern"], "approach": "x", "complexity": "O(n)"},
+        "recall": {"pattern": load_problem(prob["id"]).pattern, "approach": "x", "complexity": "O(n)"},
         "judge_passed": judged["passed"], "hints_used": 0,
     }).json()
 
@@ -63,6 +65,13 @@ def test_next_returns_problem_without_solution(tmp_path):
     assert "tests" not in prob
 
 
+def test_next_does_not_leak_pattern(tmp_path):
+    c = _client(tmp_path)
+    p = c.get("/api/next").json()["problem"]
+    assert "pattern" not in p
+    assert "pattern" not in p["pattern_pool"]
+
+
 def test_judge_endpoint_runs_code(tmp_path):
     c = _client(tmp_path)
     code = ("def two_sum(nums, target):\n    seen={}\n"
@@ -72,6 +81,19 @@ def test_judge_endpoint_runs_code(tmp_path):
     r = c.post("/api/judge", json={"problem_id": "two-sum", "code": code})
     assert r.status_code == 200
     assert r.json()["passed"] is True
+
+
+def test_judge_unknown_problem_404(tmp_path):
+    c = _client(tmp_path)
+    r = c.post("/api/judge", json={"problem_id": "nope", "code": "x = 1"})
+    assert r.status_code == 404
+
+
+def test_session_unknown_problem_404(tmp_path):
+    c = _client(tmp_path)
+    r = c.post("/api/session", json={
+        "problem_id": "nope", "code": "x", "recall": {}, "judge_passed": False})
+    assert r.status_code == 404
 
 
 def test_full_loop_with_stub_tutor(tmp_path):
@@ -89,7 +111,7 @@ def test_full_loop_with_stub_tutor(tmp_path):
     judged = c.post("/api/judge", json={"problem_id": prob["id"], "code": code}).json()
     sess = c.post("/api/session", json={
         "problem_id": prob["id"], "code": code,
-        "recall": {"pattern": prob["pattern"], "approach": "x", "complexity": "O(n)"},
+        "recall": {"pattern": load_problem(prob["id"]).pattern, "approach": "x", "complexity": "O(n)"},
         "judge_passed": judged["passed"], "hints_used": 0,
     }).json()
 
@@ -140,6 +162,84 @@ def test_ingest_rejects_session_mismatch(tmp_path):
     assert r.status_code == 400
 
 
+def test_verdict_status_not_ready_for_unknown_session(tmp_path):
+    c = _client(tmp_path)
+    r = c.get("/api/verdict/status", params={"session_id": "no-such-session"})
+    assert r.json() == {"ready": False}
+
+
+def test_verdict_status_ready_once_verdict_file_exists(tmp_path):
+    c, sess, session_dir, db_path = _run_full_loop_up_to_ingest(tmp_path)
+    r = c.get("/api/verdict/status", params={"session_id": sess["session_id"]})
+    assert r.json() == {"ready": True}
+
+
 def load_default_solution(problem_id: str) -> str:
     from algotrainer.content import load_problem
     return load_problem(problem_id).reference_solution
+
+
+def test_pending_verdicts_empty_when_session_dir_missing(tmp_path):
+    c = _client(tmp_path)
+    r = c.get("/api/verdicts/pending")
+    assert r.status_code == 200
+    assert r.json() == {"pending": []}
+
+
+def test_pending_verdicts_lists_only_non_ingested(tmp_path):
+    c, sess, session_dir, db_path = _run_full_loop_up_to_ingest(tmp_path)
+
+    # A second full loop produces another verdict that we leave un-ingested.
+    prob2 = c.get("/api/next").json()["problem"]
+    code2 = load_default_solution(prob2["id"])
+    judged2 = c.post("/api/judge", json={"problem_id": prob2["id"], "code": code2}).json()
+    from algotrainer.content import load_problem as _lp
+    sess2 = c.post("/api/session", json={
+        "problem_id": prob2["id"], "code": code2,
+        "recall": {"pattern": _lp(prob2["id"]).pattern, "approach": "x", "complexity": "O(n)"},
+        "judge_passed": judged2["passed"], "hints_used": 0,
+    }).json()
+    subprocess.run(
+        [sys.executable, "scripts/stub_tutor.py", str(session_dir), sess2["session_id"]],
+        check=True, cwd=Path(__file__).resolve().parent.parent,
+    )
+
+    # Ingest only the first session's verdict.
+    c.post("/api/verdict/ingest", json={"session_id": sess["session_id"]})
+
+    r = c.get("/api/verdicts/pending")
+    assert r.status_code == 200
+    pending = r.json()["pending"]
+    assert [p["session_id"] for p in pending] == [sess2["session_id"]]
+    assert pending[0]["problem_id"] == prob2["id"]
+    assert pending[0]["grade"] in {"again", "hard", "good", "easy"}
+
+
+def test_pending_verdicts_skips_malformed_file(tmp_path):
+    c, sess, session_dir, db_path = _run_full_loop_up_to_ingest(tmp_path)
+    c.post("/api/verdict/ingest", json={"session_id": sess["session_id"]})
+
+    bad_path = session_dir / "verdict-badsession.json"
+    bad_path.write_text("not valid json {{{")
+
+    r = c.get("/api/verdicts/pending")
+    assert r.status_code == 200
+    assert r.json() == {"pending": []}
+
+
+def test_dashboard_next_review_due_is_none_for_fresh_db(tmp_path):
+    c = _client(tmp_path)
+    r = c.get("/api/dashboard")
+    assert r.status_code == 200
+    assert r.json()["next_review_due"] is None
+
+
+def test_dashboard_next_review_due_is_parseable_after_ingest(tmp_path):
+    c, sess, session_dir, db_path = _run_full_loop_up_to_ingest(tmp_path)
+    c.post("/api/verdict/ingest", json={"session_id": sess["session_id"]})
+
+    r = c.get("/api/dashboard")
+    assert r.status_code == 200
+    next_review_due = r.json()["next_review_due"]
+    assert next_review_due is not None
+    datetime.fromisoformat(next_review_due)

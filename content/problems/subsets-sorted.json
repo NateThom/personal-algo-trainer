@@ -1,0 +1,21 @@
+{
+  "id": "subsets-sorted",
+  "pattern": "backtracking",
+  "title": "All Subsets, Sorted",
+  "difficulty": "easy",
+  "statement": "Given a list of distinct integers nums, return all possible subsets (the power set). Each subset must be returned as a list of its elements in ascending order, and the overall list of subsets must be sorted lexicographically (comparing subsets element by element as lists, where a shorter subset that is a prefix of a longer one comes first, e.g. [] < [1] < [1, 2] < [2]).",
+  "function_name": "subsets_sorted",
+  "starter_code": "def subsets_sorted(nums):\n    # your code here\n    pass\n",
+  "reference_solution": "def subsets_sorted(nums):\n    nums = sorted(nums)\n    n = len(nums)\n    result = []\n\n    def backtrack(start, path):\n        result.append(path[:])\n        for i in range(start, n):\n            path.append(nums[i])\n            backtrack(i + 1, path)\n            path.pop()\n\n    backtrack(0, [])\n    result.sort()\n    return result\n",
+  "tests": [
+    {"args": [[]], "expected": [[]]},
+    {"args": [[1]], "expected": [[], [1]]},
+    {"args": [[1, 2]], "expected": [[], [1], [1, 2], [2]]},
+    {"args": [[3, 1, 2]], "expected": [[], [1], [1, 2], [1, 2, 3], [1, 3], [2], [2, 3], [3]]}
+  ],
+  "hints": [
+    "This is a classic backtracking enumeration: at each step you either include or exclude the next candidate.",
+    "Sort the input first so subsets are built in ascending element order; recurse with a start index so each element is only considered once per branch.",
+    "backtrack(start, path): append a copy of path to results, then for i from start to end, append nums[i] to path, recurse with i+1, then pop. Sort the final result list before returning."
+  ]
+}

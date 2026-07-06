@@ -1,0 +1,23 @@
+{
+  "id": "is-symmetric-tree",
+  "pattern": "trees",
+  "title": "Symmetric Snowflake Structure",
+  "difficulty": "easy",
+  "statement": "A decoration designer models a snowflake as a binary tree given in level-order array form: `tree` is a list where tree[0] is the root and the tree is reconstructed by scanning the array left to right, assigning each successive value as the left then right child of the next node still waiting for children (missing children are the value null). Determine whether the tree is a mirror of itself across its vertical axis (i.e., the left subtree of the root is a mirror image of the right subtree). Return true if it is symmetric, false otherwise. An empty tree is considered symmetric.",
+  "function_name": "is_symmetric",
+  "starter_code": "def is_symmetric(tree):\n    # your code here\n    pass\n",
+  "reference_solution": "def _build(tree):\n    if not tree or tree[0] is None:\n        return None\n    nodes = [None if v is None else {'val': v, 'left': None, 'right': None} for v in tree]\n    kids = iter(range(1, len(nodes)))\n    for node in nodes:\n        if node is None:\n            continue\n        for side in ('left', 'right'):\n            idx = next(kids, None)\n            if idx is not None and idx < len(nodes) and nodes[idx] is not None:\n                node[side] = nodes[idx]\n    return nodes[0]\n\n\ndef is_symmetric(tree):\n    root = _build(tree)\n    if root is None:\n        return True\n\n    def mirror(a, b):\n        if a is None and b is None:\n            return True\n        if a is None or b is None:\n            return False\n        if a['val'] != b['val']:\n            return False\n        return mirror(a['left'], b['right']) and mirror(a['right'], b['left'])\n\n    return mirror(root['left'], root['right'])\n",
+  "tests": [
+    {"args": [[1, 2, 2, 3, 4, 4, 3]], "expected": true},
+    {"args": [[1, 2, 2, null, 3, null, 3]], "expected": false},
+    {"args": [[1]], "expected": true},
+    {"args": [[]], "expected": true},
+    {"args": [[1, 2, 2]], "expected": true},
+    {"args": [[2, 3, 3, 4, 5, 5, 4]], "expected": true}
+  ],
+  "hints": [
+    "This is a DFS-over-trees problem: compare the left and right subtrees as mirror images rather than comparing the tree to itself.",
+    "Two subtrees are mirrors when their root values match and each one's left subtree mirrors the other's right subtree (and vice versa).",
+    "Write a helper mirror(a, b) that returns True if both are None, False if only one is None or their values differ, and otherwise returns mirror(a.left, b.right) and mirror(a.right, b.left); call it with the root's left and right children."
+  ]
+}

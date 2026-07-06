@@ -1,0 +1,22 @@
+{
+  "id": "house-robber",
+  "pattern": "dp-1d",
+  "title": "House Robber",
+  "difficulty": "medium",
+  "statement": "A row of houses stands along a street, each holding some amount of money given by the integer list nums, where nums[i] is the money in house i. You may rob any subset of houses, but you cannot rob two houses that are directly adjacent (that would trigger the alarm). Return the maximum total amount of money you can rob. nums may be empty, in which case the answer is 0.",
+  "function_name": "rob",
+  "starter_code": "def rob(nums):\n    # your code here\n    pass\n",
+  "reference_solution": "def rob(nums):\n    prev2, prev1 = 0, 0\n    for x in nums:\n        prev2, prev1 = prev1, max(prev1, prev2 + x)\n    return prev1\n",
+  "tests": [
+    {"args": [[]], "expected": 0},
+    {"args": [[5]], "expected": 5},
+    {"args": [[1, 2, 3, 1]], "expected": 4},
+    {"args": [[2, 7, 9, 3, 1]], "expected": 12},
+    {"args": [[2, 1, 1, 2]], "expected": 4}
+  ],
+  "hints": [
+    "At each house you face a binary choice: skip it, or rob it and skip the previous one — this suggests a running best-so-far state rather than examining every subset.",
+    "Define best(i) as the max loot using houses 0..i. best(i) = max(best(i-1), best(i-2) + nums[i]), since robbing house i forbids also using house i-1's own inclusion.",
+    "Track only the last two best values (prev2, prev1); for each house x, compute prev2, prev1 = prev1, max(prev1, prev2 + x), and return prev1 at the end (0 for an empty list)."
+  ]
+}

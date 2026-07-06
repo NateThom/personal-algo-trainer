@@ -8,11 +8,12 @@
   <link rel="stylesheet" href="/static/app.css" />
 </head>
 <body>
-  <header><h1>AlgoTrainer</h1><span id="stats"></span><span id="pattern-badge"></span></header>
+  <header><h1>AlgoTrainer</h1><span id="stats"></span></header>
   <p class="firstrun">New here? Start with the <a href="/guide">Guide</a> and the <a href="/methodology">Methodology</a>.</p>
   <main>
+    <div id="pending-verdicts" hidden></div>
     <section id="problem">
-      <h2 id="title">Loading… <span id="seen-badge"></span></h2>
+      <h2><span id="title">Loading…</span> <span id="seen-badge"></span></h2>
       <div id="pool-banner" class="pool-banner" hidden></div>
       <p id="statement"></p>
     </section>
@@ -30,6 +31,7 @@
         <button id="run">Run tests</button>
         <button id="handoff" disabled>Send to tutor</button>
         <button id="ingest" disabled>Ingest verdict</button>
+        <button id="copy-cmd" disabled>Copy tutor command</button>
       </div>
       <pre id="results"></pre>
       <div id="hints"></div>

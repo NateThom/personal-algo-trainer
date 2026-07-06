@@ -8,10 +8,9 @@ def test_reset_progress_clears_all_learner_tables(tmp_path):
     now = datetime.now(timezone.utc)
     due = now + timedelta(days=1)
     # populate every learner table
-    s.save_card("two-sum", "{}", due)
     s.save_pattern_card("arrays-hashing", "{}", due)
     aid = s.record_attempt("two-sum", "code", "arrays-hashing", "hm", "O(n)", True, 0, now)
-    s.record_review(aid, "two-sum", 3, "{}", now)
+    s.ingest_verdict(aid, "two-sum", 3, "{}", due, "{}", now)
     s.record_graded_attempt(aid, "two-sum", "arrays-hashing", "arrays-hashing",
                             0, True, "good", True, None, now)
 

@@ -1,0 +1,22 @@
+{
+  "id": "counting-bits-sequence",
+  "pattern": "bit-manipulation",
+  "title": "Counting Bits Sequence",
+  "difficulty": "easy",
+  "statement": "Given a non-negative integer n, return a list ans of length n + 1 where ans[i] is the number of 1 bits in the binary representation of i, for every i from 0 to n. Your solution should run in O(n) total time (avoid calling a population-count routine independently for every value).",
+  "function_name": "count_bits",
+  "starter_code": "def count_bits(n):\n    # your code here\n    pass\n",
+  "reference_solution": "def count_bits(n):\n    ans = [0] * (n + 1)\n    for i in range(1, n + 1):\n        ans[i] = ans[i >> 1] + (i & 1)\n    return ans\n",
+  "tests": [
+    {"args": [0], "expected": [0]},
+    {"args": [2], "expected": [0, 1, 1]},
+    {"args": [5], "expected": [0, 1, 1, 2, 1, 2]},
+    {"args": [8], "expected": [0, 1, 1, 2, 1, 2, 2, 3, 1]},
+    {"args": [1], "expected": [0, 1]}
+  ],
+  "hints": [
+    "Counting bits for every number independently is O(n log n); look for a way to reuse previously computed answers.",
+    "Notice that i >> 1 drops the last bit of i, and (i & 1) tells you whether that dropped bit was a 1.",
+    "Build the answer array bottom-up with ans[i] = ans[i >> 1] + (i & 1), starting from ans[0] = 0."
+  ]
+}

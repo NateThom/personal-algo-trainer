@@ -17,7 +17,7 @@ def _solve_and_grade(c, session_dir, db_path):
     judged = c.post("/api/judge", json={"problem_id": prob["id"], "code": code}).json()
     sess = c.post("/api/session", json={
         "problem_id": prob["id"], "code": code,
-        "recall": {"pattern": prob["pattern"], "approach": "x", "complexity": "O(n)"},
+        "recall": {"pattern": load_problem(prob["id"]).pattern, "approach": "x", "complexity": "O(n)"},
         "judge_passed": judged["passed"], "hints_used": 0,
     }).json()
     subprocess.run([sys.executable, "scripts/stub_tutor.py", str(session_dir),
@@ -37,8 +37,8 @@ def test_ingest_writes_graded_attempt_and_pattern_card(tmp_path):
     pc = conn.execute("SELECT pattern FROM pattern_card").fetchall()
     conn.close()
     assert len(ga) == 1
-    assert ga[0][0] == prob["pattern"]
-    assert (prob["pattern"],) in pc
+    assert ga[0][0] == load_problem(prob["id"]).pattern
+    assert (load_problem(prob["id"]).pattern,) in pc
 
 
 def test_mastery_endpoint_reports_pattern(tmp_path):
@@ -50,8 +50,9 @@ def test_mastery_endpoint_reports_pattern(tmp_path):
     r = c.get("/api/mastery")
     assert r.status_code == 200
     pats = {p["pattern"]: p for p in r.json()["patterns"]}
-    assert prob["pattern"] in pats
-    entry = pats[prob["pattern"]]
+    expected_pattern = load_problem(prob["id"]).pattern
+    assert expected_pattern in pats
+    entry = pats[expected_pattern]
     assert entry["attempts"] >= 1
     assert "mastery_score" in entry and "mastered" in entry
     assert entry["transfer_breadth"] >= 1  # solved unaided

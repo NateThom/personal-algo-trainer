@@ -1,0 +1,22 @@
+{
+  "id": "min-length-subarray-sum-target",
+  "pattern": "sliding-window",
+  "title": "Minimum Length Subarray with Sum At Least Target",
+  "difficulty": "medium",
+  "statement": "Given an array of positive integers nums and a positive integer target, return the length of the shortest contiguous subarray whose sum is greater than or equal to target. If no such subarray exists, return 0.",
+  "function_name": "min_subarray_len",
+  "starter_code": "def min_subarray_len(nums, target):\n    # your code here\n    pass\n",
+  "reference_solution": "def min_subarray_len(nums, target):\n    left = 0\n    total = 0\n    best = len(nums) + 1\n    for right, n in enumerate(nums):\n        total += n\n        while total >= target:\n            best = min(best, right - left + 1)\n            total -= nums[left]\n            left += 1\n    return best if best <= len(nums) else 0\n",
+  "tests": [
+    {"args": [[2, 3, 1, 2, 4, 3], 7], "expected": 2},
+    {"args": [[1, 4, 4], 4], "expected": 1},
+    {"args": [[1, 1, 1, 1, 1, 1, 1, 1], 11], "expected": 0},
+    {"args": [[5], 5], "expected": 1},
+    {"args": [[1, 2, 3, 4, 5], 15], "expected": 5}
+  ],
+  "hints": [
+    "Because all numbers are positive, a variable-size sliding window can track a running sum without ever having to recompute it from scratch.",
+    "Expand the window by moving the right pointer and adding to the running sum; once the sum meets the target, shrink from the left to find the minimal valid window.",
+    "While total >= target: record right - left + 1 as a candidate, subtract nums[left] from total, and advance left; continue expanding right afterward."
+  ]
+}
