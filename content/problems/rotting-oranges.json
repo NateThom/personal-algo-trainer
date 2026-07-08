@@ -11,7 +11,9 @@
     {"args": [[[2, 1, 1], [1, 1, 0], [0, 1, 1]]], "expected": 4},
     {"args": [[[2, 1, 1], [0, 1, 1], [1, 0, 1]]], "expected": -1},
     {"args": [[[0, 2]]], "expected": 0},
-    {"args": [[[0, 0, 0]]], "expected": 0}
+    {"args": [[[0, 0, 0]]], "expected": 0},
+    {"args": [[[2, 1, 1], [1, 1, 1], [1, 1, 2]]], "expected": 2},
+    {"args": [[[1]]], "expected": -1}
   ],
   "hints": [
     "Think of every rotten orange as a source; this is a multi-source shortest-path/BFS-levels problem.",

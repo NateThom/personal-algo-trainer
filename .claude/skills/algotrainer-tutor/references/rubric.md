@@ -2,17 +2,18 @@
 
 ## Composite grade (map to exactly one FSRS rating)
 
-Consider four signals: correctness (from the judge result in the session file),
-complexity optimality, time-to-solve, and hints used.
+Consider three signals: correctness (from the judge result in the session file),
+complexity optimality, and hints used. (The session file carries no timing data,
+so speed is never part of the grade.)
 
 - **again** — did not identify the pattern, OR the judge shows failing tests and
   the approach is fundamentally wrong, OR the learner needed the full worked step
   and still could not finish.
 - **hard** — solved (tests pass) but only WITH ≥1 hint, or the solution is
   correct-but-suboptimal in complexity, or it was slow / buggy on the way.
-- **good** — solved unaided (0 hints), correct, optimal or near-optimal, time
-  reasonable.
-- **easy** — solved unaided, first try, optimal complexity, clean and fast.
+- **good** — solved unaided (0 hints), correct, optimal or near-optimal.
+- **easy** — solved unaided, optimal complexity, clean code, and the recall gate
+  showed confident, principled understanding.
 
 Hard rule: if `hints_used >= 1` and tests pass, the grade is at most **hard**.
 If tests fail, the grade is **again** (never higher).
@@ -40,5 +41,5 @@ recall fields are empty.
 
 ## feedback
 2–5 sentences, Socratic and encouraging: name what went well, then the single
-highest-leverage thing to improve. When asked for a HINT instead of a grade, give
-ONLY the next tier and never the full solution.
+highest-leverage thing to improve. (Mid-solve hints are served by the app's own
+pre-authored hint ladder — grading is this skill's only request type.)

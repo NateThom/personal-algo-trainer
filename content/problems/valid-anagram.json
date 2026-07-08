@@ -10,7 +10,9 @@
   "tests": [
     {"args": ["anagram", "nagaram"], "expected": true},
     {"args": ["rat", "car"], "expected": false},
-    {"args": ["", ""], "expected": true}
+    {"args": ["", ""], "expected": true},
+    {"args": ["aab", "abb"], "expected": false},
+    {"args": ["a", "ab"], "expected": false}
   ],
   "hints": [
     "Counting characters is a hashing problem.",

@@ -11,7 +11,8 @@
     {"args": [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5], "expected": 15},
     {"args": [[3, 2, 2, 4, 1, 4], 3], "expected": 6},
     {"args": [[1, 2, 3, 1, 1], 4], "expected": 3},
-    {"args": [[5], 1], "expected": 5}
+    {"args": [[5], 1], "expected": 5},
+    {"args": [[1, 2, 3, 4], 1], "expected": 10}
   ],
   "hints": [
     "This is a 'binary search on the answer' problem: binary search over the possible ship capacities, not over the weights array itself.",

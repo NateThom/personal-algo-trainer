@@ -11,7 +11,9 @@
     {"args": [[[1, 1, 0, 0, 0], [1, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 1]]], "expected": 3},
     {"args": [[[0, 0, 0], [0, 0, 0]]], "expected": 0},
     {"args": [[[1]]], "expected": 1},
-    {"args": [[[1, 0, 1, 0, 1]]], "expected": 3}
+    {"args": [[[1, 0, 1, 0, 1]]], "expected": 3},
+    {"args": [[[1, 1], [0, 1], [1, 1]]], "expected": 1},
+    {"args": [[[1], [0], [1]]], "expected": 2}
   ],
   "hints": [
     "This is a connected-components problem on a grid; each cell is a node connected to its up/down/left/right neighbors.",

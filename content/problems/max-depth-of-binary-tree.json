@@ -12,7 +12,8 @@
     {"args": [[1, null, 2]], "expected": 2},
     {"args": [[]], "expected": 0},
     {"args": [[1]], "expected": 1},
-    {"args": [[1, 2, 3, 4, null, null, null, 5]], "expected": 4}
+    {"args": [[1, 2, 3, 4, null, null, null, 5]], "expected": 4},
+    {"args": [[1, null, 2, null, 3]], "expected": 3}
   ],
   "hints": [
     "This is a straightforward tree-depth problem: rebuild the binary tree from the level-order array, then explore it with DFS or BFS.",

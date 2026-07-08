@@ -12,7 +12,8 @@
     {"args": [[[1, 2], [3, 5], [6, 7], [8, 10], [12, 16]], [4, 8]], "expected": [[1, 2], [3, 10], [12, 16]]},
     {"args": [[], [5, 7]], "expected": [[5, 7]]},
     {"args": [[[1, 5]], [6, 8]], "expected": [[1, 5], [6, 8]]},
-    {"args": [[[1, 5]], [0, 0]], "expected": [[0, 0], [1, 5]]}
+    {"args": [[[1, 5]], [0, 0]], "expected": [[0, 0], [1, 5]]},
+    {"args": [[[1, 5]], [5, 7]], "expected": [[1, 7]]}
   ],
   "hints": [
     "Re-sorting the whole list after inserting is O(n log n); since the input is already sorted you can do this in a single O(n) pass.",

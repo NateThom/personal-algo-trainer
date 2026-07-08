@@ -104,7 +104,8 @@
         ]
       ],
       "expected": 3
-    }
+    },
+    {"args": [[[1, 3], [3, 5]]], "expected": 2}
   ],
   "hints": [
     "Checking every pair of intervals for overlap is O(n^2); think of turning each interval into a pair of timeline events instead.",

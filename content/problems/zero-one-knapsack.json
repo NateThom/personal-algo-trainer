@@ -12,7 +12,8 @@
     {"args": [[1, 3, 4, 5], [1, 4, 5, 7], 0], "expected": 0},
     {"args": [[1, 3, 4, 5], [1, 4, 5, 7], 7], "expected": 9},
     {"args": [[2, 3, 4, 5], [3, 4, 5, 6], 5], "expected": 7},
-    {"args": [[5, 4, 6, 3], [10, 40, 30, 50], 10], "expected": 90}
+    {"args": [[5, 4, 6, 3], [10, 40, 30, 50], 10], "expected": 90},
+    {"args": [[10], [100], 5], "expected": 0}
   ],
   "hints": [
     "For each item you only have two choices — leave it out or take it — and taking it uses up part of the remaining capacity, so track best value as a function of both how many items you've considered and how much capacity remains.",

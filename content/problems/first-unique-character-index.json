@@ -12,7 +12,8 @@
     {"args": ["loveleetcode"], "expected": 2},
     {"args": ["aabb"], "expected": -1},
     {"args": ["z"], "expected": 0},
-    {"args": ["cccbde"], "expected": 3}
+    {"args": ["cccbde"], "expected": 3},
+    {"args": [""], "expected": -1}
   ],
   "hints": [
     "Counting how many times each character occurs is a job for a hash map, and it lets you avoid rescanning the string for every character.",

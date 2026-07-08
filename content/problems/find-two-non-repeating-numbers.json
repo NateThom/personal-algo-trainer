@@ -12,7 +12,10 @@
     {"args": [[4, 1, 4, 2]], "expected": [1, 2]},
     {"args": [[-1, 0]], "expected": [-1, 0]},
     {"args": [[7, 3, 7, 9]], "expected": [3, 9]},
-    {"args": [[10, 20, 10, 30, 40, 30]], "expected": [20, 40]}
+    {"args": [[10, 20, 10, 30, 40, 30]], "expected": [20, 40]},
+    {"args": [[3, 1]], "expected": [1, 3]},
+    {"args": [[-2, 3, -2, -7]], "expected": [-7, 3]},
+    {"args": [[-3, -5]], "expected": [-5, -3]}
   ],
   "hints": [
     "XORing all elements together cancels the duplicates but mixes the two unique numbers; you need a way to separate them.",

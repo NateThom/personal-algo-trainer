@@ -3,7 +3,7 @@
   "pattern": "arrays-hashing",
   "title": "Two Sum",
   "difficulty": "easy",
-  "statement": "Given an integer array nums and an integer target, return the indices of the two numbers such that they add up to target. Exactly one solution exists; you may not use the same element twice.",
+  "statement": "Given an integer array nums and an integer target, return the indices of the two numbers such that they add up to target, in ascending order. Exactly one solution exists; you may not use the same element twice.",
   "function_name": "two_sum",
   "starter_code": "def two_sum(nums, target):\n    # your code here\n    pass\n",
   "reference_solution": "def two_sum(nums, target):\n    seen = {}\n    for i, n in enumerate(nums):\n        if target - n in seen:\n            return [seen[target - n], i]\n        seen[n] = i\n    return []\n",

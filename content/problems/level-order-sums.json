@@ -12,7 +12,8 @@
     {"args": [[1, 2, 3, 4, 5]], "expected": [1, 5, 9]},
     {"args": [[]], "expected": []},
     {"args": [[1]], "expected": [1]},
-    {"args": [[1, 2, 3, 4, null, null, null, 5]], "expected": [1, 5, 4, 5]}
+    {"args": [[1, 2, 3, 4, null, null, null, 5]], "expected": [1, 5, 4, 5]},
+    {"args": [[1, null, 2, 3, 4, 5]], "expected": [1, 2, 7, 5]}
   ],
   "hints": [
     "This is a breadth-first traversal problem: process the tree one full level at a time and accumulate a running sum per level.",

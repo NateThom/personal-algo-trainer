@@ -10,7 +10,9 @@
   "tests": [
     {"args": [[2, 7, 4, 1, 8, 1]], "expected": 1},
     {"args": [[1]], "expected": 1},
-    {"args": [[2, 2]], "expected": 0}
+    {"args": [[2, 2]], "expected": 0},
+    {"args": [[]], "expected": 0},
+    {"args": [[10, 4, 2, 10]], "expected": 2}
   ],
   "hints": [
     "Use a max-heap (negate values for Python's min-heap) to always grab the two heaviest stones.",

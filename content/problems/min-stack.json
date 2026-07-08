@@ -3,14 +3,15 @@
   "pattern": "stack",
   "title": "Min Stack (Functional)",
   "difficulty": "medium",
-  "statement": "Given a list of stack operations, replay them against a stack that supports push, pop, top, and getMin, and return the list of results produced by the query operations (\"top\" and \"getMin\"), in order. Operations are given as [\"push\", value], [\"pop\"], [\"top\"], or [\"getMin\"].",
+  "statement": "Given a list of stack operations, replay them against a stack that supports push, pop, top, and getMin, and return the list of results produced by the query operations (\"top\" and \"getMin\"), in order. Operations are given as [\"push\", value], [\"pop\"], [\"top\"], or [\"getMin\"]. Every \"pop\", \"top\", and \"getMin\" is guaranteed to be issued only while the stack is non-empty.",
   "function_name": "min_stack_ops",
   "starter_code": "def min_stack_ops(ops):\n    # your code here\n    pass\n",
   "reference_solution": "def min_stack_ops(ops):\n    stack = []\n    results = []\n    for op in ops:\n        name = op[0]\n        if name == 'push':\n            value = op[1]\n            cur_min = value if not stack else min(value, stack[-1][1])\n            stack.append((value, cur_min))\n        elif name == 'pop':\n            if stack:\n                stack.pop()\n        elif name == 'top':\n            results.append(stack[-1][0])\n        elif name == 'getMin':\n            results.append(stack[-1][1])\n    return results\n",
   "tests": [
     {"args": [[["push", 5], ["push", 3], ["getMin"], ["pop"], ["getMin"]]], "expected": [3, 5]},
     {"args": [[["push", -2], ["push", 0], ["push", -3], ["getMin"], ["pop"], ["top"], ["getMin"]]], "expected": [-3, 0, -2]},
-    {"args": [[["push", 1], ["push", 2], ["top"], ["getMin"]]], "expected": [2, 1]}
+    {"args": [[["push", 1], ["push", 2], ["top"], ["getMin"]]], "expected": [2, 1]},
+    {"args": [[["push", 2], ["push", 2], ["pop"], ["getMin"], ["push", 1], ["push", 1], ["pop"], ["getMin"]]], "expected": [2, 1]}
   ],
   "hints": [
     "Store each element alongside the minimum seen so far at that stack depth.",

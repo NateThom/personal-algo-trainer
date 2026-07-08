@@ -11,7 +11,8 @@
     {"args": [[2, 3, 6, 7], 7], "expected": [[2, 2, 3], [7]]},
     {"args": [[2, 3, 5], 8], "expected": [[2, 2, 2, 2], [2, 3, 3], [3, 5]]},
     {"args": [[2], 1], "expected": []},
-    {"args": [[5], 5], "expected": [[5]]}
+    {"args": [[5], 5], "expected": [[5]]},
+    {"args": [[7, 3, 2], 7], "expected": [[2, 2, 3], [7]]}
   ],
   "hints": [
     "This is a backtracking enumeration problem where each candidate can be reused, so the recursion should not simply move to the next index after choosing an element.",

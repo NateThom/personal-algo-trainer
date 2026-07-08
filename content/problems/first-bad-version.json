@@ -11,7 +11,8 @@
     {"args": [5, 4], "expected": 4},
     {"args": [1, 1], "expected": 1},
     {"args": [10, 1], "expected": 1},
-    {"args": [2000000000, 1999999999], "expected": 1999999999}
+    {"args": [2000000000, 1999999999], "expected": 1999999999},
+    {"args": [5, 5], "expected": 5}
   ],
   "hints": [
     "This is a 'binary search on the answer' problem: the search space is versions 1..n, not array indices into a data array.",

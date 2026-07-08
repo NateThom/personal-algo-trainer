@@ -2,8 +2,8 @@
   "id": "sliding-window",
   "summary": "Maintain a moving window over a contiguous run of a sequence, expanding and shrinking it to satisfy a constraint, so each element is visited O(1) amortized times.",
   "recognize_when": ["The problem asks about a contiguous subarray or substring","You want the longest/shortest/max/min window satisfying a condition","A brute force would recompute overlapping ranges (O(n^2)) you could slide instead","Constraints like 'at most K', 'sum >= target', or 'no repeating characters'"],
-  "complexity": {"time": "O(n)", "space": "O(k)", "notes": "Each index enters and leaves the window at most once; space holds the window's contents."},
+  "complexity": {"time": "O(n)", "space": "O(k)", "notes": "Each index enters and leaves the window at most once; space holds the window's contents (k = number of distinct elements tracked, e.g. alphabet size)."},
   "template": "def sliding_window(s):\n    from collections import defaultdict\n    counts = defaultdict(int)\n    left = 0\n    best = 0\n    for right, ch in enumerate(s):\n        counts[ch] += 1\n        while window_invalid(counts):\n            counts[s[left]] -= 1\n            left += 1\n        best = max(best, right - left + 1)\n    return best\n",
-  "gotchas": ["Forgetting to shrink from the left when the window becomes invalid","Off-by-one in window size: right - left + 1","Using a fixed-size window when a variable one is needed"],
+  "gotchas": ["Forgetting to shrink from the left when the window becomes invalid","Off-by-one in window size: right - left + 1","Using a fixed-size window when a variable one is needed","Shrinking only works when the constraint is monotonic in window size — negative numbers break sum-based windows (that's when to reach for prefix-sum instead)","Some problems collapse the window to a single tracked value: in Best Time to Buy and Sell Stock the 'left edge' is just the running minimum price, with no explicit window structure in the code"],
   "examples": ["Longest Substring Without Repeating Characters","Minimum Size Subarray Sum","Best Time to Buy and Sell Stock"]
 }

@@ -12,7 +12,8 @@
     {"args": [[["A", "B", "C", "E"], ["S", "F", "C", "S"], ["A", "D", "E", "E"]], "SEE"], "expected": true},
     {"args": [[["A", "B", "C", "E"], ["S", "F", "C", "S"], ["A", "D", "E", "E"]], "ABCB"], "expected": false},
     {"args": [[["A"]], "A"], "expected": true},
-    {"args": [[["A"]], "AA"], "expected": false}
+    {"args": [[["A"]], "AA"], "expected": false},
+    {"args": [[["A", "B", "C", "E"], ["S", "F", "E", "S"], ["A", "D", "E", "E"]], "ABCESEEEFS"], "expected": true}
   ],
   "hints": [
     "This is a backtracking search over grid paths: try starting the word at every cell and explore neighbors depth-first.",

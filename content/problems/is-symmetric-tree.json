@@ -13,7 +13,9 @@
     {"args": [[1]], "expected": true},
     {"args": [[]], "expected": true},
     {"args": [[1, 2, 2]], "expected": true},
-    {"args": [[2, 3, 3, 4, 5, 5, 4]], "expected": true}
+    {"args": [[2, 3, 3, 4, 5, 5, 4]], "expected": true},
+    {"args": [[1, 2, 3]], "expected": false},
+    {"args": [[1, 2, 2, 3, 4, 4, 5]], "expected": false}
   ],
   "hints": [
     "This is a DFS-over-trees problem: compare the left and right subtrees as mirror images rather than comparing the tree to itself.",

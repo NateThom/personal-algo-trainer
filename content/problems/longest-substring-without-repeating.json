@@ -12,7 +12,8 @@
     {"args": ["bbbbb"], "expected": 1},
     {"args": ["pwwkew"], "expected": 3},
     {"args": [""], "expected": 0},
-    {"args": ["dvdf"], "expected": 3}
+    {"args": ["dvdf"], "expected": 3},
+    {"args": ["abba"], "expected": 2}
   ],
   "hints": [
     "Grow a window over the string and shrink it from the left whenever a duplicate character appears.",

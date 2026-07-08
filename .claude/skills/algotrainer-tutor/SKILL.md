@@ -16,11 +16,14 @@ spaced-repetition schedule.
 - Session directory: `sessions/` at the repo root unless told otherwise.
 - Session id: given by the user (e.g. "grade session a1b2c3d4e5f6").
 - Read `sessions/session-<id>.json`. Its fields:
+  - `session_id`: string; `attempt_id`: integer (both echoed into the verdict)
   - `problem`: `{id, title, pattern, statement, reference_solution}`
   - `attempt`: `{code, judge_passed}` (the learner's code and whether tests passed)
   - `recall`: `{pattern, approach, complexity}` (what the learner stated BEFORE coding)
   - `hints_used`: integer
   - `request`: `"grade"` (default, and only supported value)
+- The `python` in the commands below must be the project venv's interpreter
+  (activate `.venv`, or use `.venv/bin/python`) — the scripts import `algotrainer`.
 
 Load the grading rubric and error taxonomy from `references/rubric.md` in this
 skill directory before grading — follow it exactly.
@@ -69,5 +72,6 @@ an arrays-hashing variant, medium"):
 
 - Be encouraging and specific. Name one highest-leverage improvement, not ten.
 - Diagnose the misconception; prefer a guiding question over handing the answer.
-- The verdict JSON is machine-read — keep `feedback` plain text, no newlines that
-  would break the one-line echo (use short sentences).
+- The verdict JSON is machine-read — keep `feedback` plain text with no newlines
+  AND no apostrophes or single quotes (either breaks the single-quoted `echo`;
+  write "you are" rather than "you're", or pipe the JSON from a temp file instead).

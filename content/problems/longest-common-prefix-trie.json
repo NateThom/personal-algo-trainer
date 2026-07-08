@@ -12,7 +12,8 @@
     {"args": [["dog", "racecar", "car"]], "expected": ""},
     {"args": [["single"]], "expected": "single"},
     {"args": [[]], "expected": ""},
-    {"args": [["interspecies", "interstellar", "interstate"]], "expected": "inters"}
+    {"args": [["interspecies", "interstellar", "interstate"]], "expected": "inters"},
+    {"args": [["flow", "flower"]], "expected": "flow"}
   ],
   "hints": [
     "Comparing every pair of words directly works but a trie makes the shared-prefix structure explicit: build one trie over all words and walk down while every word is still represented.",

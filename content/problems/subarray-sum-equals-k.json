@@ -13,7 +13,8 @@
     {"args": [[1, -1, 0], 0], "expected": 3},
     {"args": [[3, 4, 7, 2, -3, 1, 4, 2], 7], "expected": 4},
     {"args": [[], 0], "expected": 0},
-    {"args": [[5], 5], "expected": 1}
+    {"args": [[5], 5], "expected": 1},
+    {"args": [[1, -2, 3], -2], "expected": 1}
   ],
   "hints": [
     "Brute-force checking every subarray is O(n^2); think about prefix sums to get O(n).",

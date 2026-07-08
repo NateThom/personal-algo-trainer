@@ -11,7 +11,9 @@
     {"args": [[1]], "expected": [[1]]},
     {"args": [[1, 2]], "expected": [[1, 2], [2, 1]]},
     {"args": [[1, 1, 2]], "expected": [[1, 1, 2], [1, 2, 1], [2, 1, 1]]},
-    {"args": [[2, 2, 1, 1]], "expected": [[1, 1, 2, 2], [1, 2, 1, 2], [1, 2, 2, 1], [2, 1, 1, 2], [2, 1, 2, 1], [2, 2, 1, 1]]}
+    {"args": [[2, 2, 1, 1]], "expected": [[1, 1, 2, 2], [1, 2, 1, 2], [1, 2, 2, 1], [2, 1, 1, 2], [2, 1, 2, 1], [2, 2, 1, 1]]},
+    {"args": [[]], "expected": [[]]},
+    {"args": [[1, 1]], "expected": [[1, 1]]}
   ],
   "hints": [
     "This is a backtracking enumeration over permutations; duplicates in the input require extra care to avoid emitting the same permutation twice.",

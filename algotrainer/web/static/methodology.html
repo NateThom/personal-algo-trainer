@@ -41,19 +41,21 @@
     <section>
       <h2>3. Spaced repetition (FSRS)</h2>
       <p>The same number of reps spaced over time beats massed cramming, because revisiting material just as
-      you're about to forget it interrupts the forgetting curve. AlgoTrainer schedules each pattern with
-      <strong>FSRS</strong> (the modern Free Spaced Repetition Scheduler): after each graded solve it computes
-      when you should next see that pattern, at expanding intervals. Reviews that are <em>due</em> are served
-      before brand-new material, so retention is never starved by novelty.</p>
+      you're about to forget it interrupts the forgetting curve. AlgoTrainer schedules each solved
+      <em>problem</em> with <strong>FSRS</strong> (the modern Free Spaced Repetition Scheduler): after each
+      graded solve it computes when that problem should next come due, at expanding intervals. (A per-pattern
+      FSRS card is also maintained, feeding the stability signal in the mastery gate.) Reviews that are
+      <em>due</em> are served before brand-new material, so retention is never starved by novelty.</p>
     </section>
 
     <section>
-      <h2>4. Novel instances, never a re-run</h2>
+      <h2>4. Novel instances for mastery</h2>
       <p>Re-solving the <em>same</em> problem measures episodic memory of that solution, not mastery of the
-      pattern. So when a pattern comes due, the tool prefers a problem you haven't seen — drawing on the
-      curated seed bank and on fresh AI-generated variants (each validated by executing its reference solution
-      against its own tests before it's ever served). Mastery is measured on held-out instances, never on
-      repeats.</p>
+      pattern. Due reviews <em>do</em> revisit a specific problem — that is what interrupts its forgetting
+      curve — but breadth comes from novelty: when a pattern needs new material, the tool draws on the curated
+      seed bank and on fresh AI-generated variants (each validated by executing its reference solution against
+      its own tests before it's ever served), and the mastery gate counts only <em>distinct</em> problems
+      solved — grinding one problem repeatedly can never satisfy it.</p>
     </section>
 
     <section>

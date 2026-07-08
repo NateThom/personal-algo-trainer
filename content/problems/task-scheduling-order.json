@@ -3,7 +3,7 @@
   "pattern": "topological-sort",
   "title": "Unique Task Scheduling Order",
   "difficulty": "easy",
-  "statement": "A build pipeline has n tasks labeled 0 to n - 1. You are given edges, a list of pairs [a, b] meaning task a must run before task b. It is guaranteed that the dependency graph has a unique topological order (that is, at every step of the scheduling process exactly one task is ready to run). Return that unique order as a list of task labels. If the input does not actually admit a valid complete order (a cycle is present), return an empty list.",
+  "statement": "A build pipeline has n tasks (n >= 1) labeled 0 to n - 1. You are given edges, a list of pairs [a, b] meaning task a must run before task b. It is guaranteed that the dependency graph has a unique topological order (that is, at every step of the scheduling process exactly one task is ready to run). Return that unique order as a list of task labels. If the input does not actually admit a valid complete order (a cycle is present), return an empty list.",
   "function_name": "schedule_tasks",
   "starter_code": "def schedule_tasks(n, edges):\n    # your code here\n    pass\n",
   "reference_solution": "from collections import deque\n\n\ndef schedule_tasks(n, edges):\n    adj = [[] for _ in range(n)]\n    indegree = [0] * n\n    for a, b in edges:\n        adj[a].append(b)\n        indegree[b] += 1\n    queue = deque(i for i in range(n) if indegree[i] == 0)\n    order = []\n    while queue:\n        node = queue.popleft()\n        order.append(node)\n        for nxt in adj[node]:\n            indegree[nxt] -= 1\n            if indegree[nxt] == 0:\n                queue.append(nxt)\n    if len(order) != n:\n        return []\n    return order\n",
@@ -11,7 +11,7 @@
     {"args": [4, [[0, 1], [1, 2], [2, 3]]], "expected": [0, 1, 2, 3]},
     {"args": [1, []], "expected": [0]},
     {"args": [3, [[0, 1], [1, 2], [2, 0]]], "expected": []},
-    {"args": [5, [[0, 1], [1, 2], [1, 3], [3, 4], [2, 4]]], "expected": [0, 1, 2, 3, 4]},
+    {"args": [5, [[0, 1], [1, 2], [1, 3], [3, 4], [2, 4], [2, 3]]], "expected": [0, 1, 2, 3, 4]},
     {"args": [2, [[0, 1]]], "expected": [0, 1]}
   ],
   "hints": [

@@ -12,7 +12,9 @@
     {"args": [[1, 2, 0], 0], "expected": true},
     {"args": [[-1], 0], "expected": false},
     {"args": [[1, 2, 3, 1], 0], "expected": true},
-    {"args": [[2, 3, 4, -1, 1], 0], "expected": false}
+    {"args": [[2, 3, 4, -1, 1], 0], "expected": false},
+    {"args": [[-1, 2, 1], 0], "expected": false},
+    {"args": [[1, 1], 0], "expected": true}
   ],
   "hints": [
     "This is the classic linked-list cycle problem, just with the 'next pointer' stored as an array index instead of a node reference.",

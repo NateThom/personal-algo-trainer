@@ -10,7 +10,9 @@
   "tests": [
     {"args": ["A man, a plan, a canal: Panama"], "expected": true},
     {"args": ["race a car"], "expected": false},
-    {"args": [" "], "expected": true}
+    {"args": [" "], "expected": true},
+    {"args": ["0P"], "expected": false},
+    {"args": [""], "expected": true}
   ],
   "hints": [
     "Two pointers from both ends, skipping non-alphanumeric.",

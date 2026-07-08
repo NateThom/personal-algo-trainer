@@ -12,7 +12,8 @@
     {"args": [[1, 2, 3]], "expected": -1},
     {"args": [[2, 1, -1]], "expected": 0},
     {"args": [[0, 0, 0]], "expected": 0},
-    {"args": [[5]], "expected": 0}
+    {"args": [[5]], "expected": 0},
+    {"args": [[1, -1, 2]], "expected": 2}
   ],
   "hints": [
     "Computing left and right sums independently for every index gives O(n^2); there's a way to do it in one or two passes.",

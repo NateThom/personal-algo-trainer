@@ -11,7 +11,8 @@
     {"args": ["bcabc"], "expected": "abc"},
     {"args": ["cbacdcbc"], "expected": "acdb"},
     {"args": ["a"], "expected": "a"},
-    {"args": ["ecbacba"], "expected": "eacb"}
+    {"args": ["ecbacba"], "expected": "eacb"},
+    {"args": [""], "expected": ""}
   ],
   "hints": [
     "This is a monotonic-stack problem: build the answer on a stack, keeping letters in increasing order when it is safe to do so.",

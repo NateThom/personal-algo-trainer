@@ -13,7 +13,8 @@
     {"args": [[[1, 4], [0, 4]]], "expected": [[0, 4]]},
     {"args": [[]], "expected": []},
     {"args": [[[5, 10]]], "expected": [[5, 10]]},
-    {"args": [[[1, 2], [3, 4], [5, 6]]], "expected": [[1, 2], [3, 4], [5, 6]]}
+    {"args": [[[1, 2], [3, 4], [5, 6]]], "expected": [[1, 2], [3, 4], [5, 6]]},
+    {"args": [[[1, 10], [2, 3], [4, 5]]], "expected": [[1, 10]]}
   ],
   "hints": [
     "Comparing every pair of intervals for overlap is O(n^2); sorting first makes a single linear pass sufficient.",

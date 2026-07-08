@@ -3,6 +3,17 @@
 The tutor is a Claude Code skill committed at `.claude/skills/algotrainer-tutor/`.
 When you work in this repo with Claude Code, it is auto-discoverable.
 
+## Setup (first time)
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+```
+
+The editable install (`-e`) is required — the app resolves its database,
+`sessions/`, and `content/generated/` paths relative to the package source.
+
 ## Run it
 
 Activate `.venv`, then run:
@@ -17,7 +28,8 @@ Or without the console script entry point:
 python -m algotrainer
 ```
 
-The app opens at `http://127.0.0.1:8000`.
+The app serves at `http://127.0.0.1:8000` (open it in your browser). The
+database and `sessions/` directory are created automatically on first use.
 
 ## Grade a session
 1. In the web app: solve a problem, click **Run tests**, then **Send to tutor**.
