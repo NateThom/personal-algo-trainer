@@ -1,0 +1,25 @@
+{
+  "id": "word-transformation-ladder",
+  "pattern": "graphs",
+  "title": "Shortest Word Transformation Sequence",
+  "difficulty": "hard",
+  "statement": "You are given two lowercase words begin_word and end_word of equal length, and a list word_list of lowercase words that are all the same length as begin_word. A transformation sequence is a list of words w0, w1, ..., wk where w0 is begin_word, wk is end_word, every adjacent pair differs in exactly one letter position, and every word after w0 (that is, w1 through wk) appears in word_list. Note that begin_word itself does not need to appear in word_list. Return the number of words in the SHORTEST such sequence (its length, counting both begin_word and end_word). If no transformation sequence exists, return 0. If begin_word already equals end_word and end_word is present in word_list, the shortest sequence is the single word begin_word, so return 1.",
+  "function_name": "ladder_length",
+  "starter_code": "def ladder_length(begin_word, end_word, word_list):\n    # your code here\n    pass\n",
+  "reference_solution": "from collections import deque\n\n\ndef ladder_length(begin_word, end_word, word_list):\n    words = set(word_list)\n    if end_word not in words:\n        return 0\n    queue = deque([(begin_word, 1)])\n    visited = {begin_word}\n    while queue:\n        word, steps = queue.popleft()\n        if word == end_word:\n            return steps\n        for i in range(len(word)):\n            for c in \"abcdefghijklmnopqrstuvwxyz\":\n                nxt = word[:i] + c + word[i + 1:]\n                if nxt in words and nxt not in visited:\n                    visited.add(nxt)\n                    queue.append((nxt, steps + 1))\n    return 0\n",
+  "tests": [
+    {"args": ["hit", "cog", ["hot", "dot", "dog", "lot", "log", "cog"]], "expected": 5},
+    {"args": ["hit", "cog", ["hot", "dot", "dog", "lot", "log"]], "expected": 0},
+    {"args": ["a", "c", ["a", "b", "c"]], "expected": 2},
+    {"args": ["cat", "cat", ["cat", "bat", "hat"]], "expected": 1},
+    {"args": ["red", "red", ["red"]], "expected": 1},
+    {"args": ["lead", "gold", ["load", "goad", "good", "gold", "gold"]], "expected": 4},
+    {"args": ["abc", "abc", []], "expected": 0},
+    {"args": ["game", "thee", ["fame", "fate", "face", "cace"]], "expected": 0}
+  ],
+  "hints": [
+    "Each word is a node and two words are connected when they differ in exactly one letter; you need the fewest hops between two nodes in an unweighted graph. Which traversal finds shortest paths?",
+    "Run BFS from begin_word. Do not build the whole graph up front: generate a word's neighbors on the fly by trying every letter 'a'-'z' at each position and keeping only results that are in a set built from word_list.",
+    "Seed the queue with (begin_word, 1), and mark a word visited the moment you ENQUEUE it, not when you dequeue it, so it never enters the queue twice. When you dequeue end_word, return its stored count directly; because you count words (begin_word is 1) rather than edges, the hit->cog example yields 5, not 4."
+  ]
+}

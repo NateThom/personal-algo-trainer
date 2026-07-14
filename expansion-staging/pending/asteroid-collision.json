@@ -1,0 +1,25 @@
+{
+  "id": "asteroid-collision",
+  "pattern": "stack",
+  "title": "Asteroid Collision",
+  "difficulty": "medium",
+  "statement": "You are given a list of nonzero integers describing a row of asteroids drifting along a one-dimensional lane. For each asteroid, its absolute value is its size and its sign is its direction: a positive value moves right, a negative value moves left. All asteroids move at the same speed, so two asteroids collide only when a right-moving one (positive) sits immediately to the left of a left-moving one (negative) and they meet. When two asteroids collide, the smaller one explodes and disappears; if they are the same size, both explode. Asteroids moving in the same direction, or moving apart, never collide. Resolve every collision and return the list of surviving asteroids in their original left-to-right relative order. If no asteroids survive, return an empty list.",
+  "function_name": "asteroid_collision",
+  "starter_code": "def asteroid_collision(asteroids):\n    # your code here\n    pass\n",
+  "reference_solution": "def asteroid_collision(asteroids):\n    stack = []\n    for a in asteroids:\n        alive = True\n        while alive and a < 0 and stack and stack[-1] > 0:\n            top = stack[-1]\n            if top < -a:\n                stack.pop()\n                continue\n            elif top == -a:\n                stack.pop()\n            alive = False\n        if alive:\n            stack.append(a)\n    return stack\n",
+  "tests": [
+    {"args": [[5, 10, -5]], "expected": [5, 10]},
+    {"args": [[8, -8]], "expected": []},
+    {"args": [[10, 2, -5]], "expected": [10]},
+    {"args": [[-2, -1, 1, 2]], "expected": [-2, -1, 1, 2]},
+    {"args": [[]], "expected": []},
+    {"args": [[10, 5, -15]], "expected": [-15]},
+    {"args": [[1, 1, -1, -1]], "expected": []},
+    {"args": [[-5, 5, -5, 5]], "expected": [-5, 5]}
+  ],
+  "hints": [
+    "Process asteroids left to right. Which structure lets you repeatedly compare an incoming left-mover against the most recently surviving right-mover?",
+    "Keep a stack of survivors. A collision is only possible when the incoming asteroid is negative and the top of the stack is positive; keep resolving against the top until that condition breaks.",
+    "For a negative incoming asteroid, loop while the top is a positive asteroid: if the top is smaller, pop it and keep going (it may plow through several); if equal, pop the top and stop without pushing; if the top is larger, stop without pushing. Only push the incoming asteroid if it was never destroyed."
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "substring-concatenation-all-words",
+  "pattern": "arrays-hashing",
+  "title": "Substring with Concatenation of All Words",
+  "difficulty": "hard",
+  "statement": "You are given a string s of lowercase letters and a non-empty list words in which every entry is a lowercase string of the same length (the same word may appear multiple times in the list). A block match at index i is a substring of s starting at i whose length is len(words) * word_length and which can be split into consecutive word-length chunks that use every entry of words exactly once each, in any order — duplicates in words must appear that many times among the chunks. Return a list of all block-match starting indices in strictly ascending order. Every index from 0 through len(s) - total_length is a candidate, not just multiples of the word length. Return [] when there is no block match (including when s is empty or shorter than the total length).",
+  "function_name": "find_concat_starts",
+  "starter_code": "def find_concat_starts(s, words):\n    # your code here\n    pass\n",
+  "reference_solution": "def find_concat_starts(s, words):\n    from collections import Counter\n    word_len = len(words[0])\n    total = word_len * len(words)\n    need = Counter(words)\n    starts = []\n    for i in range(len(s) - total + 1):\n        chunks = Counter(s[i + k * word_len:i + (k + 1) * word_len] for k in range(len(words)))\n        if chunks == need:\n            starts.append(i)\n    return starts\n",
+  "tests": [
+    {"args": ["catdogcat", ["cat", "dog"]], "expected": [0, 3]},
+    {"args": ["xcatdog", ["cat", "dog"]], "expected": [1]},
+    {"args": ["abcdcd", ["ab", "ab", "cd"]], "expected": []},
+    {"args": ["ababab", ["ab", "ab"]], "expected": [0, 2]},
+    {"args": ["hi", ["hi"]], "expected": [0]},
+    {"args": ["aaaa", ["ab"]], "expected": []},
+    {"args": ["", ["a"]], "expected": []},
+    {"args": ["dogdogdogcatdog", ["dog", "dog", "cat"]], "expected": [3, 6]}
+  ],
+  "hints": [
+    "All words share one length, so any candidate window splits cleanly into fixed-size chunks. What hash-based structure compares two collections where duplicates matter?",
+    "Build a Counter of words once. A window starting at i matches iff the Counter of its word-length chunks equals that target Counter — a plain set loses the duplicate counts.",
+    "Loop i over every index 0..len(s)-total (not just multiples of word_len). For each i, slice the window into len(words) chunks of word_len, build Counter(chunks), and append i when it equals Counter(words)."
+  ]
+}

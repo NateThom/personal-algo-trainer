@@ -1,0 +1,25 @@
+{
+  "id": "maximum-product-subarray",
+  "pattern": "dp-1d",
+  "title": "Maximum Product Subarray",
+  "difficulty": "hard",
+  "statement": "A signal-processing pipeline multiplies gain factors together over a stretch of consecutive stages. You are given gains, a non-empty list of integers that may include negatives and zeros. Choose any non-empty run of consecutive stages and return the product of its gains, maximized over all possible runs, as an int. A run of a single stage is allowed, so the answer for [-7] is -7. Note that two negative gains multiply into a positive, so the best run may pass through negatives.",
+  "function_name": "max_product_window",
+  "starter_code": "def max_product_window(gains):\n    # your code here\n    pass\n",
+  "reference_solution": "def max_product_window(gains):\n    best = hi = lo = gains[0]\n    for x in gains[1:]:\n        cands = (x, x * hi, x * lo)\n        hi, lo = max(cands), min(cands)\n        best = max(best, hi)\n    return best\n",
+  "tests": [
+    {"args": [[3, 4, -1, 5]], "expected": 12},
+    {"args": [[-7]], "expected": -7},
+    {"args": [[0, 0, 0]], "expected": 0},
+    {"args": [[2, -3, -4]], "expected": 24},
+    {"args": [[-2, 0, -1]], "expected": 0},
+    {"args": [[5, -1, 5, 5, -1]], "expected": 125},
+    {"args": [[3, -1, 4]], "expected": 4},
+    {"args": [[1, 2, 2, -1, 2, 2]], "expected": 4}
+  ],
+  "hints": [
+    "Kadane-style running state works for sums — what breaks when you multiply and hit a negative number?",
+    "Carry TWO states per index: the maximum AND the minimum product of a run ending at i. A negative flips them: the smallest (most negative) running product times a negative becomes the largest.",
+    "At each element x compute candidates (x, x*prev_max, x*prev_min); the new max is the largest and the new min is the smallest of these. Track the global best of the running max across all indices — do not just return the state at the last index."
+  ]
+}

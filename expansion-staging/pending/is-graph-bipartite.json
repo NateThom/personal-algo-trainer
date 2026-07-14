@@ -1,0 +1,25 @@
+{
+  "id": "is-graph-bipartite",
+  "pattern": "graphs",
+  "title": "Two-Team Assignment Check",
+  "difficulty": "medium",
+  "statement": "You are organizing n people labeled 0..n-1 into exactly two teams. You are given an adjacency list graph where graph[i] is the list of people who dislike person i. Dislikes are mutual, so if j appears in graph[i] then i appears in graph[j]. Return True if the people can be split into two teams so that no two people on the same team dislike each other, otherwise return False. Everyone must be placed on one of the two teams (a team may be empty, and a person nobody dislikes can go on either team). The graph may be disconnected and may include isolated people who dislike no one. Return a single boolean.",
+  "function_name": "can_split_two_teams",
+  "starter_code": "def can_split_two_teams(graph):\n    # your code here\n    pass\n",
+  "reference_solution": "from collections import deque\n\n\ndef can_split_two_teams(graph):\n    n = len(graph)\n    color = [0] * n\n    for start in range(n):\n        if color[start] != 0:\n            continue\n        color[start] = 1\n        queue = deque([start])\n        while queue:\n            node = queue.popleft()\n            for nb in graph[node]:\n                if color[nb] == 0:\n                    color[nb] = -color[node]\n                    queue.append(nb)\n                elif color[nb] == color[node]:\n                    return False\n    return True\n",
+  "tests": [
+    {"args": [[[1, 3], [0, 2], [1, 3], [0, 2]]], "expected": true},
+    {"args": [[[]]], "expected": true},
+    {"args": [[]], "expected": true},
+    {"args": [[[1, 2, 3], [0, 2], [0, 1, 3], [0, 2]]], "expected": false},
+    {"args": [[[], [2, 3], [1, 3], [1, 2]]], "expected": false},
+    {"args": [[[1], [0], [3], [2]]], "expected": true},
+    {"args": [[[1, 1], [0, 0]]], "expected": true},
+    {"args": [[[1, 2], [0, 3], [0, 3], [1, 2]]], "expected": true}
+  ],
+  "hints": [
+    "If two people dislike each other they must land on different teams. What does that remind you of when you try to label nodes across edges of a graph?",
+    "Two-color the graph: give a start node one color and every neighbor the opposite color via BFS/DFS. A conflict (a neighbor that already has the same color) means it is impossible.",
+    "Loop over every node; when you find one with no color yet, seed it with a color and BFS its whole component, assigning each uncolored neighbor the opposite color and returning False on any same-color neighbor. Starting a fresh BFS from every uncolored node is what makes disconnected components and isolated nodes work."
+  ]
+}

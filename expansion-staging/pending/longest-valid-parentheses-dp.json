@@ -1,0 +1,25 @@
+{
+  "id": "longest-valid-parentheses-dp",
+  "pattern": "dp-1d",
+  "title": "Longest Valid Parentheses Substring",
+  "statement": "You are given a string s containing only the characters '(' and ')'. A substring is 'balanced' if it is a contiguous slice of s that forms a properly matched parentheses sequence (every '(' is later closed by a matching ')', and every ')' closes an earlier '('). Return the length of the longest balanced contiguous substring of s as an integer. Substrings must be contiguous: characters that match across a gap do not count. If no balanced substring exists (including when s is empty), return 0.",
+  "difficulty": "hard",
+  "function_name": "longest_balanced_run",
+  "starter_code": "def longest_balanced_run(s):\n    # your code here\n    pass\n",
+  "reference_solution": "def longest_balanced_run(s):\n    n = len(s)\n    dp = [0] * n\n    best = 0\n    for i in range(1, n):\n        if s[i] == ')':\n            if s[i - 1] == '(':\n                dp[i] = (dp[i - 2] if i >= 2 else 0) + 2\n            else:\n                j = i - dp[i - 1] - 1\n                if j >= 0 and s[j] == '(':\n                    dp[i] = dp[i - 1] + 2 + (dp[j - 1] if j >= 1 else 0)\n            if dp[i] > best:\n                best = dp[i]\n    return best\n",
+  "tests": [
+    {"args": ["(()"], "expected": 2},
+    {"args": [")()())"], "expected": 4},
+    {"args": [""], "expected": 0},
+    {"args": ["(((("], "expected": 0},
+    {"args": ["(())"], "expected": 4},
+    {"args": ["()(())"], "expected": 6},
+    {"args": [")("], "expected": 0},
+    {"args": ["()()"], "expected": 4}
+  ],
+  "hints": [
+    "Instead of asking about any substring, ask a narrower question at each position: what is the length of the longest balanced substring that ENDS exactly at index i? Can that be built from answers for earlier indices?",
+    "Keep dp[i] = length of the longest balanced substring ending at i. Only a ')' can close a run. If s[i-1] is '(', you just closed an adjacent pair, so dp[i] = dp[i-2] + 2. Otherwise s[i-1] is ')' and you must jump BACK over the already-valid block of length dp[i-1] to reach the potential matching '(' at index i - dp[i-1] - 1.",
+    "When s[i]==')' and s[i-1]==')': let j = i - dp[i-1] - 1. If j >= 0 and s[j]=='(', then that '(' matches the current ')', wrapping the inner block, so dp[i] = dp[i-1] + 2, and you must also add the block ending just before j: dp[i] += dp[j-1] when j >= 1. Track the running maximum of dp[i]; return 0 if nothing balanced was found."
+  ]
+}

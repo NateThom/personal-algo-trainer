@@ -1,0 +1,25 @@
+{
+  "id": "three-way-partition-single-pass",
+  "pattern": "two-pointers",
+  "title": "Single-Pass Three-Way Partition",
+  "difficulty": "medium",
+  "statement": "A support queue tags every ticket with a priority: 0 for low, 1 for normal, 2 for urgent. Given a list `tickets` containing only the integers 0, 1, and 2, return a NEW list holding the same elements ordered ascending (all 0s, then all 1s, then all 2s). Because the three values are the only thing that distinguishes tickets, the relative order of equal values does not matter and the output is uniquely determined by how many of each value the input contains. Constraints: solve it in a single left-to-right pass using three index pointers (a low boundary, a scanning cursor, and a high boundary) with O(1) extra state beyond the output list. You may NOT use counting/bucket sort and you may NOT call any built-in sort. For an empty input, return an empty list.",
+  "function_name": "sort_priorities",
+  "starter_code": "def sort_priorities(tickets):\n    # your code here\n    pass\n",
+  "reference_solution": "def sort_priorities(tickets):\n    arr = list(tickets)\n    low, mid, high = 0, 0, len(arr) - 1\n    while mid <= high:\n        if arr[mid] == 0:\n            arr[low], arr[mid] = arr[mid], arr[low]\n            low += 1\n            mid += 1\n        elif arr[mid] == 1:\n            mid += 1\n        else:\n            arr[mid], arr[high] = arr[high], arr[mid]\n            high -= 1\n    return arr\n",
+  "tests": [
+    {"args": [[2, 0, 1]], "expected": [0, 1, 2]},
+    {"args": [[]], "expected": []},
+    {"args": [[1]], "expected": [1]},
+    {"args": [[2, 2, 2, 0, 0, 0, 1, 1, 1]], "expected": [0, 0, 0, 1, 1, 1, 2, 2, 2]},
+    {"args": [[1, 2, 0]], "expected": [0, 1, 2]},
+    {"args": [[1, 0, 2, 1, 0, 2, 1, 0, 2]], "expected": [0, 0, 0, 1, 1, 1, 2, 2, 2]},
+    {"args": [[0, 0, 0, 0, 0]], "expected": [0, 0, 0, 0, 0]},
+    {"args": [[2, 2, 1, 1, 0, 0]], "expected": [0, 0, 1, 1, 2, 2]}
+  ],
+  "hints": [
+    "You have only three possible values and want a single pass with no extra counting arrays. Can three pointers carve the list into three growing regions (settled-0s, settled-1s, unscanned) as you go?",
+    "Keep the invariant: everything before `low` is 0, everything between `low` and `mid` is 1, everything after `high` is 2, and `mid..high` is still unexamined. Advance `mid` only when you know the element it points at is finished.",
+    "When arr[mid] == 0, swap it into the low region and advance BOTH low and mid. When arr[mid] == 1, just advance mid. When arr[mid] == 2, swap it with arr[high] and shrink high but do NOT advance mid — the value that just arrived from the high side is unexamined and must be inspected on the next iteration."
+  ]
+}

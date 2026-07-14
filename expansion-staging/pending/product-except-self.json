@@ -1,0 +1,25 @@
+{
+  "id": "product-except-self",
+  "pattern": "prefix-sum",
+  "title": "Product of Array Except Self",
+  "difficulty": "medium",
+  "statement": "You are given a list of integers nums with length at least 2. The list may contain zeros and negative numbers. Build and return a new list answer of the same length where answer[i] equals the product of every element of nums other than nums[i]. Return the values in the same index order as nums. You must not use division at any point; instead combine a left-to-right running product of everything before index i with a right-to-left running product of everything after index i. Note that when nums contains exactly one zero, every answer entry is 0 except at the zero's own position, and when nums contains two or more zeros every answer entry is 0.",
+  "function_name": "products_except_self",
+  "starter_code": "def products_except_self(nums):\n    # your code here\n    pass\n",
+  "reference_solution": "def products_except_self(nums):\n    n = len(nums)\n    answer = [1] * n\n    prefix = 1\n    for i in range(n):\n        answer[i] = prefix\n        prefix *= nums[i]\n    suffix = 1\n    for i in range(n - 1, -1, -1):\n        answer[i] *= suffix\n        suffix *= nums[i]\n    return answer\n",
+  "tests": [
+    {"args": [[3, 4, 5]], "expected": [20, 15, 12]},
+    {"args": [[2, 3]], "expected": [3, 2]},
+    {"args": [[-2, 4, -6]], "expected": [-24, 12, -8]},
+    {"args": [[1, 1, 1, 1]], "expected": [1, 1, 1, 1]},
+    {"args": [[0, 5, 2, 3]], "expected": [30, 0, 0, 0]},
+    {"args": [[0, 4, 0, 6]], "expected": [0, 0, 0, 0]},
+    {"args": [[7, 0, 0]], "expected": [0, 0, 0]},
+    {"args": [[-1, 1, 0, -3, 3]], "expected": [0, 0, 9, 0, 0]}
+  ],
+  "hints": [
+    "You cannot divide the total product by each element, so how could two sweeps in opposite directions supply what each position needs?",
+    "For index i the answer is (product of everything to its left) times (product of everything to its right); maintain a running prefix product and a running suffix product.",
+    "First pass left to right: set answer[i] to the running product of elements before i, then fold nums[i] into that running product. Second pass right to left: multiply answer[i] by a running product of elements after i, then fold nums[i] into it. Zeros fall out naturally with no special casing."
+  ]
+}

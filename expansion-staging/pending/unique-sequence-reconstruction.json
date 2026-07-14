@@ -1,0 +1,25 @@
+{
+  "id": "unique-sequence-reconstruction",
+  "pattern": "topological-sort",
+  "title": "Unique Sequence Reconstruction",
+  "difficulty": "medium",
+  "statement": "You are given nums, a permutation of the integers 1..n, and sequences, a list of lists where each inner list is a subsequence of nums. Together the sequences impose ordering constraints: for every pair of values that appear next to each other inside any single sequence, the first must come before the second in the reconstructed order. Return True if nums is the one and only ordering consistent with all of these constraints, and False otherwise. Concretely, build a directed graph whose edges are the consecutive pairs drawn from each sequence, then reconstruct an order with Kahn's algorithm: the order is unique exactly when, at every removal step, precisely one node has no remaining incoming edges. Return True only if that reconstruction never faces a choice between two or more ready nodes AND the resulting order equals nums; return False if the constraints are ambiguous (two orders are possible), contradictory (a cycle makes no order possible), or produce an order different from nums. When sequences is empty, the constraints are satisfied by any permutation, so return True only if n is 1.",
+  "function_name": "is_unique_reconstruction",
+  "starter_code": "def is_unique_reconstruction(nums, sequences):\n    # your code here\n    pass\n",
+  "reference_solution": "from collections import defaultdict, deque\n\n\ndef is_unique_reconstruction(nums, sequences):\n    in_degree = {v: 0 for v in nums}\n    graph = defaultdict(set)\n    for seq in sequences:\n        for i in range(len(seq) - 1):\n            a, b = seq[i], seq[i + 1]\n            if b not in graph[a]:\n                graph[a].add(b)\n                in_degree[b] += 1\n    queue = deque(v for v in nums if in_degree[v] == 0)\n    order = []\n    while queue:\n        if len(queue) > 1:\n            return False\n        node = queue.popleft()\n        order.append(node)\n        for nb in graph[node]:\n            in_degree[nb] -= 1\n            if in_degree[nb] == 0:\n                queue.append(nb)\n    return order == nums\n",
+  "tests": [
+    {"args": [[1, 2, 3], [[1, 2], [2, 3]]], "expected": true},
+    {"args": [[1, 2, 3], [[1, 2], [1, 3]]], "expected": false},
+    {"args": [[1], [[1]]], "expected": true},
+    {"args": [[1], []], "expected": true},
+    {"args": [[2, 1], []], "expected": false},
+    {"args": [[1, 2, 3], [[1, 2], [2, 3], [3, 1]]], "expected": false},
+    {"args": [[1, 2, 3], [[3, 2]]], "expected": false},
+    {"args": [[1, 2, 3, 4, 5], [[1, 2, 3], [3, 4], [4, 5], [1, 5]]], "expected": true}
+  ],
+  "hints": [
+    "Each adjacent pair inside a sequence is a 'must come before' edge; what algorithm reconstructs an order from such precedence edges, and how would you tell whether that order is forced rather than merely possible?",
+    "Run Kahn's algorithm, but track the size of the ready set (in-degree-zero nodes) at each step: if it ever holds more than one node, two different valid orders exist, so the reconstruction is not unique.",
+    "Build the graph and in-degrees, seed the queue with in-degree-zero nodes; at each iteration return False immediately if the queue has more than one node, otherwise pop the single node and decrement its neighbors' in-degrees; after the loop return whether the reconstructed order exactly equals nums (a cycle leaves it shorter, which also fails)."
+  ]
+}

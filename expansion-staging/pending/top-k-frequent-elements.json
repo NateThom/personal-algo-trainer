@@ -1,0 +1,24 @@
+{
+  "id": "top-k-frequent-elements",
+  "pattern": "arrays-hashing",
+  "title": "Top K Frequent Elements",
+  "difficulty": "medium",
+  "statement": "Given an integer array nums and an integer k, return a list of the k distinct values that appear most often in nums. Order the result by frequency from highest to lowest; when two values occur the same number of times, the smaller value comes first. k is guaranteed to be at least 1 and at most the number of distinct values in nums, so a valid answer of length exactly k always exists.",
+  "function_name": "top_k_frequent",
+  "starter_code": "def top_k_frequent(nums, k):\n    # your code here\n    pass\n",
+  "reference_solution": "def top_k_frequent(nums, k):\n    counts = {}\n    for n in nums:\n        counts[n] = counts.get(n, 0) + 1\n    order = sorted(counts, key=lambda v: (-counts[v], v))\n    return order[:k]\n",
+  "tests": [
+    {"args": [[1, 1, 1, 2, 2, 3], 2], "expected": [1, 2]},
+    {"args": [[7], 1], "expected": [7]},
+    {"args": [[4, 4, 5, 6], 3], "expected": [4, 5, 6]},
+    {"args": [[5, 5, 3, 3, 3, 9], 1], "expected": [3]},
+    {"args": [[10, 4, 7, 4, 10, 7], 2], "expected": [4, 7]},
+    {"args": [[-1, -1, 0, 0, 2], 2], "expected": [-1, 0]},
+    {"args": [[3, 1, 2], 2], "expected": [1, 2]}
+  ],
+  "hints": [
+    "You need to know how often each value occurs before you can rank anything. What structure gives you counts in one pass?",
+    "Build a hash map from value to occurrence count, then select the top k distinct keys. The required order is descending count with ties broken by ascending value.",
+    "Sort the map's keys with a compound key like (-count[v], v) so higher counts come first and equal counts fall back to smaller values first, then slice the first k keys."
+  ]
+}

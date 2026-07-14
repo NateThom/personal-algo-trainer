@@ -1,0 +1,24 @@
+{
+  "id": "running-median-stream",
+  "pattern": "heaps",
+  "title": "Running Median of a Number Stream",
+  "statement": "You are given a list of integers named stream, given in the exact order the values arrive. Produce a list of floats named result of the same length, where result[i] is the median of the first i+1 arrived values (the prefix stream[0..i] inclusive). The median of an odd number of values is the single middle value once they are sorted, returned as a float. The median of an even number of values is the average of the two middle values (their sum divided by 2), which is also a float. Every entry in the returned list must be a float, including whole-number medians (return 4.0, not 4). If stream is empty, return an empty list.",
+  "difficulty": "hard",
+  "function_name": "running_median",
+  "starter_code": "def running_median(stream):\n    # your code here\n    pass\n",
+  "reference_solution": "import heapq\n\n\ndef running_median(stream):\n    lower = []  # max-heap of the lower half, values negated\n    upper = []  # min-heap of the upper half\n    result = []\n    for x in stream:\n        if lower and x <= -lower[0]:\n            heapq.heappush(lower, -x)\n        else:\n            heapq.heappush(upper, x)\n        if len(lower) > len(upper) + 1:\n            heapq.heappush(upper, -heapq.heappop(lower))\n        elif len(upper) > len(lower) + 1:\n            heapq.heappush(lower, -heapq.heappop(upper))\n        if len(lower) == len(upper):\n            result.append((-lower[0] + upper[0]) / 2)\n        elif len(lower) > len(upper):\n            result.append(float(-lower[0]))\n        else:\n            result.append(float(upper[0]))\n    return result\n",
+  "tests": [
+    {"args": [[]], "expected": []},
+    {"args": [[5]], "expected": [5.0]},
+    {"args": [[5, 1, 2]], "expected": [5.0, 3.0, 2.0]},
+    {"args": [[1, 2, 3, 4]], "expected": [1.0, 1.5, 2.0, 2.5]},
+    {"args": [[4, 3, 2, 1]], "expected": [4.0, 3.5, 3.0, 2.5]},
+    {"args": [[2, 2, 2, 2, 2]], "expected": [2.0, 2.0, 2.0, 2.0, 2.0]},
+    {"args": [[10, -5, 3, -1, 8, -20]], "expected": [10.0, 2.5, 3.0, 1.0, 3.0, 1.0]}
+  ],
+  "hints": [
+    "You must re-report the median after every arrival. Sorting the whole prefix each time is wasteful -- what structure lets you keep instant access to the middle without a full sort?",
+    "Split the seen values into a lower half and an upper half held in two heaps: a max-heap for the lower half (store negated values so heapq can act as a max-heap) and a min-heap for the upper half. Keep their sizes within one of each other so the median is always at the tops.",
+    "For each new x: if the lower half is non-empty and x is at most its current maximum (-lower[0]), push it onto the lower max-heap, otherwise push onto the upper min-heap. Then if one heap grew two ahead of the other, move its top across (negating as you cross). If the heaps are equal size, the median is the average of the two tops; otherwise it is the top of the larger heap. Remember to negate values when reading from or writing to the lower max-heap."
+  ]
+}

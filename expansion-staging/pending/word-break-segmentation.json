@@ -1,0 +1,25 @@
+{
+  "id": "word-break-segmentation",
+  "pattern": "dp-1d",
+  "title": "Word Break Segmentation",
+  "difficulty": "medium",
+  "statement": "A label printer jams whenever it hits a space, so product codes are printed as one unbroken string. Given a string s and a list words of approved code fragments, decide whether s can be split into a sequence of fragments taken from words, concatenated with nothing in between. Each fragment may be reused any number of times, and the split must consume s exactly (no leftover characters). Return True if such a split exists, else False. An empty s counts as trivially splittable (a sequence of zero fragments), so return True for it.",
+  "function_name": "can_segment",
+  "starter_code": "def can_segment(s, words):\n    # your code here\n    pass\n",
+  "reference_solution": "def can_segment(s, words):\n    word_set = set(words)\n    n = len(s)\n    dp = [False] * (n + 1)\n    dp[0] = True\n    for i in range(1, n + 1):\n        for j in range(i):\n            if dp[j] and s[j:i] in word_set:\n                dp[i] = True\n                break\n    return dp[n]\n",
+  "tests": [
+    {"args": ["raincoat", ["rain", "coat", "rai"]], "expected": true},
+    {"args": ["aaab", ["aaa", "aa", "ab"]], "expected": true},
+    {"args": ["z", ["z"]], "expected": true},
+    {"args": ["", ["any"]], "expected": true},
+    {"args": ["catdogs", ["cat", "dog", "cats"]], "expected": false},
+    {"args": ["dododo", ["do", "dodo"]], "expected": true},
+    {"args": ["cars", ["car", "ca", "rs"]], "expected": true},
+    {"args": ["pineapplepen", ["pine", "pineapple", "pen", "apples"]], "expected": true}
+  ],
+  "hints": [
+    "Greedily grabbing the longest (or first) matching fragment can strand you: taking 'aaa' from 'aaab' leaves an unmatchable 'b'. What lets you consider every possible split point instead of committing to one?",
+    "Define dp[i] = True when the prefix of s of length i can be split into fragments. dp[0] is True (empty prefix), and dp[i] is True if any earlier reachable prefix dp[j] extends to i via a fragment: s[j:i] in the word set.",
+    "Build dp of size len(s)+1 with dp[0]=True. For each i from 1 to len(s), scan j from 0 to i-1; if dp[j] and s[j:i] is in the fragment set, set dp[i]=True and break. Answer is dp[len(s)]."
+  ]
+}

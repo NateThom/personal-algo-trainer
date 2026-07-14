@@ -1,0 +1,25 @@
+{
+  "id": "smallest-string-after-swaps",
+  "pattern": "union-find",
+  "title": "Lexicographically Smallest String After Allowed Swaps",
+  "difficulty": "medium",
+  "statement": "You are given a lowercase string s and a list pairs of index pairs [i, j] (0-indexed into s). You may swap the characters sitting at any listed pair of indices, and you may perform any swap as many times as you like, in any order. Because swaps can be repeated and chained, if index a connects to b and b connects to c, then the characters at a, b, and c can be rearranged into any order among those three positions. Return the lexicographically smallest string obtainable through any sequence of allowed swaps. Formally: indices that are linked directly or transitively through pairs form a connected group, and the characters occupying a group's positions may be placed into those positions in any arrangement. To minimize the result, within each group sort the group's characters in ascending order and assign them to the group's index positions ordered from smallest index to largest index. Indices in no pair form a group by themselves and keep their original character. If pairs is empty, return s unchanged. The empty string returns the empty string.",
+  "function_name": "smallest_string_after_swaps",
+  "starter_code": "def smallest_string_after_swaps(s, pairs):\n    # your code here\n    pass\n",
+  "reference_solution": "def smallest_string_after_swaps(s, pairs):\n    n = len(s)\n    parent = list(range(n))\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a, b):\n        ra, rb = find(a), find(b)\n        if ra != rb:\n            parent[rb] = ra\n\n    for i, j in pairs:\n        union(i, j)\n\n    groups = {}\n    for i in range(n):\n        groups.setdefault(find(i), []).append(i)\n\n    res = list(s)\n    for idxs in groups.values():\n        chars = sorted(res[i] for i in idxs)\n        for pos, ch in zip(sorted(idxs), chars):\n            res[pos] = ch\n    return \"\".join(res)\n",
+  "tests": [
+    {"args": ["dcab", [[0, 3], [1, 2]]], "expected": "bacd"},
+    {"args": ["dcab", [[0, 3], [1, 2], [0, 2]]], "expected": "abcd"},
+    {"args": ["cba", [[0, 1], [1, 2]]], "expected": "abc"},
+    {"args": ["a", []], "expected": "a"},
+    {"args": ["", []], "expected": ""},
+    {"args": ["zxywvu", []], "expected": "zxywvu"},
+    {"args": ["bca", [[0, 1]]], "expected": "bca"},
+    {"args": ["dbca", [[0, 3], [3, 2]]], "expected": "abcd"}
+  ],
+  "hints": [
+    "Swaps compose: if you can swap positions a,b and positions b,c, then a, b, and c can be freely rearranged. What structure groups indices that are reachable from each other through a chain of relations?",
+    "Build a union-find (DSU) over the indices and union the two endpoints of every pair; indices with the same root belong to one component whose characters can be permuted arbitrarily among that component's positions.",
+    "Collect the indices of each component, take the multiset of characters currently at those indices, sort both the indices and the characters ascending, then write the k-th smallest character into the k-th smallest index of the component; join the array to get the answer."
+  ]
+}

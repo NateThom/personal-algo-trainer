@@ -1,0 +1,25 @@
+{
+  "id": "restore-ip-addresses-sorted",
+  "pattern": "backtracking",
+  "title": "Restore Valid IP Addresses",
+  "difficulty": "medium",
+  "statement": "A logging system stripped all the dots out of IPv4 addresses, leaving only the raw digit strings. Given a string digits containing only characters '0'-'9', reconstruct every valid IPv4 address that could have produced it by inserting exactly three dots (splitting the string into exactly four segments that together use every character, in order). A segment is valid when it is 1 to 3 characters long, its numeric value is between 0 and 255 inclusive, and it has no leading zero (a segment starting with '0' is only valid if it is exactly \"0\"). Return the reconstructed addresses as a list of strings sorted in ascending lexicographic (string) order. If no valid address can be formed — including when the string is shorter than 4 or longer than 12 characters — return an empty list.",
+  "function_name": "restore_ip_addresses",
+  "starter_code": "def restore_ip_addresses(digits):\n    # your code here\n    pass\n",
+  "reference_solution": "def restore_ip_addresses(digits):\n    n = len(digits)\n    results = []\n\n    def valid(seg):\n        if len(seg) > 1 and seg[0] == \"0\":\n            return False\n        return int(seg) <= 255\n\n    def backtrack(start, parts):\n        if len(parts) == 4:\n            if start == n:\n                results.append(\".\".join(parts))\n            return\n        remaining = 4 - len(parts)\n        if n - start < remaining or n - start > remaining * 3:\n            return\n        for length in range(1, 4):\n            if start + length > n:\n                break\n            seg = digits[start:start + length]\n            if valid(seg):\n                parts.append(seg)\n                backtrack(start + length, parts)\n                parts.pop()\n\n    backtrack(0, [])\n    results.sort()\n    return results\n",
+  "tests": [
+    {"args": ["19216811"], "expected": ["1.92.168.11", "19.2.168.11", "19.21.68.11", "19.216.8.11", "19.216.81.1", "192.1.68.11", "192.16.8.11", "192.16.81.1", "192.168.1.1"]},
+    {"args": ["1111"], "expected": ["1.1.1.1"]},
+    {"args": [""], "expected": []},
+    {"args": ["999999999999"], "expected": []},
+    {"args": ["010010"], "expected": ["0.10.0.10", "0.100.1.0"]},
+    {"args": ["101023"], "expected": ["1.0.10.23", "1.0.102.3", "10.1.0.23", "10.10.2.3", "101.0.2.3"]},
+    {"args": ["0000"], "expected": ["0.0.0.0"]},
+    {"args": ["12345678901"], "expected": []}
+  ],
+  "hints": [
+    "You must split the string into exactly four parts, each 1-3 characters. How would you try every way of placing the three dots and abandon a partial split as soon as a segment is invalid?",
+    "Backtrack on (start index, segments chosen so far): at each step try segment lengths 1, 2, 3 from start, keep the segment only if it passes the 0-255 and leading-zero checks, and prune when the remaining characters can no longer fit in the remaining segments (fewer than 1 or more than 3 per segment).",
+    "A segment is valid iff int(seg) <= 255 AND (len(seg) == 1 or seg[0] != '0'). Recurse: when 4 segments are chosen and start == len(digits), join them with dots and record; after the recursive call, pop the segment to un-choose. Sort the collected strings before returning."
+  ]
+}

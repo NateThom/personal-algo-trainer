@@ -1,0 +1,25 @@
+{
+  "id": "min-interval-removals",
+  "pattern": "intervals",
+  "title": "Minimum Interval Removals",
+  "difficulty": "medium",
+  "statement": "You are given a list of intervals, each written as [start, end] with start < end. Return the minimum number of intervals you must delete so that no two of the remaining intervals overlap. Two intervals overlap only if they share more than a single point: intervals that merely touch at an endpoint, such as [1, 2] and [2, 3], are NOT considered overlapping and may both stay. Return a single integer: the count of intervals removed. If the list is empty, or if no intervals overlap, return 0.",
+  "function_name": "min_interval_removals",
+  "starter_code": "def min_interval_removals(intervals):\n    # your code here\n    pass\n",
+  "reference_solution": "def min_interval_removals(intervals):\n    if not intervals:\n        return 0\n    ivs = sorted(intervals, key=lambda iv: iv[1])\n    kept_end = None\n    kept = 0\n    for start, end in ivs:\n        if kept_end is None or start >= kept_end:\n            kept += 1\n            kept_end = end\n    return len(ivs) - kept\n",
+  "tests": [
+    {"args": [[[1, 3], [2, 4], [3, 5]]], "expected": 1},
+    {"args": [[]], "expected": 0},
+    {"args": [[[5, 9]]], "expected": 0},
+    {"args": [[[1, 2], [2, 3], [3, 4]]], "expected": 0},
+    {"args": [[[1, 100], [2, 3], [4, 5], [6, 7], [8, 9]]], "expected": 1},
+    {"args": [[[0, 2], [0, 2], [0, 2]]], "expected": 2},
+    {"args": [[[1, 4], [1, 4], [2, 3], [3, 5]]], "expected": 2},
+    {"args": [[[10, 11], [1, 5], [3, 8], [4, 6], [6, 9]]], "expected": 2}
+  ],
+  "hints": [
+    "If you must drop some intervals so the rest never overlap, it is easier to think about which ones you get to KEEP: maximize the kept set, and the removals are just the leftovers.",
+    "To keep as many non-overlapping intervals as possible, greedily prefer the interval that finishes earliest, because leaving the smallest possible endpoint behind gives later intervals the most room. Sort by end, not by start.",
+    "Sort by end ascending. Walk through tracking the end of the last kept interval; keep the current interval when its start is >= that end (touching is allowed), updating the tracked end. The answer is total count minus the number kept."
+  ]
+}

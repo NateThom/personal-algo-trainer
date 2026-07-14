@@ -1,0 +1,25 @@
+{
+  "id": "min-cost-connect-ropes",
+  "pattern": "heaps",
+  "title": "Minimum Cost to Connect Ropes",
+  "difficulty": "easy",
+  "statement": "You are given a list of positive integers, each the length of a rope. Connecting two ropes fuses them into a single rope whose length is the sum of the two, and the cost of that connection equals that sum. You must keep connecting ropes until only one rope remains, and you want the total connection cost to be as small as possible. Return the minimum possible total cost as an integer. If the list has fewer than two ropes there is nothing to connect, so return 0. The optimal strategy is to always fuse the two shortest ropes currently available, add every intermediate fusion sum to the running total, and treat each fused rope as a new rope eligible for further connections. The total is the same regardless of how equal-length ropes are ordered among themselves, so no tie-break rule is needed.",
+  "function_name": "min_connect_cost",
+  "starter_code": "def min_connect_cost(ropes):\n    # your code here\n    pass\n",
+  "reference_solution": "import heapq\n\n\ndef min_connect_cost(ropes):\n    if len(ropes) < 2:\n        return 0\n    heap = list(ropes)\n    heapq.heapify(heap)\n    total = 0\n    while len(heap) > 1:\n        a = heapq.heappop(heap)\n        b = heapq.heappop(heap)\n        combined = a + b\n        total += combined\n        heapq.heappush(heap, combined)\n    return total\n",
+  "tests": [
+    {"args": [[1, 2, 5, 10, 35, 89]], "expected": 224},
+    {"args": [[4, 3, 2, 6]], "expected": 29},
+    {"args": [[8]], "expected": 0},
+    {"args": [[]], "expected": 0},
+    {"args": [[5, 5]], "expected": 10},
+    {"args": [[1, 1, 1, 1]], "expected": 8},
+    {"args": [[10, 10, 10, 10, 10]], "expected": 120},
+    {"args": [[20, 4, 8, 2]], "expected": 54}
+  ],
+  "hints": [
+    "At every step you only ever need the two shortest ropes available right now -- which data structure hands you the current minimum cheaply and lets you add new items back?",
+    "Keep the rope lengths in a min-heap. Each round pop the two smallest, and remember that the rope you create by fusing them must go back into the heap so it can be chosen again later.",
+    "Heapify the lengths, then loop while more than one rope remains: pop two, let combined = a + b, add combined to a running total, and push combined back. When one rope is left, the accumulated total (the sum of every fusion) is the answer; return 0 up front if there are fewer than two ropes."
+  ]
+}

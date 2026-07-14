@@ -1,0 +1,25 @@
+{
+  "id": "island-count-after-land-additions",
+  "pattern": "union-find",
+  "title": "Island Count After Each Land Addition",
+  "difficulty": "hard",
+  "statement": "You are given a grid with rows rows and cols columns that starts as all water. You are also given positions, a list of [r, c] pairs. Process the pairs in order; each one turns the cell at row r, column c into land. After processing each pair, record the current number of islands, where an island is a maximal group of land cells connected 4-directionally (up, down, left, right). Return the list of these recorded counts, one entry per pair in positions, in the same order. If a pair names a cell that is already land, the grid does not change and you still record the current (unchanged) count for that step. Recommended approach: flatten cell (r, c) to the id r*cols + c, keep a running island counter, increment it by one for every genuinely new land cell you create, and decrement it by one for each successful union with an already-land 4-directional neighbor (a union that actually merges two distinct components). If positions is empty, return an empty list.",
+  "function_name": "islands_after_additions",
+  "starter_code": "def islands_after_additions(rows, cols, positions):\n    # your code here\n    pass\n",
+  "reference_solution": "def islands_after_additions(rows, cols, positions):\n    parent = {}\n    rank = {}\n    count = 0\n    result = []\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a, b):\n        ra, rb = find(a), find(b)\n        if ra == rb:\n            return False\n        if rank[ra] < rank[rb]:\n            ra, rb = rb, ra\n        parent[rb] = ra\n        if rank[ra] == rank[rb]:\n            rank[ra] += 1\n        return True\n\n    for r, c in positions:\n        idx = r * cols + c\n        if idx in parent:\n            result.append(count)\n            continue\n        parent[idx] = idx\n        rank[idx] = 0\n        count += 1\n        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < rows and 0 <= nc < cols:\n                nidx = nr * cols + nc\n                if nidx in parent and union(idx, nidx):\n                    count -= 1\n        result.append(count)\n    return result\n",
+  "tests": [
+    {"args": [3, 3, [[0, 0], [0, 1], [1, 2], [2, 1]]], "expected": [1, 1, 2, 3]},
+    {"args": [1, 1, [[0, 0]]], "expected": [1]},
+    {"args": [0, 0, []], "expected": []},
+    {"args": [2, 2, [[0, 0], [1, 1], [0, 1]]], "expected": [1, 2, 1]},
+    {"args": [3, 3, [[0, 0], [0, 1], [1, 1], [1, 0], [2, 2]]], "expected": [1, 1, 1, 1, 2]},
+    {"args": [2, 3, [[0, 0], [0, 0], [1, 1], [1, 1]]], "expected": [1, 1, 2, 2]},
+    {"args": [3, 4, [[0, 0], [0, 1], [0, 2], [0, 3], [1, 3], [2, 3], [2, 2], [2, 1], [2, 0], [1, 0], [1, 2], [1, 1]]], "expected": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]},
+    {"args": [4, 4, [[0, 0], [3, 3], [1, 1], [2, 2], [1, 2], [2, 1], [1, 0], [0, 1]]], "expected": [1, 2, 3, 4, 3, 3, 2, 2]}
+  ],
+  "hints": [
+    "Each addition only ever connects the new cell to cells that already exist, so think about a structure that merges groups incrementally rather than rescanning the whole grid every step.",
+    "Maintain a disjoint-set forest over flattened cell ids plus a single running island counter: +1 when a brand-new land cell appears, and rely on your union routine's return value to know whether a neighbor merge actually reduced the count.",
+    "For each new cell: skip it entirely (and repeat the last count) if it is already land; otherwise add it, do count += 1, then for each of the four in-bounds land neighbors call union and only do count -= 1 when union reports that two distinct components were actually joined. A cell that touches two arms of the same existing island unions successfully only once, so the count drops by at most one for that cell."
+  ]
+}

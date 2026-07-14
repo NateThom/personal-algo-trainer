@@ -1,0 +1,25 @@
+{
+  "id": "almost-palindrome-one-deletion",
+  "pattern": "two-pointers",
+  "title": "Palindrome After At Most One Deletion",
+  "difficulty": "medium",
+  "statement": "You are given a string s made up only of lowercase English letters. Return True if s is already a palindrome, OR if it can be turned into a palindrome by deleting at most one character; otherwise return False. Deleting zero characters is allowed, so any string that is already a palindrome returns True. The empty string and any single-character string are palindromes and return True. Walk two pointers inward from the two ends: as long as the characters match, keep going. At the first mismatch you are permitted exactly one deletion, which means you must check BOTH possibilities and return True if EITHER works: skipping the left character (comparing the segment one position right of left through right) leaves a palindrome, OR skipping the right character (comparing left through one position left of right) leaves a palindrome. If neither branch yields a palindrome, return False. Return a boolean (True or False).",
+  "function_name": "valid_palindrome_after_one_deletion",
+  "starter_code": "def valid_palindrome_after_one_deletion(s):\n    # your code here\n    pass\n",
+  "reference_solution": "def valid_palindrome_after_one_deletion(s):\n    def is_pal(lo, hi):\n        while lo < hi:\n            if s[lo] != s[hi]:\n                return False\n            lo += 1\n            hi -= 1\n        return True\n    left, right = 0, len(s) - 1\n    while left < right:\n        if s[left] != s[right]:\n            return is_pal(left + 1, right) or is_pal(left, right - 1)\n        left += 1\n        right -= 1\n    return True\n",
+  "tests": [
+    {"args": [""], "expected": true},
+    {"args": ["a"], "expected": true},
+    {"args": ["racecar"], "expected": true},
+    {"args": ["abc"], "expected": false},
+    {"args": ["deeee"], "expected": true},
+    {"args": ["cbbcc"], "expected": true},
+    {"args": ["abccdba"], "expected": true},
+    {"args": ["ebcbbececabbacecbbcbe"], "expected": true}
+  ],
+  "hints": [
+    "When you compare characters from both ends of the string, what should you do the moment the two ends disagree, given you get one free deletion?",
+    "March two pointers inward while ends match. At the first mismatch you have one deletion to spend, and it could go to either side, so you must test both skip-left and skip-right, not just one.",
+    "Write a helper is_pal(lo, hi) that checks whether s[lo..hi] is a plain palindrome. Advance left/right while s[left] == s[right]. On the first mismatch, return is_pal(left+1, right) OR is_pal(left, right-1). If the loop finishes with no mismatch, the string was already a palindrome, so return True."
+  ]
+}

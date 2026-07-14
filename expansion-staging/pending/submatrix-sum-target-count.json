@@ -1,0 +1,25 @@
+{
+  "id": "submatrix-sum-target-count",
+  "pattern": "prefix-sum",
+  "title": "Count Submatrices That Sum to Target",
+  "difficulty": "hard",
+  "statement": "You are auditing a rectangular ledger stored as matrix, a list of rows where every row has the same number of integer entries (values may be negative, zero, or positive). Given matrix and an integer target, count how many non-empty axis-aligned submatrices have entries that add up to exactly target. A submatrix is any contiguous block chosen by picking a top row, a bottom row (at or below the top), a left column, and a right column (at or below the left); two submatrices are considered different if they occupy different row/column boundaries, even if their entries are identical. Return the count as a single integer. If matrix is empty or has no columns, return 0.",
+  "function_name": "count_target_submatrices",
+  "starter_code": "def count_target_submatrices(matrix, target):\n    # your code here\n    pass\n",
+  "reference_solution": "def count_target_submatrices(matrix, target):\n    from collections import defaultdict\n    if not matrix or not matrix[0]:\n        return 0\n    rows = len(matrix)\n    cols = len(matrix[0])\n    row_prefix = [[0] * (cols + 1) for _ in range(rows)]\n    for r in range(rows):\n        for c in range(cols):\n            row_prefix[r][c + 1] = row_prefix[r][c] + matrix[r][c]\n    count = 0\n    for c1 in range(cols):\n        for c2 in range(c1, cols):\n            prefix_counts = defaultdict(int)\n            prefix_counts[0] = 1\n            running = 0\n            for r in range(rows):\n                strip = row_prefix[r][c2 + 1] - row_prefix[r][c1]\n                running += strip\n                count += prefix_counts[running - target]\n                prefix_counts[running] += 1\n    return count\n",
+  "tests": [
+    {"args": [[[5]], 5], "expected": 1},
+    {"args": [[[5]], 3], "expected": 0},
+    {"args": [[[0]], 0], "expected": 1},
+    {"args": [[], 4], "expected": 0},
+    {"args": [[[1, 2, 3], [4, 5, 6], [7, 8, 9]], 12], "expected": 2},
+    {"args": [[[1, -1], [-1, 1]], 0], "expected": 5},
+    {"args": [[[0, 0], [0, 0]], 0], "expected": 9},
+    {"args": [[[2, -2, 2], [-2, 2, -2]], 2], "expected": 4}
+  ],
+  "hints": [
+    "Fixing a left and right column collapses each row into a single number (the sum of that row between those columns). What 1D problem does counting blocks that sum to target then become?",
+    "For each pair of column boundaries, walk down the rows keeping a running vertical sum and a hashmap of how many times each running-sum value has appeared, seeded with {0: 1}; a submatrix ending at the current row hits target whenever running - target was seen before.",
+    "Build row-wise prefix sums so any horizontal strip sum is O(1). Loop over every (c1, c2) column pair; for EACH pair create a FRESH prefix_counts = {0: 1}, reset running = 0, then for each row add strip = row_prefix[r][c2+1] - row_prefix[r][c1] to running, add prefix_counts[running - target] to the answer, and increment prefix_counts[running]. Summing over all column pairs gives the total."
+  ]
+}

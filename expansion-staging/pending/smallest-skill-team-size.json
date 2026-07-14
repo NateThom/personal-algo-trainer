@@ -1,0 +1,25 @@
+{
+  "id": "smallest-skill-team-size",
+  "pattern": "bit-manipulation",
+  "title": "Smallest Sufficient Team Size",
+  "difficulty": "hard",
+  "statement": "A research station is staffing an expedition. You are given required, a list of distinct skill names the expedition needs (at most 16, possibly empty), and people, a list where people[i] is the list of skill names person i possesses (a person may list skills not in required; ignore those). Return the size (an int) of the smallest team of people whose combined skills include every required skill. If required is empty, return 0. You are guaranteed that for every input a valid team exists. Only the minimum team size is asked for, never the members themselves.",
+  "function_name": "min_crew_size",
+  "starter_code": "def min_crew_size(required, people):\n    # encode each person as a bitmask over required skills, then DP over skill subsets\n    pass\n",
+  "reference_solution": "def min_crew_size(required, people):\n    m = len(required)\n    if m == 0:\n        return 0\n    idx = {s: i for i, s in enumerate(required)}\n    masks = []\n    for person in people:\n        mask = 0\n        for s in person:\n            if s in idx:\n                mask |= 1 << idx[s]\n        masks.append(mask)\n    full = (1 << m) - 1\n    INF = float('inf')\n    dp = [INF] * (1 << m)\n    dp[0] = 0\n    for state in range(1 << m):\n        if dp[state] == INF:\n            continue\n        for mask in masks:\n            nxt = state | mask\n            if dp[nxt] > dp[state] + 1:\n                dp[nxt] = dp[state] + 1\n    return dp[full]\n",
+  "tests": [
+    {"args": [["python", "sql", "docker"], [["python"], ["sql", "docker"], ["docker"]]], "expected": 2},
+    {"args": [["welding"], [["welding", "painting"]]], "expected": 1},
+    {"args": [[], [["anything"], []]], "expected": 0},
+    {"args": [["a", "b", "c"], [["a"], ["b"], ["a", "b", "c", "z"], ["c"]]], "expected": 1},
+    {"args": [["nav", "med"], [["nav"], ["nav"], ["med"], ["nav", "med"]]], "expected": 1},
+    {"args": [["a", "b", "c", "d", "e", "f"], [["a", "b", "c", "d"], ["a", "b", "e"], ["c", "d", "f"]]], "expected": 2},
+    {"args": [["s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8"], [["s1", "s2", "s3", "s4", "s5"], ["s1", "s2", "s3", "s6"], ["s4", "s5", "s7", "s8"], ["s6", "s7"], ["s8"]]], "expected": 2},
+    {"args": [["k0", "k1", "k2", "k3", "k4", "k5", "k6", "k7", "k8", "k9", "k10", "k11", "k12", "k13", "k14", "k15"], [["k0", "k1", "k2", "k3", "k4", "k5", "k6", "k7", "k8"], ["k0", "k1", "k2", "k3", "k4", "k5", "k6", "k7"], ["k8", "k9", "k10", "k11", "k12", "k13", "k14", "k15"], ["k9", "k10", "k11", "k12", "k13", "k14", "k15"]]], "expected": 2}
+  ],
+  "hints": [
+    "There are at most 16 required skills. What compact representation lets you treat 'which skills are covered so far' as a single value, and why does greedily picking the person with the most new skills fail?",
+    "Encode each person as an integer bitmask over the required skills (bit i set means they have required[i]). The DP state is a subset of covered skills: dp[state] = fewest people needed to cover exactly that set, with dp[0] = 0.",
+    "Iterate states from 0 to 2^m - 1; for each reachable state and each person mask, relax dp[state | mask] = min(dp[state | mask], dp[state] + 1). The answer is dp[(1 << m) - 1]; return 0 immediately when required is empty."
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "id": "bst-lowest-common-ancestor",
+  "pattern": "trees",
+  "title": "Lowest Common Ancestor in a BST",
+  "difficulty": "medium",
+  "statement": "A valid binary search tree (BST) is given in level-order (breadth-first) array form: `tree` is a list where tree[0] is the root, and the array is read left to right so that for each non-null node consumed, its next two not-yet-assigned slots become its left and right child; missing children are the value null. In a BST every node's left subtree holds only smaller values and its right subtree only larger values. You are given two distinct values `p` and `q`, both guaranteed to exist in the tree (they may be passed in either order, so do not assume p < q). Return the VALUE of their lowest common ancestor: the deepest node whose subtree contains both p and q, where a node counts as an ancestor of itself. Solve it by descending from the root: when both target values are smaller than the current node go left, when both are larger go right, and otherwise the current node is the split point and is the lowest common ancestor. Return an integer.",
+  "function_name": "lca_bst",
+  "starter_code": "def lca_bst(tree, p, q):\n    # your code here\n    pass\n",
+  "reference_solution": "def _build(tree):\n    if not tree or tree[0] is None:\n        return None\n    nodes = [None if v is None else {'val': v, 'left': None, 'right': None} for v in tree]\n    kids = iter(range(1, len(nodes)))\n    for node in nodes:\n        if node is None:\n            continue\n        for side in ('left', 'right'):\n            idx = next(kids, None)\n            if idx is not None and idx < len(nodes) and nodes[idx] is not None:\n                node[side] = nodes[idx]\n    return nodes[0]\n\n\ndef lca_bst(tree, p, q):\n    node = _build(tree)\n    lo, hi = min(p, q), max(p, q)\n    while node is not None:\n        if hi < node['val']:\n            node = node['left']\n        elif lo > node['val']:\n            node = node['right']\n        else:\n            return node['val']\n    return None\n",
+  "tests": [
+    {"args": [[6, 2, 8, 0, 4, 7, 9, null, null, 3, 5], 2, 8], "expected": 6},
+    {"args": [[6, 2, 8, 0, 4, 7, 9, null, null, 3, 5], 2, 4], "expected": 2},
+    {"args": [[6, 2, 8, 0, 4, 7, 9, null, null, 3, 5], 3, 5], "expected": 4},
+    {"args": [[6, 2, 8, 0, 4, 7, 9, null, null, 3, 5], 8, 2], "expected": 6},
+    {"args": [[6, 2, 8, 0, 4, 7, 9, null, null, 3, 5], 5, 4], "expected": 4},
+    {"args": [[1, null, 2], 1, 2], "expected": 1},
+    {"args": [[20, 10, 30, 5, 15], 30, 5], "expected": 20}
+  ],
+  "hints": [
+    "In a BST, comparing a target value against the current node tells you which side it must live on -- can you use that to walk down toward both targets at once instead of searching the whole tree?",
+    "The lowest common ancestor is the first node where the two targets fall on opposite sides (or one target equals the node); descend left while both targets are smaller, right while both are larger.",
+    "Since p and q may arrive in any order, take lo = min(p, q) and hi = max(p, q); at each node, if hi < node.val go left, elif lo > node.val go right, else return node.val -- that node is the split point and the LCA."
+  ]
+}

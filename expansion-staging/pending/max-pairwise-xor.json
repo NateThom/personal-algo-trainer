@@ -1,0 +1,25 @@
+{
+  "id": "max-pairwise-xor",
+  "pattern": "bit-manipulation",
+  "title": "Maximum XOR of Any Two Elements",
+  "difficulty": "hard",
+  "statement": "A hardware team encodes sensor readings as non-negative integers and measures how 'different' two readings are by XOR-ing them: the bigger the XOR, the more their bit patterns disagree. Given a list nums of at least two non-negative integers (each value at most 2^31, list length up to 10^5), return the single integer max(nums[i] ^ nums[j]) over all index pairs with i != j. The same index may not be paired with itself, but equal values at different indices are a valid pair (their XOR is 0). The answer always exists since len(nums) >= 2. An O(n^2) scan of all pairs is too slow at the top of the size range; aim for O(n log MAX) by deciding the answer one bit at a time from the most significant bit down, keeping a set of prefixes masked to the bits decided so far and using the identity a ^ b = c  <=>  a ^ c = b to test whether the current candidate answer with the next bit set is achievable.",
+  "function_name": "max_pairwise_xor",
+  "starter_code": "def max_pairwise_xor(nums):\n    # your code here\n    pass\n",
+  "reference_solution": "def max_pairwise_xor(nums):\n    best = 0\n    mask = 0\n    for bit in range(31, -1, -1):\n        mask |= 1 << bit\n        prefixes = {n & mask for n in nums}\n        candidate = best | (1 << bit)\n        if any(p ^ candidate in prefixes for p in prefixes):\n            best = candidate\n    return best\n",
+  "tests": [
+    {"args": [[4, 9, 14, 3, 7]], "expected": 14},
+    {"args": [[8, 10, 2]], "expected": 10},
+    {"args": [[0, 0]], "expected": 0},
+    {"args": [[7, 7, 7]], "expected": 0},
+    {"args": [[2147483647, 1, 2147483648]], "expected": 4294967295},
+    {"args": [[5, 5, 12]], "expected": 9},
+    {"args": [[1024, 512, 256, 128, 64]], "expected": 1536},
+    {"args": [[13, 29, 6, 21, 34, 8]], "expected": 63}
+  ],
+  "hints": [
+    "Comparing every pair is O(n^2). Could you instead decide, one bit at a time, whether the final answer can have that bit set? Which end of the number should you start from?",
+    "Go from the most significant bit down. Maintain 'best' (bits decided so far) and a growing mask; at each bit, collect the set {n & mask for n in nums} and ask whether two prefixes XOR to candidate = best | (1 << bit). The identity a ^ b = c  <=>  a ^ c = b turns that pair question into set lookups.",
+    "For each bit from 31 down to 0: extend mask by that bit, build the prefix set, form candidate = best | (1 << bit), and if any prefix p has (p ^ candidate) also in the set, commit best = candidate. Greedily keeping a high bit is always safe because one higher bit outweighs all lower bits combined. Return best."
+  ]
+}

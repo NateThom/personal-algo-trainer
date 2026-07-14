@@ -1,0 +1,25 @@
+{
+  "id": "longest-subarray-k-distinct",
+  "pattern": "sliding-window",
+  "title": "Longest Subarray with At Most K Distinct Values",
+  "difficulty": "medium",
+  "statement": "You are given a list of integers nums and an integer k (k >= 1). A subarray is a contiguous slice of nums. Return the length of the longest subarray that contains at most k distinct values. If nums is empty, return 0. The result is a single non-negative integer, uniquely determined: you want the maximum possible window length, not the window itself, so ties among equally long windows do not matter.",
+  "function_name": "longest_subarray_k_distinct",
+  "starter_code": "def longest_subarray_k_distinct(nums, k):\n    # your code here\n    pass\n",
+  "reference_solution": "def longest_subarray_k_distinct(nums, k):\n    from collections import defaultdict\n    counts = defaultdict(int)\n    left = 0\n    best = 0\n    for right, v in enumerate(nums):\n        counts[v] += 1\n        while len(counts) > k:\n            counts[nums[left]] -= 1\n            if counts[nums[left]] == 0:\n                del counts[nums[left]]\n            left += 1\n        best = max(best, right - left + 1)\n    return best\n",
+  "tests": [
+    {"args": [[], 3], "expected": 0},
+    {"args": [[7], 1], "expected": 1},
+    {"args": [[1, 2, 1, 2, 3], 2], "expected": 4},
+    {"args": [[4, 4, 4, 4], 1], "expected": 4},
+    {"args": [[1, 2, 3, 4, 5], 2], "expected": 2},
+    {"args": [[1, 2, 1, 3, 4, 2, 3], 3], "expected": 4},
+    {"args": [[5, 5, 6, 7, 7, 8], 2], "expected": 3},
+    {"args": [[9, 8, 7, 6], 4], "expected": 4}
+  ],
+  "hints": [
+    "You want the longest contiguous run whose variety of values stays within a limit — what kind of window can grow on the right and give ground on the left as needed?",
+    "Track the values currently inside the window with a frequency map; the number of distinct values is exactly how many keys the map holds.",
+    "Extend right by one each step, incrementing that value's count. While the map has more than k keys, decrement nums[left] and, crucially, delete the key when its count reaches zero so the distinct count actually drops; then move left forward. Record right - left + 1 as a candidate best."
+  ]
+}

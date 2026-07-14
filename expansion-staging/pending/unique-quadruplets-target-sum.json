@@ -1,0 +1,24 @@
+{
+  "id": "unique-quadruplets-target-sum",
+  "pattern": "two-pointers",
+  "title": "Unique Quadruplets With Target Sum",
+  "difficulty": "hard",
+  "statement": "You are given a list of integers nums and an integer target. Return every unique quadruplet of values [a, b, c, d] drawn from four distinct positions in nums such that a + b + c + d == target. Each returned quadruplet must be sorted in ascending order (a <= b <= c <= d), and the overall list of quadruplets must be sorted lexicographically (compare first elements, then second, then third, then fourth). Two quadruplets are considered the same if they contain the same multiset of values, so each distinct value-combination appears at most once even when nums holds repeated numbers. If no quadruplet sums to target, return an empty list.",
+  "function_name": "four_sum",
+  "starter_code": "def four_sum(nums, target):\n    # your code here\n    pass\n",
+  "reference_solution": "def four_sum(nums, target):\n    nums = sorted(nums)\n    n = len(nums)\n    result = []\n    for i in range(n - 3):\n        if i > 0 and nums[i] == nums[i - 1]:\n            continue\n        for j in range(i + 1, n - 2):\n            if j > i + 1 and nums[j] == nums[j - 1]:\n                continue\n            left, right = j + 1, n - 1\n            need = target - nums[i] - nums[j]\n            while left < right:\n                s = nums[left] + nums[right]\n                if s == need:\n                    result.append([nums[i], nums[j], nums[left], nums[right]])\n                    left += 1\n                    right -= 1\n                    while left < right and nums[left] == nums[left - 1]:\n                        left += 1\n                    while left < right and nums[right] == nums[right + 1]:\n                        right -= 1\n                elif s < need:\n                    left += 1\n                else:\n                    right -= 1\n    return result\n",
+  "tests": [
+    {"args": [[1, 0, -1, 0, -2, 2], 0], "expected": [[-2, -1, 1, 2], [-2, 0, 0, 2], [-1, 0, 0, 1]]},
+    {"args": [[2, 2, 2, 2, 2], 8], "expected": [[2, 2, 2, 2]]},
+    {"args": [[-2, -1, -1, 1, 1, 2, 2], 0], "expected": [[-2, -1, 1, 2], [-1, -1, 1, 1]]},
+    {"args": [[], 0], "expected": []},
+    {"args": [[1, 2, 3, 4], 100], "expected": []},
+    {"args": [[0, 0, 0, 0], 0], "expected": [[0, 0, 0, 0]]},
+    {"args": [[5, 5, 5, 5, 1, 1, 1, 1], 12], "expected": [[1, 1, 5, 5]]}
+  ],
+  "hints": [
+    "A brute-force check of all four-position combinations is O(n^4). If you sort the values first, can you fix two of them and reduce the rest to a sorted-array pair search?",
+    "After sorting, iterate two outer indices i < j, then converge a left/right pointer over the suffix looking for the remaining needed sum. Uniqueness is the real trap: you must skip repeated values at every level, not just the innermost.",
+    "For i, skip when nums[i] == nums[i-1] (and i > 0); for j, skip when nums[j] == nums[j-1] (and j > i+1) using continue so you advance to the next candidate rather than break. After recording a hit, advance left past equal neighbors and right past equal neighbors before continuing the pair search."
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "search-rotated-array",
+  "pattern": "binary-search",
+  "title": "Search in Rotated Sorted Array",
+  "difficulty": "medium",
+  "statement": "A list of distinct integers was sorted in ascending order, then rotated at some unknown pivot: every element after the pivot was moved to the front (a rotation of zero positions, leaving it fully sorted, is possible). Given this rotated list nums and an integer target, return the index of target in nums, or -1 if target does not appear. Because all values are distinct, the index is unique. Your solution must run in O(log n) time: at each step, decide which half of the current window [left, right] is sorted (the left half is sorted exactly when nums[left] <= nums[mid]), then check whether target falls inside that sorted half's value range to choose which side to keep. An empty list has no target, so return -1.",
+  "function_name": "search_rotated",
+  "starter_code": "def search_rotated(nums, target):\n    # your code here\n    pass\n",
+  "reference_solution": "def search_rotated(nums, target):\n    left, right = 0, len(nums) - 1\n    while left <= right:\n        mid = left + (right - left) // 2\n        if nums[mid] == target:\n            return mid\n        if nums[left] <= nums[mid]:\n            if nums[left] <= target < nums[mid]:\n                right = mid - 1\n            else:\n                left = mid + 1\n        else:\n            if nums[mid] < target <= nums[right]:\n                left = mid + 1\n            else:\n                right = mid - 1\n    return -1\n",
+  "tests": [
+    {"args": [[13, 18, 25, 2, 7, 9, 11], 9], "expected": 5},
+    {"args": [[4, 5, 6, 7, 0, 1, 2], 0], "expected": 4},
+    {"args": [[6, 7, 1, 2, 3, 4, 5], 6], "expected": 0},
+    {"args": [[5], 5], "expected": 0},
+    {"args": [[5], 3], "expected": -1},
+    {"args": [[], 4], "expected": -1},
+    {"args": [[3, 1], 1], "expected": 1},
+    {"args": [[10, 20, 30, 40, 50], 40], "expected": 3}
+  ],
+  "hints": [
+    "A rotated sorted array is two sorted runs glued together. When you look at any window [left, right] and its midpoint, what can you say about at least one of the two halves?",
+    "Key invariant: at every step, at least one half of the window is fully sorted, and you can tell which by comparing nums[left] <= nums[mid]. In a sorted half you can test membership by value range alone.",
+    "Compute mid; if nums[mid] == target return mid. If nums[left] <= nums[mid], the left half is sorted: when nums[left] <= target < nums[mid], set right = mid - 1, otherwise left = mid + 1. Else the right half is sorted: when nums[mid] < target <= nums[right], set left = mid + 1, otherwise right = mid - 1. Return -1 when left > right. Use <= (not <) in the sorted-half check so two-element windows like [3, 1] classify correctly."
+  ]
+}

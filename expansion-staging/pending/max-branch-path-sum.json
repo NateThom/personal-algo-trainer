@@ -1,0 +1,25 @@
+{
+  "id": "max-branch-path-sum",
+  "pattern": "trees",
+  "title": "Maximum Path Sum in a Binary Tree",
+  "statement": "A binary tree is given as `tree`, a non-empty list in level-order (breadth-first) array form: tree[0] is the root, and the tree is built level by level by reading the array left to right. For each non-null node consumed, its next two not-yet-assigned child slots (in the order they appear) become its left and right child; missing children are written as null. Node values may be negative. A downward-connected path is any sequence of one or more nodes where each successive node is a child of the previous one, but the path may also fork through a single node so that it descends into the left subtree, passes through that node once, and continues down into the right subtree (i.e. the path is a simple path in the tree that never moves from a node up to its parent more than to reach a shared topmost node). Concretely, for each node the candidate path sum is the node's value plus the best downward extension into its left subtree (or 0 if that would be negative) plus the best downward extension into its right subtree (or 0 if that would be negative). Return the maximum such sum over all nodes. A single node by itself is a valid path, so the answer is at least the largest single node value. Since `tree` is non-empty, an answer always exists; return the integer sum.",
+  "function_name": "max_branch_path_sum",
+  "starter_code": "def max_branch_path_sum(tree):\n    # your code here\n    pass\n",
+  "reference_solution": "def _build(tree):\n    if not tree or tree[0] is None:\n        return None\n    nodes = [None if v is None else {'val': v, 'left': None, 'right': None} for v in tree]\n    kids = iter(range(1, len(nodes)))\n    for node in nodes:\n        if node is None:\n            continue\n        for side in ('left', 'right'):\n            idx = next(kids, None)\n            if idx is not None and idx < len(nodes) and nodes[idx] is not None:\n                node[side] = nodes[idx]\n    return nodes[0]\n\n\ndef max_branch_path_sum(tree):\n    root = _build(tree)\n    best = [root['val']]\n\n    def dfs(node):\n        if node is None:\n            return 0\n        left = max(0, dfs(node['left']))\n        right = max(0, dfs(node['right']))\n        best[0] = max(best[0], node['val'] + left + right)\n        return node['val'] + max(left, right)\n\n    dfs(root)\n    return best[0]\n",
+  "tests": [
+    {"args": [[1, 2, 3]], "expected": 6},
+    {"args": [[-10, 9, 20, null, null, 15, 7]], "expected": 42},
+    {"args": [[5]], "expected": 5},
+    {"args": [[-3]], "expected": -3},
+    {"args": [[-1, -2, -3]], "expected": -1},
+    {"args": [[4, -3, 5]], "expected": 9},
+    {"args": [[10, 2, 10, 20, 1, null, -25, null, null, null, null, 3, 4]], "expected": 42},
+    {"args": [[2, -1, -2]], "expected": 2}
+  ],
+  "hints": [
+    "Each node asks the same recursive question: what is the best path that bends through me, and separately, what is the best straight branch I can hand upward to my parent?",
+    "Do a post-order DFS. From a child, only accept its contribution if it is positive (clamp with max(0, dfs(child))); update a running best with node.val + left + right, but return only node.val + max(left, right) to the parent so a forked path is never extended further.",
+    "Keep the global answer in a mutable holder initialized to the root value. At each node compute left = max(0, dfs(left)) and right = max(0, dfs(right)); set best = max(best, node.val + left + right) (the through-node path), then return node.val + max(left, right) (the single extendable branch). The final answer is the holder after visiting the root."
+  ],
+  "difficulty": "hard"
+}

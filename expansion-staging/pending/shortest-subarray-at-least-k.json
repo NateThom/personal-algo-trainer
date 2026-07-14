@@ -1,0 +1,25 @@
+{
+  "id": "shortest-subarray-at-least-k",
+  "pattern": "prefix-sum",
+  "title": "Shortest Subarray With Sum at Least K",
+  "difficulty": "hard",
+  "statement": "You are given an integer array nums (values may be negative, zero, or positive) and an integer k. Consider every non-empty contiguous subarray of nums. Return the length of the shortest such subarray whose elements sum to at least k (that is, sum >= k). If no non-empty contiguous subarray reaches a sum of k, return -1. Because the array may contain negative numbers, a plain expanding/shrinking window is not valid here: the running sum is not monotonic across window edges, so a shorter qualifying subarray can begin after a dip that an ordinary sliding window would have already discarded.",
+  "function_name": "shortest_subarray_at_least_k",
+  "starter_code": "def shortest_subarray_at_least_k(nums, k):\n    # your code here\n    pass\n",
+  "reference_solution": "def shortest_subarray_at_least_k(nums, k):\n    from collections import deque\n    n = len(nums)\n    prefix = [0] * (n + 1)\n    for i, v in enumerate(nums):\n        prefix[i + 1] = prefix[i] + v\n    best = n + 1\n    dq = deque()\n    for j in range(n + 1):\n        while dq and prefix[j] - prefix[dq[0]] >= k:\n            best = min(best, j - dq.popleft())\n        while dq and prefix[dq[-1]] >= prefix[j]:\n            dq.pop()\n        dq.append(j)\n    return best if best <= n else -1\n",
+  "tests": [
+    {"args": [[2, -1, 2], 3], "expected": 3},
+    {"args": [[1], 1], "expected": 1},
+    {"args": [[1], 2], "expected": -1},
+    {"args": [[84, -38, 32, 40, 95], 167], "expected": 3},
+    {"args": [[-1, -2, -3], 1], "expected": -1},
+    {"args": [[5, 4, 3, 2, 1], 6], "expected": 2},
+    {"args": [[2, 3, 1, 2, 4, 3], 7], "expected": 2},
+    {"args": [[-28, 81, -20, 28, -29], 89], "expected": 3}
+  ],
+  "hints": [
+    "Range sums over a static array beg for a prefix array; the condition sum(i..j) >= k becomes prefix[j+1] - prefix[i] >= k. What lets you find, for each end, the best start fast?",
+    "Sweep the prefix array with a deque of candidate start indices kept in increasing prefix-value order; a smaller-and-later prefix always dominates a larger-and-earlier one, so pop those from the back.",
+    "For each j: while the front start satisfies prefix[j] - prefix[front] >= k, record j - front and pop the front (it can never give a shorter answer again); then pop from the back while prefix[back] >= prefix[j] before appending j. Answer is the smallest length seen, else -1."
+  ]
+}

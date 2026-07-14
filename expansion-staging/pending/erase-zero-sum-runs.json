@@ -1,0 +1,25 @@
+{
+  "id": "erase-zero-sum-runs",
+  "pattern": "linked-list",
+  "title": "Erase Consecutive Runs That Sum to Zero",
+  "difficulty": "hard",
+  "statement": "You are given a list of integers `values` that you should treat as the payloads of a singly linked list chained head-to-tail in the given order. Repeatedly delete every maximal-or-not consecutive run of elements whose values sum to exactly zero, continuing until no consecutive run summing to zero remains anywhere in the chain. Deletions cascade: after removing a run, the elements that were on either side of it become adjacent and may themselves form a new zero-sum run that must also be removed. The final surviving values are the same no matter what order you perform the deletions in, so the answer is unique. Return the surviving values as a list, in their original left-to-right order. If everything is deleted, return an empty list. For example, `[1, 2, -3, 3, 1]` becomes `[3, 1]` because `[1, 2, -3]` sums to zero, and `[3, 4, -7, 5, -6, 6]` collapses all the way to `[5]` as successive removals expose new zero-sum neighbors.",
+  "function_name": "erase_zero_sum_runs",
+  "starter_code": "def erase_zero_sum_runs(values):\n    # your code here\n    pass\n",
+  "reference_solution": "class ListNode:\n    def __init__(self, val=0, next=None):\n        self.val = val\n        self.next = next\n\n\ndef erase_zero_sum_runs(values):\n    dummy = ListNode(0)\n    node = dummy\n    for v in values:\n        node.next = ListNode(v)\n        node = node.next\n    # First pass: map each running prefix sum to the LAST node that produces it.\n    prefix = {}\n    running = 0\n    node = dummy\n    while node:\n        running += node.val\n        prefix[running] = node\n        node = node.next\n    # Second pass: whenever a prefix sum repeats, everything strictly between the\n    # first occurrence and its last occurrence sums to zero, so splice it out.\n    running = 0\n    node = dummy\n    while node:\n        running += node.val\n        node.next = prefix[running].next\n        node = node.next\n    out = []\n    node = dummy.next\n    while node:\n        out.append(node.val)\n        node = node.next\n    return out\n",
+  "tests": [
+    {"args": [[1, 2, -3, 3, 1]], "expected": [3, 1]},
+    {"args": [[1, 2, 3, -3, -2]], "expected": [1]},
+    {"args": [[3, 4, -7, 5, -6, 6]], "expected": [5]},
+    {"args": [[]], "expected": []},
+    {"args": [[5]], "expected": [5]},
+    {"args": [[1, 2, 3, 4]], "expected": [1, 2, 3, 4]},
+    {"args": [[3, -3, 2, 2, -1, 4, -4, 0]], "expected": [2, 2, -1]},
+    {"args": [[0]], "expected": []}
+  ],
+  "hints": [
+    "A run of elements sums to zero exactly when two running prefix sums (measured from a sentinel before the head) are equal. What does an equal prefix sum tell you about the segment between those two points?",
+    "Put a dummy head before the list and record, for each prefix-sum value, the LAST node at which it occurs. Two nodes sharing a prefix sum bracket a zero-sum span; using the last occurrence automatically absorbs cascading and overlapping runs in one shot.",
+    "Do two passes. Pass one builds prefix_sum -> last_node_with_that_sum. Pass two walks from the dummy re-accumulating the running sum and sets node.next = prefix[running].next, jumping directly over every deleted span; then read off the survivors from dummy.next."
+  ]
+}

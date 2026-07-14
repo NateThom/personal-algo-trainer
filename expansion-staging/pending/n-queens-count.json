@@ -1,0 +1,24 @@
+{
+  "id": "n-queens-count",
+  "pattern": "backtracking",
+  "title": "Count N-Queens Placements",
+  "difficulty": "hard",
+  "statement": "A chess coach wants to know how many safe drills she can set up. Given an integer n >= 1, return the number of distinct ways to place n queens on an n x n board so that no two queens share a row, a column, or a diagonal (either direction). Return a single integer count. If no placement is possible, return 0. Examples: n = 1 has 1 placement, n = 2 and n = 3 have 0, n = 4 has 2, and n = 8 has 92.",
+  "function_name": "count_queen_arrangements",
+  "starter_code": "def count_queen_arrangements(n):\n    # your code here\n    pass\n",
+  "reference_solution": "def count_queen_arrangements(n):\n    cols = set()\n    diag_down = set()  # row - col identifies one diagonal direction\n    diag_up = set()    # row + col identifies the other\n    def place(row):\n        if row == n:\n            return 1\n        total = 0\n        for col in range(n):\n            if col in cols or (row - col) in diag_down or (row + col) in diag_up:\n                continue\n            cols.add(col)                 # choose\n            diag_down.add(row - col)\n            diag_up.add(row + col)\n            total += place(row + 1)       # explore\n            cols.remove(col)              # un-choose\n            diag_down.remove(row - col)\n            diag_up.remove(row + col)\n        return total\n    return place(0)\n",
+  "tests": [
+    {"args": [1], "expected": 1},
+    {"args": [2], "expected": 0},
+    {"args": [3], "expected": 0},
+    {"args": [4], "expected": 2},
+    {"args": [5], "expected": 10},
+    {"args": [6], "expected": 4},
+    {"args": [8], "expected": 92}
+  ],
+  "hints": [
+    "Every valid placement has exactly one queen per row. What if you commit to a queen in row 0, then row 1, and so on, undoing a choice when it leads nowhere?",
+    "Track three conflict sets while you recurse: occupied columns, and the two diagonal families keyed by row - col and row + col. A square (row, col) is safe only if all three keys are free.",
+    "Recurse row by row: for each free column in the current row, add col, row - col, and row + col to the three sets, recurse on row + 1 (adding its returned count), then remove all three keys before trying the next column. When row == n you have one complete placement, so return 1."
+  ]
+}

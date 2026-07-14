@@ -1,0 +1,25 @@
+{
+  "id": "satisfy-equality-equations",
+  "pattern": "union-find",
+  "title": "Can These Equality Equations All Hold?",
+  "difficulty": "medium",
+  "statement": "You are given a list equations of constraints over single lowercase-letter variables. Each entry is a 4-character string of exactly one of two forms: \"a==b\" (variable a equals variable b) or \"a!=b\" (variable a does not equal variable b), where the first and last characters are lowercase letters and the middle two characters are either \"==\" or \"!=\". Return True if there exists some assignment of values to the variables that makes every equation hold simultaneously, and False otherwise. Note that a constraint like \"x==x\" is always satisfiable, while \"x!=x\" can never be satisfied. If equations is empty, return True.",
+  "function_name": "equations_possible",
+  "starter_code": "def equations_possible(equations):\n    # your code here\n    pass\n",
+  "reference_solution": "def equations_possible(equations):\n    parent = {}\n\n    def find(x):\n        parent.setdefault(x, x)\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a, b):\n        parent[find(a)] = find(b)\n\n    # First pass: merge every equality into the same equivalence class.\n    for eq in equations:\n        if eq[1] == '=':\n            union(eq[0], eq[3])\n    # Second pass: only after all merges, verify inequalities.\n    for eq in equations:\n        if eq[1] == '!':\n            if find(eq[0]) == find(eq[3]):\n                return False\n    return True\n",
+  "tests": [
+    {"args": [["a==b", "b==c", "a==c"]], "expected": true},
+    {"args": [["a==b", "b!=c"]], "expected": true},
+    {"args": [["a==a"]], "expected": true},
+    {"args": [["a!=a"]], "expected": false},
+    {"args": [[]], "expected": true},
+    {"args": [["a!=b", "b==c", "a==c"]], "expected": false},
+    {"args": [["f==g", "g==h", "h!=f"]], "expected": false},
+    {"args": [["m==n", "n==o", "o==p", "p!=m", "q==q"]], "expected": false}
+  ],
+  "hints": [
+    "The \"==\" equations say certain variables must be interchangeable. What data structure lets you group variables that are forced to be equal and later ask whether two variables landed in the same group?",
+    "Build equivalence classes with a disjoint-set union: union the two variables of every \"==\" equation. A group of variables can all share one value; an \"!=\" between two members of the same group is impossible.",
+    "Do it in two passes. First scan the whole list and union every \"==\" pair, ignoring inequalities. Only after all unions are done, scan the \"!=\" equations and return False if find(left) == find(right) for any of them; otherwise return True. Checking inequalities in the same pass as the unions is wrong, because a later \"==\" can retroactively merge classes that an earlier \"!=\" compared."
+  ]
+}

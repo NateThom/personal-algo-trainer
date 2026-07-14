@@ -1,0 +1,25 @@
+{
+  "id": "max-area-between-walls",
+  "pattern": "two-pointers",
+  "title": "Maximum Water Between Two Walls",
+  "difficulty": "medium",
+  "statement": "You are given a list of non-negative integer wall heights, where heights[k] is the height of the wall at position k. Picture each wall as a vertical line; choosing two walls at positions i < j forms a container whose water capacity is min(heights[i], heights[j]) * (j - i) (the shorter wall limits the depth, and j - i is the width). Return the maximum capacity achievable over all valid pairs i < j, as an integer. If there are fewer than two walls, return 0. Only the single maximum value is returned, so ties between different pairs do not need to be resolved.",
+  "function_name": "max_water_between_walls",
+  "starter_code": "def max_water_between_walls(heights):\n    # your code here\n    pass\n",
+  "reference_solution": "def max_water_between_walls(heights):\n    if len(heights) < 2:\n        return 0\n    left, right = 0, len(heights) - 1\n    best = 0\n    while left < right:\n        area = min(heights[left], heights[right]) * (right - left)\n        if area > best:\n            best = area\n        if heights[left] <= heights[right]:\n            left += 1\n        else:\n            right -= 1\n    return best\n",
+  "tests": [
+    {"args": [[1, 8, 6, 2, 5, 4, 8, 3, 7]], "expected": 49},
+    {"args": [[2, 3, 4, 5, 18, 17, 6]], "expected": 17},
+    {"args": [[]], "expected": 0},
+    {"args": [[5]], "expected": 0},
+    {"args": [[4, 3]], "expected": 3},
+    {"args": [[6, 6, 6, 6]], "expected": 18},
+    {"args": [[7, 1, 2, 3, 9]], "expected": 28},
+    {"args": [[0, 0, 0]], "expected": 0}
+  ],
+  "hints": [
+    "A brute force check of every pair is O(n^2). Since the width shrinks as you bring the two candidate walls closer, where should you start the two walls to consider the widest containers first?",
+    "Start one pointer at each end. The key invariant: the shorter of the two current walls caps the capacity of every container it can form, so once you've measured it against the farthest partner, that shorter wall can never help again and should be discarded.",
+    "Track the best area seen. Each step, compute min(heights[left], heights[right]) * (right - left), update the best, then advance the pointer at the shorter wall (advance left when heights[left] <= heights[right], else advance right). Stop when the pointers meet and return the best."
+  ]
+}

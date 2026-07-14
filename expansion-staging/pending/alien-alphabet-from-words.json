@@ -1,0 +1,25 @@
+{
+  "id": "alien-alphabet-from-words",
+  "pattern": "topological-sort",
+  "title": "Recover the Alien Alphabet",
+  "difficulty": "hard",
+  "statement": "Explorers found a dictionary from an alien world. Its words use ordinary lowercase English letters, but the letters are ranked in some unknown order. You are given words, a list of lowercase strings that is already sorted according to that unknown alphabet. Your job is to recover one valid ordering of every letter that appears in words.\n\nDerive the ordering like this: for each pair of adjacent words words[i] and words[i+1], scan left to right and find the FIRST position where the two words differ; that tells you the earlier word's character ranks before the later word's character. Stop at that first difference for the pair (later differences reveal nothing). Collect all such precedence relations, then order the letters so that every relation 'x before y' is respected.\n\nAmong all valid orderings, return the one that is lexicographically smallest by NORMAL a-z comparison, as a single string. Concretely: repeatedly append the alphabetically smallest letter that has no remaining unplaced predecessor.\n\nReturn \"\" (the empty string) if the input is inconsistent. It is inconsistent in exactly two cases: (1) the derived relations contain a cycle, so no ordering can satisfy them; or (2) a word is immediately followed by one of its own proper prefixes, for example [\"abc\", \"ab\"], which can never happen in a correctly sorted dictionary. A single letter with no relations is valid and returns that letter.",
+  "function_name": "alien_order",
+  "starter_code": "def alien_order(words):\n    # your code here\n    pass\n",
+  "reference_solution": "import heapq\n\n\ndef alien_order(words):\n    chars = set()\n    for w in words:\n        for c in w:\n            chars.add(c)\n    adj = {c: set() for c in chars}\n    indegree = {c: 0 for c in chars}\n    for i in range(len(words) - 1):\n        a, b = words[i], words[i + 1]\n        minlen = min(len(a), len(b))\n        found = False\n        for j in range(minlen):\n            if a[j] != b[j]:\n                if b[j] not in adj[a[j]]:\n                    adj[a[j]].add(b[j])\n                    indegree[b[j]] += 1\n                found = True\n                break\n        if not found and len(a) > len(b):\n            return \"\"\n    heap = [c for c in chars if indegree[c] == 0]\n    heapq.heapify(heap)\n    order = []\n    while heap:\n        c = heapq.heappop(heap)\n        order.append(c)\n        for nxt in sorted(adj[c]):\n            indegree[nxt] -= 1\n            if indegree[nxt] == 0:\n                heapq.heappush(heap, nxt)\n    if len(order) != len(chars):\n        return \"\"\n    return \"\".join(order)\n",
+  "tests": [
+    {"args": [["wrt", "wrf", "er", "ett", "rftt"]], "expected": "wertf"},
+    {"args": [["z", "x"]], "expected": "zx"},
+    {"args": [["a"]], "expected": "a"},
+    {"args": [["z", "x", "z"]], "expected": ""},
+    {"args": [["abc", "ab"]], "expected": ""},
+    {"args": [["ba", "bc", "ac", "cab"]], "expected": "bac"},
+    {"args": [["hello"]], "expected": "ehlo"},
+    {"args": [["ca", "cb", "ab"]], "expected": "cab"}
+  ],
+  "hints": [
+    "The words are already sorted, so each adjacent pair leaks exactly one clue about relative letter rank. What kind of graph problem turns a pile of 'x must come before y' clues into a full ordering?",
+    "Build a directed graph: for each adjacent pair, the FIRST differing character gives one edge (earlier word's char -> later word's char); do not add edges for positions after the first difference. Before trusting a pair, guard the case where the words match up to min length but the earlier word is longer -- that is the invalid-prefix case and forces \"\".",
+    "Run Kahn's algorithm but pick the next letter from a min-heap of zero-indegree letters so ties break alphabetically. Append the smallest available letter, decrement its neighbors' indegrees, push any that reach zero. If you place fewer letters than exist, a cycle exists -> return \"\"; otherwise join the placed letters into the answer string."
+  ]
+}

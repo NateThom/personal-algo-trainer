@@ -1,0 +1,25 @@
+{
+  "id": "shortest-path-with-wall-breaks",
+  "pattern": "graphs",
+  "title": "Shortest Path Breaking at Most K Walls",
+  "difficulty": "hard",
+  "statement": "You are given an m x n grid where each cell is 0 (open floor) or 1 (a wall), plus an integer k. Starting at the top-left cell (row 0, column 0) you want to reach the bottom-right cell (row m-1, column n-1). Each move steps to one of the four orthogonally adjacent cells that lies inside the grid. During the whole journey you may eliminate (walk through) at most k wall cells; entering a wall cell counts as one of your k eliminations, and the top-left or bottom-right cell being a wall also costs an elimination when you occupy it. Return the minimum number of moves needed to reach the bottom-right cell, or -1 if it cannot be reached within the elimination budget. The grid always has at least one row; a row may be empty (zero columns), in which case there is no destination and the answer is -1. If the start cell is also the destination (a 1 x 1 grid), the answer is 0 provided the elimination budget covers it.",
+  "function_name": "min_steps_through_walls",
+  "starter_code": "def min_steps_through_walls(grid, k):\n    # your code here\n    pass\n",
+  "reference_solution": "from collections import deque\n\n\ndef min_steps_through_walls(grid, k):\n    if not grid or not grid[0]:\n        return -1\n    m, n = len(grid), len(grid[0])\n    if grid[0][0] > k:\n        return -1\n    if m == 1 and n == 1:\n        return 0\n    best = [[-1] * n for _ in range(m)]\n    start_rem = k - grid[0][0]\n    best[0][0] = start_rem\n    q = deque([(0, 0, start_rem)])\n    steps = 0\n    while q:\n        steps += 1\n        for _ in range(len(q)):\n            r, c, rem = q.popleft()\n            for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                nr, nc = r + dr, c + dc\n                if 0 <= nr < m and 0 <= nc < n:\n                    nrem = rem - grid[nr][nc]\n                    if nrem < 0:\n                        continue\n                    if nr == m - 1 and nc == n - 1:\n                        return steps\n                    if nrem > best[nr][nc]:\n                        best[nr][nc] = nrem\n                        q.append((nr, nc, nrem))\n    return -1\n",
+  "tests": [
+    {"args": [[[0, 0, 0], [0, 0, 0], [0, 0, 0]], 0], "expected": 4},
+    {"args": [[[0]], 0], "expected": 0},
+    {"args": [[[]], 0], "expected": -1},
+    {"args": [[[0, 1, 1], [1, 1, 1], [1, 1, 0]], 1], "expected": -1},
+    {"args": [[[0, 1, 0], [0, 1, 0], [0, 0, 0]], 0], "expected": 4},
+    {"args": [[[0, 0, 0], [0, 0, 1], [1, 0, 1], [0, 1, 0]], 1], "expected": 5},
+    {"args": [[[0, 0, 0, 1, 0], [1, 1, 0, 0, 1], [0, 0, 1, 1, 0], [0, 0, 1, 0, 0], [0, 1, 1, 1, 0]], 1], "expected": 8},
+    {"args": [[[0, 1, 1], [1, 1, 1], [1, 1, 0]], 4], "expected": 4}
+  ],
+  "hints": [
+    "This is a shortest-path-in-an-unweighted-grid question, so BFS by levels gives the answer in moves — but a plain cell is no longer the full picture. What extra fact do you carry alongside (row, col)?",
+    "The state is (row, col, eliminations_remaining). Two arrivals at the same cell are genuinely different if they have different budgets left, so track the best (largest) remaining budget ever seen per cell and only re-enqueue when you arrive with strictly more budget than before.",
+    "Seed the queue with the start cell and k minus its own value (return -1 if that is negative). Each BFS level increments the step count; for every in-bounds neighbor compute nrem = rem - grid[nr][nc], skip if nrem < 0, return the current step count the moment the neighbor is the bottom-right cell, and otherwise enqueue it only if nrem beats best[nr][nc]."
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "shortest-clear-path-binary-matrix",
+  "pattern": "graphs",
+  "title": "Shortest Clear Path in a Binary Matrix",
+  "difficulty": "medium",
+  "statement": "You are given an n x n grid where each cell is 0 (open) or 1 (blocked). A clear path starts at the top-left cell (0, 0), ends at the bottom-right cell (n-1, n-1), and steps only through open cells. From a cell you may move to any of its up to eight neighbors (horizontal, vertical, or diagonal) as long as that neighbor is open. The length of a path is the number of cells it visits, counting both the start and end cells. Return the length of the shortest clear path. If no such path exists, return -1; this includes the case where the start cell or the end cell is itself blocked. For a single-cell grid [[0]] the answer is 1.",
+  "function_name": "shortest_clear_path",
+  "starter_code": "def shortest_clear_path(grid):\n    # your code here\n    pass\n",
+  "reference_solution": "from collections import deque\n\n\ndef shortest_clear_path(grid):\n    n = len(grid)\n    if n == 0 or grid[0][0] == 1 or grid[n - 1][n - 1] == 1:\n        return -1\n    dirs = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]\n    visited = [[False] * n for _ in range(n)]\n    visited[0][0] = True\n    queue = deque([(0, 0, 1)])\n    while queue:\n        r, c, dist = queue.popleft()\n        if r == n - 1 and c == n - 1:\n            return dist\n        for dr, dc in dirs:\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < n and 0 <= nc < n and not visited[nr][nc] and grid[nr][nc] == 0:\n                visited[nr][nc] = True\n                queue.append((nr, nc, dist + 1))\n    return -1\n",
+  "tests": [
+    {"args": [[[0]]], "expected": 1},
+    {"args": [[[0, 1], [1, 0]]], "expected": 2},
+    {"args": [[[0, 0], [0, 0]]], "expected": 2},
+    {"args": [[[0, 0, 0], [1, 1, 0], [1, 1, 0]]], "expected": 4},
+    {"args": [[[1, 0, 0], [0, 0, 0], [0, 0, 0]]], "expected": -1},
+    {"args": [[[0, 0, 0], [0, 0, 0], [0, 0, 1]]], "expected": -1},
+    {"args": [[[0, 1, 0], [0, 1, 0], [0, 1, 0]]], "expected": -1},
+    {"args": [[[0, 1, 1, 0], [0, 1, 0, 1], [0, 0, 0, 0], [1, 1, 1, 0]]], "expected": 5}
+  ],
+  "hints": [
+    "The grid is an implicit graph: each open cell links to its open neighbors. Which traversal finds the fewest steps in an unweighted graph?",
+    "Run BFS from (0, 0). The neighbor set has eight offsets (including all four diagonals), and you must mark a cell visited the moment you enqueue it, not when you pop it, so it never enters the queue twice.",
+    "Guard the blocked-endpoint cases first (return -1 if grid[0][0] or grid[n-1][n-1] is 1). Seed the queue with (0, 0, 1), and for each dequeued cell try all eight offsets; the first time you dequeue (n-1, n-1) its stored distance is the answer. If the queue drains without reaching it, return -1."
+  ]
+}

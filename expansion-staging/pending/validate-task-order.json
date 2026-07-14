@@ -1,0 +1,25 @@
+{
+  "id": "validate-task-order",
+  "pattern": "topological-sort",
+  "title": "Validate a Proposed Task Order",
+  "difficulty": "easy",
+  "statement": "You run a build pipeline with n tasks labeled 0 to n-1. You are given a list of dependency edges, where each edge [a, b] means task a must finish before task b starts. A teammate hands you a proposed order: a list of task labels describing the sequence in which they plan to run the tasks. Return True if the proposed order is a valid execution order, and False otherwise. To be valid, the order must list each of the n tasks exactly once (no task missing, no task duplicated, no label outside 0..n-1), and for every edge [a, b], task a must appear somewhere before task b in the order. An empty order is valid only when n is 0. Return a boolean.",
+  "function_name": "validate_task_order",
+  "starter_code": "def validate_task_order(n, edges, order):\n    # your code here\n    pass\n",
+  "reference_solution": "def validate_task_order(n, edges, order):\n    if len(order) != n:\n        return False\n    pos = {}\n    for i, task in enumerate(order):\n        if task < 0 or task >= n or task in pos:\n            return False\n        pos[task] = i\n    if len(pos) != n:\n        return False\n    for a, b in edges:\n        if pos[a] >= pos[b]:\n            return False\n    return True\n",
+  "tests": [
+    {"args": [3, [[0, 1], [1, 2]], [0, 1, 2]], "expected": true},
+    {"args": [4, [[0, 1], [0, 2], [1, 3], [2, 3]], [0, 2, 1, 3]], "expected": true},
+    {"args": [3, [[0, 1], [1, 2]], [2, 1, 0]], "expected": false},
+    {"args": [1, [], [0]], "expected": true},
+    {"args": [3, [[0, 1], [1, 2]], [0, 1]], "expected": false},
+    {"args": [3, [[0, 1]], [0, 0, 1]], "expected": false},
+    {"args": [4, [[0, 1], [2, 3]], [0, 2, 1]], "expected": false},
+    {"args": [0, [], []], "expected": true}
+  ],
+  "hints": [
+    "You do not need to build the ordering yourself here; you only need to check a candidate. What single fact about each task lets you compare two tasks' relative order in O(1)?",
+    "Record each task's index in the proposed order as a position map, but first confirm the order is a true permutation of 0..n-1 (right length, no duplicates, no out-of-range labels) so every edge endpoint is guaranteed present.",
+    "Reject early if len(order) != n. Then walk the order building pos[task] = i, returning False on any duplicate or out-of-range label. Finally, for each edge [a, b], return False if pos[a] >= pos[b]; if all edges pass, return True."
+  ]
+}

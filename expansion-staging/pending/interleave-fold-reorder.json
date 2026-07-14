@@ -1,0 +1,25 @@
+{
+  "id": "interleave-fold-reorder",
+  "pattern": "linked-list",
+  "title": "Fold a Chain: Interleave Front and Reversed Back Halves",
+  "difficulty": "hard",
+  "statement": "You are given a list of integer values that represent a singly linked list chained head-to-tail, e.g. values[0] is the head and values[-1] is the tail. Reorder the chain by folding its back half onto its front half: transform [v0, v1, v2, ..., vn-2, vn-1] into [v0, vn-1, v1, vn-2, v2, vn-3, ...], and return the reordered values as a plain list of ints. Concretely, you interleave the original order (v0, v1, v2, ...) with the reversed order (vn-1, vn-2, vn-3, ...), always taking from the front first, until every node has been placed exactly once. For an odd number of values the single middle element ends up last. Solve it as the classic three-step in-place linked-list composite in O(1) extra space: (1) find the middle using fast/slow pointers, (2) reverse the second half in place, (3) merge the two halves alternately. Do not build a reversed copy of the whole list or walk two indices across a single array in place of real pointer surgery. If the input has length 0 or 1, return it unchanged.",
+  "function_name": "fold_reorder",
+  "starter_code": "def fold_reorder(values):\n    # your code here\n    pass\n",
+  "reference_solution": "class ListNode:\n    def __init__(self, val=0, next=None):\n        self.val = val\n        self.next = next\n\n\ndef fold_reorder(values):\n    if len(values) <= 1:\n        return list(values)\n    dummy = ListNode()\n    curr = dummy\n    for v in values:\n        curr.next = ListNode(v)\n        curr = curr.next\n    head = dummy.next\n    slow = fast = head\n    while fast.next and fast.next.next:\n        slow = slow.next\n        fast = fast.next.next\n    second = slow.next\n    slow.next = None\n    prev = None\n    curr = second\n    while curr:\n        nxt = curr.next\n        curr.next = prev\n        prev = curr\n        curr = nxt\n    second = prev\n    first = head\n    while second:\n        f_next = first.next\n        s_next = second.next\n        first.next = second\n        second.next = f_next\n        first = f_next\n        second = s_next\n    out = []\n    node = head\n    while node:\n        out.append(node.val)\n        node = node.next\n    return out\n",
+  "tests": [
+    {"args": [[1, 2, 3, 4, 5]], "expected": [1, 5, 2, 4, 3]},
+    {"args": [[1, 2, 3, 4]], "expected": [1, 4, 2, 3]},
+    {"args": [[1]], "expected": [1]},
+    {"args": [[]], "expected": []},
+    {"args": [[7, 7, 7, 7]], "expected": [7, 7, 7, 7]},
+    {"args": [[10, 20, 30, 40, 50, 60]], "expected": [10, 60, 20, 50, 30, 40]},
+    {"args": [[5, 1, 8, 2, 9, 3, 4]], "expected": [5, 4, 1, 3, 8, 9, 2]},
+    {"args": [[2, 2]], "expected": [2, 2]}
+  ],
+  "hints": [
+    "This is not one trick but three chained together. If you split the chain in half, what would you have to do to the back half so that reading it forward gives you vn-1, vn-2, vn-3, ...?",
+    "Use fast/slow pointers to land slow on the last node of the first half, cut the list there (slow.next = None), reverse the detached second half in place, then weave the two halves together one node at a time starting from the front.",
+    "The subtle failure is the cut: after the fast/slow loop, the second half must START at slow.next and the first half must be terminated with slow.next = None. If the middle node stays attached to both halves, an odd-length list emits its middle value twice (and a real pointer version forms a cycle). Merge by repeatedly saving first.next and second.next, then setting first.next = second and second.next = saved first.next, advancing both."
+  ]
+}

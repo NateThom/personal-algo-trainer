@@ -1,0 +1,24 @@
+{
+  "id": "kth-smallest-pair-distance",
+  "pattern": "binary-search",
+  "title": "K-th Smallest Pair Distance",
+  "difficulty": "hard",
+  "statement": "A field crew has placed sensors along a straight pipeline; nums[i] is the position of sensor i (positions may repeat, and the list is not sorted). The gap between two sensors i and j is the absolute difference |nums[i] - nums[j]|. Considering every unordered pair i < j exactly once, list all gaps in non-decreasing order and return the k-th value in that list (k is 1-indexed). If the array has fewer than 2 sensors, or k exceeds the total number of pairs n*(n-1)/2, return -1. Constraints: n up to 10^4 and positions up to 10^6, so enumerating and sorting all O(n^2) gaps is too slow -- binary search the gap value itself, using a two-pointer count of pairs within a given gap as the predicate.",
+  "function_name": "kth_smallest_pair_distance",
+  "starter_code": "def kth_smallest_pair_distance(nums, k):\n    # your code here\n    pass\n",
+  "reference_solution": "def kth_smallest_pair_distance(nums, k):\n    n = len(nums)\n    total_pairs = n * (n - 1) // 2\n    if k < 1 or k > total_pairs:\n        return -1\n    a = sorted(nums)\n\n    def pairs_leq(d):\n        count = 0\n        left = 0\n        for right in range(n):\n            while a[right] - a[left] > d:\n                left += 1\n            count += right - left\n        return count\n\n    lo, hi = 0, a[-1] - a[0]\n    while lo < hi:\n        mid = lo + (hi - lo) // 2\n        if pairs_leq(mid) >= k:\n            hi = mid\n        else:\n            lo = mid + 1\n    return lo\n",
+  "tests": [
+    {"args": [[8, 1, 5, 12], 3], "expected": 4},
+    {"args": [[4, 9], 1], "expected": 5},
+    {"args": [[7], 1], "expected": -1},
+    {"args": [[6, 6, 6, 2], 2], "expected": 0},
+    {"args": [[10, 3, 25], 4], "expected": -1},
+    {"args": [[100, 2, 41, 63, 9, 77], 8], "expected": 39},
+    {"args": [[3, 14, 1, 22, 8, 14, 30], 12], "expected": 13}
+  ],
+  "hints": [
+    "You can't afford all O(n^2) gaps -- but for a fixed distance d, could you count in O(n) how many pairs have a gap of at most d, and is that count monotonic in d?",
+    "Sort the array, then binary search d over [0, max - min]. Count pairs with gap <= d using a two-pointer sweep: for each right index, advance left while a[right] - a[left] > d and add (right - left) to the count.",
+    "Find the FIRST d where pairs_leq(d) >= k: while lo < hi, if the count at mid is >= k set hi = mid, else lo = mid + 1. Do not return mid the moment the count equals k -- a whole interval of d values can share that count, and only the boundary lo is guaranteed to be an actual pair distance."
+  ]
+}

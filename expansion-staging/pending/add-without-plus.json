@@ -1,0 +1,25 @@
+{
+  "id": "add-without-plus",
+  "pattern": "bit-manipulation",
+  "title": "Add Two Integers Without + or -",
+  "difficulty": "medium",
+  "statement": "You are given two integers a and b. Each fits in a signed 32-bit range (-2^31 to 2^31 - 1), either may be negative, and their true sum is guaranteed to fit in the same signed 32-bit range. Return their sum a + b as a plain integer, but you may not use the + or - operators anywhere in your code (no addition, subtraction, unary negation, or increment tricks). Build the sum out of bitwise operations instead: XOR gives the sum of two numbers ignoring carries, and AND followed by a left shift gives the carries. Because Python integers have unlimited width, you must simulate a fixed 32-bit machine by masking intermediate values with 0xFFFFFFFF, and if the final masked result has its top bit set (value >= 0x80000000) you must convert it back to the corresponding negative Python int before returning it. The returned value must be exactly equal to a + b.",
+  "function_name": "add_without_plus",
+  "starter_code": "def add_without_plus(a, b):\n    # your code here (no + or - operators allowed)\n    pass\n",
+  "reference_solution": "def add_without_plus(a, b):\n    MASK = 0xFFFFFFFF\n    a &= MASK\n    b &= MASK\n    while b:\n        a, b = (a ^ b) & MASK, ((a & b) << 1) & MASK\n    if a >= 0x80000000:\n        a = ~(a ^ MASK)\n    return a\n",
+  "tests": [
+    {"args": [3, 4], "expected": 7},
+    {"args": [0, 0], "expected": 0},
+    {"args": [123456789, 987654321], "expected": 1111111110},
+    {"args": [-5, -9], "expected": -14},
+    {"args": [-1, 1], "expected": 0},
+    {"args": [2147483647, -2147483647], "expected": 0},
+    {"args": [-2, -3], "expected": -5},
+    {"args": [100, -250], "expected": -150}
+  ],
+  "hints": [
+    "If you add two binary numbers by hand, which bit operation gives you the digit sums when you ignore all carries, and which gives you just the carries?",
+    "Repeat: sum-without-carry is a ^ b, carry is (a & b) << 1; the loop ends when the carry is zero. But Python ints are infinitely wide, so a negative operand never runs out of 1-bits -- mask every intermediate value with 0xFFFFFFFF to emulate 32-bit hardware.",
+    "Start with a &= 0xFFFFFFFF and b &= 0xFFFFFFFF; loop a, b = (a ^ b) & 0xFFFFFFFF, ((a & b) << 1) & 0xFFFFFFFF while b is nonzero; finally, if a >= 0x80000000 the 32-bit result is negative, so return ~(a ^ 0xFFFFFFFF), otherwise return a."
+  ]
+}

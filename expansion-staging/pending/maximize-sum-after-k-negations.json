@@ -1,0 +1,25 @@
+{
+  "id": "maximize-sum-after-k-negations",
+  "pattern": "heaps",
+  "title": "Maximize Array Sum After K Negations",
+  "difficulty": "easy",
+  "statement": "You are given an integer array nums (which may contain negative numbers and zeros) and a non-negative integer k. You must perform EXACTLY k operations. In one operation you pick any index i and replace nums[i] with -nums[i]; the same index may be chosen more than once across operations. After performing exactly k operations, return the maximum possible sum of the array, as a single integer.\n\nBecause you must use all k operations, you cannot stop early: if every element is already non-negative and operations remain, you are forced to keep flipping. To lose as little as possible, repeated flips should always land on whichever element is currently the smallest. If nums is empty there are no elements to operate on, so return 0 regardless of k.",
+  "function_name": "maximize_sum_after_k_negations",
+  "starter_code": "def maximize_sum_after_k_negations(nums, k):\n    # your code here\n    pass\n",
+  "reference_solution": "import heapq\n\n\ndef maximize_sum_after_k_negations(nums, k):\n    if not nums:\n        return 0\n    heap = list(nums)\n    heapq.heapify(heap)\n    for _ in range(k):\n        smallest = heapq.heappop(heap)\n        heapq.heappush(heap, -smallest)\n    return sum(heap)\n",
+  "tests": [
+    {"args": [[-4, -2, -3], 2], "expected": 5},
+    {"args": [[5], 3], "expected": -5},
+    {"args": [[], 2], "expected": 0},
+    {"args": [[1, -2, 3], 0], "expected": 2},
+    {"args": [[-1, -1, 2], 1], "expected": 2},
+    {"args": [[3, -1, 0, 2], 3], "expected": 6},
+    {"args": [[-9, 1], 4], "expected": 8},
+    {"args": [[-8, -5, -3, 0], 5], "expected": 16}
+  ],
+  "hints": [
+    "Each operation should target the element that hurts the total least right now -- which structure lets you repeatedly pull out the current minimum cheaply?",
+    "Heapify nums into a min-heap. The invariant: on every one of the k operations, the best element to flip is the current global minimum, which changes as you go.",
+    "k times: pop the minimum, push back its negation. A negative becomes positive; once none are left the smallest non-negative (often a 0, or a value you just flipped) keeps absorbing flips. Then return the sum of the heap."
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "interval-list-intersections",
+  "pattern": "intervals",
+  "title": "Intersection of Two Interval Lists",
+  "difficulty": "medium",
+  "statement": "You are given two schedules, first and second. Each is a list of closed intervals [start, end] (with start <= end) representing busy blocks. Within a single schedule the intervals are pairwise disjoint and already sorted by start. Return the list of every interval during which BOTH schedules are busy at the same time, written as [start, end] pairs. An overlap that touches at a single instant counts and is written as [t, t] (for example [5, 5]). Return the overlaps sorted by start. If the two schedules never overlap, or either schedule is empty, return an empty list.",
+  "function_name": "interval_list_intersections",
+  "starter_code": "def interval_list_intersections(first, second):\n    # your code here\n    pass\n",
+  "reference_solution": "def interval_list_intersections(first, second):\n    result = []\n    i = j = 0\n    while i < len(first) and j < len(second):\n        lo = max(first[i][0], second[j][0])\n        hi = min(first[i][1], second[j][1])\n        if lo <= hi:\n            result.append([lo, hi])\n        if first[i][1] < second[j][1]:\n            i += 1\n        else:\n            j += 1\n    return result\n",
+  "tests": [
+    {"args": [[[0, 2], [5, 10], [13, 23], [24, 25]], [[1, 5], [8, 12], [15, 24], [25, 26]]], "expected": [[1, 2], [5, 5], [8, 10], [15, 23], [24, 24], [25, 25]]},
+    {"args": [[[0, 10]], [[1, 2], [3, 4]]], "expected": [[1, 2], [3, 4]]},
+    {"args": [[], [[1, 5]]], "expected": []},
+    {"args": [[[1, 3]], [[5, 7]]], "expected": []},
+    {"args": [[[2, 6]], [[2, 6]]], "expected": [[2, 6]]},
+    {"args": [[[1, 5], [7, 9]], [[5, 5], [8, 8]]], "expected": [[5, 5], [8, 8]]},
+    {"args": [[[0, 4]], [[4, 4]]], "expected": [[4, 4]]},
+    {"args": [[[1, 100]], [[10, 20], [30, 40], [50, 60]]], "expected": [[10, 20], [30, 40], [50, 60]]}
+  ],
+  "hints": [
+    "Both lists are already sorted by start, so you never need to sort again. Can you walk both at once with a pointer into each?",
+    "The overlap of first[i] and second[j], if any, runs from max of the two starts to min of the two ends; it exists only when that low bound is <= that high bound.",
+    "After recording (or skipping) a pair, discard the interval that ENDS first, because the one that ends later may still overlap the other list's next interval: advance i when first[i][1] < second[j][1], otherwise advance j."
+  ]
+}

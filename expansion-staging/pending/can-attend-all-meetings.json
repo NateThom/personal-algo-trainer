@@ -1,0 +1,25 @@
+{
+  "id": "can-attend-all-meetings",
+  "pattern": "intervals",
+  "title": "Can Attend All Meetings",
+  "difficulty": "easy",
+  "statement": "You are given a list meetings where each element is a pair [start, end] describing a meeting on a single shared calendar. The pairs arrive in arbitrary order. Treat each meeting as half-open: a meeting occupies the time from start up to but not including end, so a meeting that ends exactly when another begins does NOT conflict (for example [1, 3] and [3, 5] are fine). Return True if one person can attend every meeting without any two overlapping in time, and False otherwise. An empty list and a single meeting both return True.",
+  "function_name": "can_attend_all_meetings",
+  "starter_code": "def can_attend_all_meetings(meetings):\n    # your code here\n    pass\n",
+  "reference_solution": "def can_attend_all_meetings(meetings):\n    ordered = sorted(meetings, key=lambda m: m[0])\n    for i in range(1, len(ordered)):\n        if ordered[i][0] < ordered[i - 1][1]:\n            return False\n    return True\n",
+  "tests": [
+    {"args": [[[5, 8], [1, 6]]], "expected": false},
+    {"args": [[[1, 3], [3, 5]]], "expected": true},
+    {"args": [[]], "expected": true},
+    {"args": [[[0, 30]]], "expected": true},
+    {"args": [[[9, 10], [4, 7], [1, 3]]], "expected": true},
+    {"args": [[[2, 4], [2, 6]]], "expected": false},
+    {"args": [[[10, 20], [20, 30], [30, 40]]], "expected": true},
+    {"args": [[[7, 10], [2, 4], [3, 8]]], "expected": false}
+  ],
+  "hints": [
+    "The meetings come in any order, so before you can reason about which meeting comes right after another, what should you do to the list?",
+    "Sort the meetings by their start time; then a conflict can only ever be between a meeting and the one immediately before it in sorted order.",
+    "After sorting by start, walk adjacent pairs and return False the moment a meeting's start is strictly less than the previous meeting's end (use < not <=, so back-to-back meetings that merely touch are allowed); if you get through all pairs, return True."
+  ]
+}

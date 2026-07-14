@@ -1,0 +1,25 @@
+{
+  "id": "basic-calculator-parens",
+  "pattern": "stack",
+  "title": "Basic Calculator with Parentheses",
+  "statement": "You are given a string expr holding a valid arithmetic expression built from non-negative multi-digit integers, the binary operators '+' and '-', matched parentheses, and spaces. A minus sign may also appear as a unary negation immediately after an opening parenthesis or at the very start of the expression (for example '-(2 + 3)' or '(1 - (-4))'). Evaluate the expression and return its integer value. Scan left to right keeping a running result and a current sign; when you reach '(' remember the result and sign accumulated so far and start a fresh sub-total, and when you reach ')' fold the finished sub-total back into the remembered context. Return a single Python int. If expr is empty or contains only spaces, return 0. Examples: '1 - (2 + 3) + 4' returns 0, and '2 - (3 - 4)' returns 3.",
+  "difficulty": "hard",
+  "function_name": "evaluate_expression",
+  "starter_code": "def evaluate_expression(expr):\n    # your code here\n    pass\n",
+  "reference_solution": "def evaluate_expression(expr):\n    result = 0\n    sign = 1\n    num = 0\n    stack = []\n    for ch in expr:\n        if ch.isdigit():\n            num = num * 10 + int(ch)\n        elif ch == '+':\n            result += sign * num\n            num = 0\n            sign = 1\n        elif ch == '-':\n            result += sign * num\n            num = 0\n            sign = -1\n        elif ch == '(':\n            stack.append(result)\n            stack.append(sign)\n            result = 0\n            sign = 1\n        elif ch == ')':\n            result += sign * num\n            num = 0\n            prev_sign = stack.pop()\n            prev_result = stack.pop()\n            result = prev_result + prev_sign * result\n            sign = 1\n    result += sign * num\n    return result\n",
+  "tests": [
+    {"args": ["1 - (2 + 3) + 4"], "expected": 0},
+    {"args": [""], "expected": 0},
+    {"args": ["42"], "expected": 42},
+    {"args": ["-(2 + 3)"], "expected": -5},
+    {"args": ["2 - (3 - 4)"], "expected": 3},
+    {"args": ["100 - (20 - (5 + 5)) - 30"], "expected": 60},
+    {"args": ["-(-(-7))"], "expected": -7},
+    {"args": ["1 - (2 + 3) - (4 - 10)"], "expected": 2}
+  ],
+  "hints": [
+    "As you sweep across the characters, the sign in front of a parenthesized group has to survive across everything inside it. What data structure lets you set that context aside and restore it exactly when the group closes?",
+    "Keep a running result, a current sign (+1 or -1), and a number being built. On '(' push both the running result and the current sign, then reset result to 0 and sign to +1; on ')' finish the inner total and combine it as prev_result + prev_sign * inner.",
+    "Accumulate multi-digit numbers with num = num*10 + digit. On '+'/'-' add sign*num into result, zero num, and set sign. On '(' push result then sign and reset; on ')' first add sign*num, then pop sign and result and fold inner in. After the loop add the trailing sign*num and return result."
+  ]
+}

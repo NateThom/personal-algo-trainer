@@ -1,0 +1,25 @@
+{
+  "id": "first-missing-positive",
+  "pattern": "arrays-hashing",
+  "title": "First Missing Positive",
+  "difficulty": "hard",
+  "statement": "A ticketing kiosk hands out badge numbers starting from 1, but its log nums is corrupted: it is an integer array that may contain zeros, negative values, and duplicate entries, in no particular order. Return the smallest positive integer (1 or greater) that does NOT appear anywhere in nums. If nums is empty, or contains no positive values at all, the answer is 1. If every integer from 1 up to some k appears, the answer is the first gap after them; in particular, if all of 1..len(nums) are present the answer is len(nums) + 1. The function returns a single int. Aim for O(n) time: note that the answer can never exceed len(nums) + 1, so you never need to look at candidates beyond that.",
+  "function_name": "first_missing_positive",
+  "starter_code": "def first_missing_positive(nums):\n    # your code here\n    pass\n",
+  "reference_solution": "def first_missing_positive(nums):\n    seen = set(nums)\n    for candidate in range(1, len(nums) + 2):\n        if candidate not in seen:\n            return candidate\n",
+  "tests": [
+    {"args": [[3, 4, -1, 1]], "expected": 2},
+    {"args": [[1, 2, 3]], "expected": 4},
+    {"args": [[1]], "expected": 2},
+    {"args": [[]], "expected": 1},
+    {"args": [[-7, 0, -3, -3]], "expected": 1},
+    {"args": [[2, 2, 3, 7, 0, 7]], "expected": 1},
+    {"args": [[1, 1, 2, 2]], "expected": 3},
+    {"args": [[5, 1, 4, 2, 3]], "expected": 6}
+  ],
+  "hints": [
+    "You keep asking 'is this value present in the array?' — what structure makes that check O(1), and how large can the answer possibly be for an array of length n?",
+    "By pigeonhole, n slots can cover at most the values 1..n, so the answer always lies in 1..n+1. Build a set of nums once, then sweep candidates in that bounded range.",
+    "Put nums into a set. Loop candidate over range(1, len(nums) + 2) and return the first candidate not in the set — the +2 upper bound guarantees the loop always returns, covering the case where all of 1..n are present."
+  ]
+}

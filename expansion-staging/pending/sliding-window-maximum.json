@@ -1,0 +1,24 @@
+{
+  "id": "sliding-window-maximum",
+  "pattern": "sliding-window",
+  "title": "Sliding Window Maximum",
+  "difficulty": "hard",
+  "statement": "A conveyor belt carries readings past a viewing slot exactly k units wide. Given an integer list nums and an integer k with 1 <= k <= len(nums), slide a window of size k from left to right across nums, one step at a time, and record the maximum value inside the window at each stop. Return these maxima as a list in left-to-right window order. The first window covers indices 0..k-1 and the last covers indices len(nums)-k..len(nums)-1, so the returned list has exactly len(nums) - k + 1 entries. When k == len(nums) there is a single window, so return a one-element list holding the maximum of the whole list.",
+  "function_name": "max_sliding_window",
+  "starter_code": "def max_sliding_window(nums, k):\n    # your code here\n    pass\n",
+  "reference_solution": "def max_sliding_window(nums, k):\n    from collections import deque\n    dq = deque()  # indices, values in decreasing order\n    out = []\n    for i, n in enumerate(nums):\n        while dq and nums[dq[-1]] <= n:\n            dq.pop()\n        dq.append(i)\n        if dq[0] <= i - k:\n            dq.popleft()\n        if i >= k - 1:\n            out.append(nums[dq[0]])\n    return out\n",
+  "tests": [
+    {"args": [[1, 3, 1, 2, 0, 5], 3], "expected": [3, 3, 2, 5]},
+    {"args": [[8], 1], "expected": [8]},
+    {"args": [[9, 9, 9, 9], 2], "expected": [9, 9, 9]},
+    {"args": [[4, 2, 12, 11, -5], 1], "expected": [4, 2, 12, 11, -5]},
+    {"args": [[1, 2, 3, 4, 5, 6], 6], "expected": [6]},
+    {"args": [[7, 2, 4, -1, 3, 8, 8, 6], 4], "expected": [7, 4, 8, 8, 8]},
+    {"args": [[5, 3, 4, 3, 5], 3], "expected": [5, 4, 5]}
+  ],
+  "hints": [
+    "Recomputing the max of each window from scratch rescans overlapping elements; can you carry useful work from one window to the next instead?",
+    "Keep a deque of indices whose values are in decreasing order: the front is always the current window's maximum. Store indices, not values, so you can tell when an element has slid out of the window.",
+    "For each new index i: pop indices from the back while their value is <= nums[i], then append i. Expire the front with 'if dq[0] <= i - k: popleft()'. Once i >= k - 1, append nums[dq[0]] as this window's maximum."
+  ]
+}

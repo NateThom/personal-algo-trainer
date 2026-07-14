@@ -1,0 +1,24 @@
+{
+  "id": "network-connectivity-queries",
+  "pattern": "union-find",
+  "title": "Answer Connectivity Queries on a Network",
+  "difficulty": "easy",
+  "statement": "You are given n nodes labeled 0 to n-1, a list of undirected edges where each edge is [u, v] meaning u and v are directly linked, and a list of queries where each query is [a, b]. First apply every edge, then answer every query. For each query [a, b], the answer is True if and only if a and b belong to the same connected component once all edges have been applied, and False otherwise. A node is always connected to itself, so a query [a, a] is always True. Return a list of booleans with exactly one entry per query, in the same order the queries are given. Edges may be repeated or listed in either direction; treat them all as undirected links.",
+  "function_name": "answer_connectivity",
+  "starter_code": "def answer_connectivity(n, edges, queries):\n    # your code here\n    pass\n",
+  "reference_solution": "def answer_connectivity(n, edges, queries):\n    parent = list(range(n))\n    rank = [0] * n\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    def union(a, b):\n        ra, rb = find(a), find(b)\n        if ra == rb:\n            return\n        if rank[ra] < rank[rb]:\n            ra, rb = rb, ra\n        parent[rb] = ra\n        if rank[ra] == rank[rb]:\n            rank[ra] += 1\n\n    for u, v in edges:\n        union(u, v)\n    return [find(a) == find(b) for a, b in queries]\n",
+  "tests": [
+    {"args": [5, [[0, 1], [1, 2], [3, 4]], [[0, 2], [0, 3], [4, 3], [2, 4]]], "expected": [true, false, true, false]},
+    {"args": [1, [], [[0, 0]]], "expected": [true]},
+    {"args": [4, [], [[0, 1], [2, 2], [3, 0]]], "expected": [false, true, false]},
+    {"args": [4, [[0, 1], [1, 2], [2, 3]], [[0, 3], [3, 0], [1, 2]]], "expected": [true, true, true]},
+    {"args": [6, [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5]], [[0, 5], [5, 0], [2, 4]]], "expected": [true, true, true]},
+    {"args": [4, [[0, 1], [0, 1], [1, 0]], [[0, 1], [1, 2]]], "expected": [true, false]},
+    {"args": [7, [[0, 1], [2, 3], [4, 5]], [[0, 6], [6, 6], [1, 0], [3, 2], [5, 4], [1, 3]]], "expected": [false, true, true, true, true, false]}
+  ],
+  "hints": [
+    "Every query asks the same thing repeatedly: do these two nodes end up in the same group after all the links are made? What structure lets you merge groups and test membership in near-constant time?",
+    "Use a disjoint-set (union-find) with a parent array. The invariant that matters: two nodes are in the same component exactly when they share the same ROOT, which you reach by following parent pointers to the top, not just looking one level up.",
+    "Initialize parent[i] = i. For each edge [u, v], union them by linking the root of one to the root of the other. To answer [a, b], compute find(a) and find(b) (walking to each root, ideally with path compression) and return find(a) == find(b). Build one boolean per query in input order."
+  ]
+}

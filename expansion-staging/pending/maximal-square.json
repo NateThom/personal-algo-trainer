@@ -1,0 +1,25 @@
+{
+  "id": "maximal-square",
+  "pattern": "dp-2d",
+  "title": "Maximal Square of Ones",
+  "difficulty": "medium",
+  "statement": "You are given a rectangular binary grid as a list of rows, where each row is a list of integers that are each 0 or 1. Find the largest axis-aligned square that consists entirely of 1s, and return its AREA (the side length multiplied by itself). A valid square must be contiguous, fully filled with 1s, and have equal width and height. If the grid contains no 1s at all, return 0. The grid always has at least one row and one column. Return a single non-negative integer. Note: you must return the area, not the side length, so a single isolated 1 contributes an area of 1, and a 3-by-3 block of 1s contributes an area of 9.",
+  "function_name": "largest_square_area",
+  "starter_code": "def largest_square_area(grid):\n    # your code here\n    pass\n",
+  "reference_solution": "def largest_square_area(grid):\n    if not grid or not grid[0]:\n        return 0\n    rows, cols = len(grid), len(grid[0])\n    dp = [[0] * cols for _ in range(rows)]\n    best = 0\n    for i in range(rows):\n        for j in range(cols):\n            if grid[i][j] == 1:\n                if i == 0 or j == 0:\n                    dp[i][j] = 1\n                else:\n                    dp[i][j] = 1 + min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1])\n                if dp[i][j] > best:\n                    best = dp[i][j]\n    return best * best\n",
+  "tests": [
+    {"args": [[[1, 0, 1, 0, 0], [1, 0, 1, 1, 1], [1, 1, 1, 1, 1], [1, 0, 0, 1, 0]]], "expected": 4},
+    {"args": [[[0, 0], [0, 0]]], "expected": 0},
+    {"args": [[[1]]], "expected": 1},
+    {"args": [[[0]]], "expected": 0},
+    {"args": [[[1, 1, 1], [1, 1, 1], [1, 1, 1]]], "expected": 9},
+    {"args": [[[0, 1], [1, 0]]], "expected": 1},
+    {"args": [[[1, 1, 0, 1], [1, 1, 1, 1], [0, 1, 1, 1], [1, 1, 1, 1]]], "expected": 9},
+    {"args": [[[1, 1, 1, 1, 1]]], "expected": 1}
+  ],
+  "hints": [
+    "Instead of scanning every possible square, can you describe, for each cell, the largest all-ones square that ENDS at that cell as its bottom-right corner?",
+    "Let dp[i][j] be the side length of the largest all-ones square whose bottom-right corner is (i, j). A cell holding 0 forces dp[i][j] = 0; the answer's area is (max dp value) squared.",
+    "For a cell holding 1 not on the top row or left column, set dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]); the MIN (not max) is what guarantees all three overlapping neighbor squares plus the corner are fully filled. Track the largest side seen, then return side * side."
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "integer-square-root",
+  "pattern": "binary-search",
+  "title": "Integer Square Root",
+  "difficulty": "easy",
+  "statement": "A tile setter wants the largest square patio that uses at most x unit tiles. Given a non-negative integer x, return the side length of that patio: the largest integer k such that k*k <= x (the floor of the square root of x). Do not use any built-in root function or fractional exponent; x = 0 must return 0 and x = 1 must return 1. The answer space [0, x] is monotonic in the predicate k*k <= x, so binary search it.",
+  "function_name": "integer_square_root",
+  "starter_code": "def integer_square_root(x):\n    # your code here\n    pass\n",
+  "reference_solution": "def integer_square_root(x):\n    left, right = 0, x\n    while left <= right:\n        mid = left + (right - left) // 2\n        if mid * mid <= x:\n            left = mid + 1\n        else:\n            right = mid - 1\n    return right\n",
+  "tests": [
+    {"args": [0], "expected": 0},
+    {"args": [1], "expected": 1},
+    {"args": [8], "expected": 2},
+    {"args": [16], "expected": 4},
+    {"args": [26], "expected": 5},
+    {"args": [99], "expected": 9},
+    {"args": [144], "expected": 12},
+    {"args": [1000000000005], "expected": 1000000}
+  ],
+  "hints": [
+    "The array isn't sorted -- there is no array. What range of candidate answers is monotonic in the check k*k <= x?",
+    "Binary search left=0, right=x with while left <= right; if mid*mid <= x the answer is mid or larger (left = mid + 1), otherwise right = mid - 1.",
+    "When the loop exits, left has moved one past the last k whose square fits, so return right -- it holds the largest k with k*k <= x (returning left gives floor+1, e.g. 3 for x=8)."
+  ]
+}

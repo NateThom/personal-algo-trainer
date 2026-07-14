@@ -1,0 +1,25 @@
+{
+  "id": "grid-word-hunt",
+  "pattern": "tries",
+  "title": "Word Hunt on a Letter Grid",
+  "difficulty": "hard",
+  "statement": "You are given grid, a rectangular board of lowercase letters represented as a list of rows, where each row is a list of single-character strings, and words, a list of distinct target words. A word is 'hunted' if you can trace it by starting on some cell and repeatedly stepping to a horizontally or vertically adjacent cell (up, down, left, or right; never diagonally), such that the letters along the path spell the word and no single cell is used more than once within that one word. Different words are hunted independently, so they may reuse cells. Return the list of every target word that can be hunted, each appearing at most once, sorted in ascending lexicographic order. If no target word can be hunted, return an empty list. To stay efficient, build a trie from words and run a depth-first search from each cell, abandoning a branch the moment its prefix leaves the trie.",
+  "function_name": "find_words",
+  "starter_code": "def find_words(grid, words):\n    # build a trie of words, DFS from every cell with backtracking\n    pass\n",
+  "reference_solution": "def find_words(grid, words):\n    if not grid or not grid[0] or not words:\n        return []\n    root = {}\n    for w in words:\n        node = root\n        for ch in w:\n            node = node.setdefault(ch, {})\n        node[\"$\"] = w\n    rows, cols = len(grid), len(grid[0])\n    found = set()\n\n    def dfs(r, c, node):\n        ch = grid[r][c]\n        if ch not in node:\n            return\n        nxt = node[ch]\n        if \"$\" in nxt:\n            found.add(nxt[\"$\"])\n        grid[r][c] = \"#\"\n        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] != \"#\":\n                dfs(nr, nc, nxt)\n        grid[r][c] = ch\n\n    for r in range(rows):\n        for c in range(cols):\n            dfs(r, c, root)\n    return sorted(found)\n",
+  "tests": [
+    {"args": [[["o", "a", "a", "n"], ["e", "t", "a", "e"], ["i", "h", "k", "r"], ["i", "f", "l", "v"]], ["oath", "pea", "eat", "rain"]], "expected": ["eat", "oath"]},
+    {"args": [[["a", "b"], ["c", "d"]], ["abcd"]], "expected": []},
+    {"args": [[["a"]], ["a"]], "expected": ["a"]},
+    {"args": [[["a", "b"], ["c", "d"]], ["xyz", "efg"]], "expected": []},
+    {"args": [[["a", "a"], ["a", "a"]], ["aaa", "aaaa", "aaaaa"]], "expected": ["aaa", "aaaa"]},
+    {"args": [[["s", "e"], ["a", "t"]], ["sea", "eat", "seat", "tea", "ate"]], "expected": ["ate"]},
+    {"args": [[["a", "b", "c"], ["d", "e", "f"]], ["abc", "abcf", "beda"]], "expected": ["abc", "abcf", "beda"]},
+    {"args": [[["a", "b"], ["c", "d"]], []], "expected": []}
+  ],
+  "hints": [
+    "For every dictionary word you would re-walk the whole board; how can you search all words at once and cut off dead prefixes early?",
+    "Insert every target into a trie, then DFS from each cell carrying the current trie node; if the cell's letter is not a child of that node, stop immediately. Mark a cell before recursing and unmark it right after so other paths can reuse it.",
+    "Store the full word (or an is_word flag) at trie leaves; when a DFS reaches such a node, add that word to a set to avoid duplicates. Overwrite grid[r][c] with a sentinel like '#' before exploring the four neighbors, then restore the original letter on the way out. Finally return sorted(found)."
+  ]
+}

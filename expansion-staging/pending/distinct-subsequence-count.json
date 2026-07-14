@@ -1,0 +1,25 @@
+{
+  "id": "distinct-subsequence-count",
+  "pattern": "dp-2d",
+  "title": "Count Distinct Subsequences Matching a Target",
+  "difficulty": "hard",
+  "statement": "Given two strings s and t, count how many distinct ways t appears as a subsequence of s. A single occurrence is a set of indices in s, strictly increasing, whose characters read in that order spell t exactly; two occurrences are considered distinct if and only if their index sets differ (not the letters they land on). Return that count as an integer. If t is longer than s, or t cannot be formed from s at all, return 0. The empty string t can always be formed exactly one way (by choosing no indices), so when t is empty return 1. Example: for s = 'rabbbit' and t = 'rabbit' there are 3 distinct index sets, so the answer is 3.",
+  "function_name": "count_distinct_subsequences",
+  "starter_code": "def count_distinct_subsequences(s, t):\n    # your code here\n    pass\n",
+  "reference_solution": "def count_distinct_subsequences(s, t):\n    m, n = len(s), len(t)\n    if n > m:\n        return 0\n    dp = [[0] * (n + 1) for _ in range(m + 1)]\n    for i in range(m + 1):\n        dp[i][0] = 1\n    for i in range(1, m + 1):\n        for j in range(1, n + 1):\n            dp[i][j] = dp[i - 1][j]\n            if s[i - 1] == t[j - 1]:\n                dp[i][j] += dp[i - 1][j - 1]\n    return dp[m][n]\n",
+  "tests": [
+    {"args": ["rabbbit", "rabbit"], "expected": 3},
+    {"args": ["banana", "ban"], "expected": 3},
+    {"args": ["abc", "abc"], "expected": 1},
+    {"args": ["abc", "abcd"], "expected": 0},
+    {"args": ["aaa", "aa"], "expected": 3},
+    {"args": ["xyz", "a"], "expected": 0},
+    {"args": ["", ""], "expected": 1},
+    {"args": ["ccc", "c"], "expected": 3}
+  ],
+  "hints": [
+    "Think about scanning s one character at a time while asking how many characters of t you have matched so far. What two independent positions describe your state?",
+    "Let dp[i][j] be the number of distinct ways to spell the first j characters of t using the first i characters of s, with dp[i][0] = 1 for every i since the empty target is always formed by choosing nothing.",
+    "For each s[i-1] you always inherit dp[i-1][j] (the ways that decline to use s[i-1]); additionally, when s[i-1] == t[j-1] you add dp[i-1][j-1] (the ways that use s[i-1] to match t[j-1]). The match branch alone is not enough because a repeated matching letter can be used or skipped."
+  ]
+}

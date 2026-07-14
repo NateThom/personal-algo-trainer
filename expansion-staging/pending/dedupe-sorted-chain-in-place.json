@@ -1,0 +1,25 @@
+{
+  "id": "dedupe-sorted-chain-in-place",
+  "pattern": "linked-list",
+  "title": "Remove Duplicates from a Sorted Chain In Place",
+  "difficulty": "easy",
+  "statement": "You are given a list of integers `values` sorted in non-decreasing order. Treat it as the values of a singly linked list, chained in the given order. Remove nodes so that every value appears exactly once, keeping the surviving nodes in their original (sorted) order. You must do this with the in-place deletion walk: hold a pointer at the current node, compare it to its next neighbor, and when they are equal splice the neighbor out by relinking `curr.next` past it (do not rebuild the list from a set or otherwise dedupe by counting). Return the resulting values as a list. If `values` is empty, return an empty list.",
+  "function_name": "dedupe_sorted_chain",
+  "starter_code": "def dedupe_sorted_chain(values):\n    # your code here\n    pass\n",
+  "reference_solution": "class ListNode:\n    def __init__(self, val=0, next=None):\n        self.val = val\n        self.next = next\n\n\ndef dedupe_sorted_chain(values):\n    dummy = ListNode()\n    tail = dummy\n    for v in values:\n        tail.next = ListNode(v)\n        tail = tail.next\n    head = dummy.next\n    curr = head\n    while curr and curr.next:\n        if curr.val == curr.next.val:\n            curr.next = curr.next.next\n        else:\n            curr = curr.next\n    out = []\n    node = head\n    while node:\n        out.append(node.val)\n        node = node.next\n    return out\n",
+  "tests": [
+    {"args": [[1, 1, 2]], "expected": [1, 2]},
+    {"args": [[1, 1, 2, 3, 3]], "expected": [1, 2, 3]},
+    {"args": [[1, 1, 1]], "expected": [1]},
+    {"args": [[]], "expected": []},
+    {"args": [[5]], "expected": [5]},
+    {"args": [[2, 2, 2, 2]], "expected": [2]},
+    {"args": [[-3, -3, -1, 0, 0, 0, 4]], "expected": [-3, -1, 0, 4]},
+    {"args": [[1, 2, 3, 4]], "expected": [1, 2, 3, 4]}
+  ],
+  "hints": [
+    "Because the values are already sorted, every group of equal values sits together in one contiguous run — so you only ever need to compare a node with its immediate next neighbor.",
+    "Walk a single `curr` pointer. The invariant: everything at and before `curr` is already deduplicated, and `curr` is the last kept node so far. Only two moves exist: splice out `curr.next`, or step `curr` forward.",
+    "When `curr.val == curr.next.val`, set `curr.next = curr.next.next` and do NOT advance — stay on `curr` so the next equal neighbor in a long run also gets removed. Advance `curr` only when `curr.next` holds a different value."
+  ]
+}

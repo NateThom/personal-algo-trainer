@@ -1,0 +1,25 @@
+{
+  "id": "reorganize-string-no-adjacent",
+  "pattern": "heaps",
+  "title": "Reorganize String So No Two Adjacent Characters Match",
+  "difficulty": "medium",
+  "statement": "Given a string s of lowercase English letters, return a rearrangement of its characters in which no two neighboring characters are the same. If no such rearrangement exists, return the empty string \"\". The empty input \"\" is itself a valid arrangement, so return \"\" for it as well. To make the answer unique, build the result one character at a time using this exact rule: among the characters that still have a remaining count and that are not equal to the character you placed immediately before, place the one with the largest remaining count; if several tie on count, place the alphabetically smallest of them. Placing a character reduces its remaining count by one. The result must use every character of s (a returned non-empty string is a permutation of s).",
+  "function_name": "reorganize_string",
+  "starter_code": "def reorganize_string(s):\n    # your code here\n    pass\n",
+  "reference_solution": "import heapq\nfrom collections import Counter\n\n\ndef reorganize_string(s):\n    counts = Counter(s)\n    n = len(s)\n    if n and max(counts.values()) > (n + 1) // 2:\n        return \"\"\n    heap = [(-c, ch) for ch, c in counts.items()]\n    heapq.heapify(heap)\n    result = []\n    held = None\n    while heap:\n        neg, ch = heapq.heappop(heap)\n        result.append(ch)\n        if held is not None and held[0] < 0:\n            heapq.heappush(heap, held)\n        held = (neg + 1, ch)\n    out = \"\".join(result)\n    return out if len(out) == n else \"\"\n",
+  "tests": [
+    {"args": ["aab"], "expected": "aba"},
+    {"args": ["a"], "expected": "a"},
+    {"args": [""], "expected": ""},
+    {"args": ["aaab"], "expected": ""},
+    {"args": ["aabbcc"], "expected": "abcabc"},
+    {"args": ["vvvlo"], "expected": "vlvov"},
+    {"args": ["aaabbc"], "expected": "ababac"},
+    {"args": ["zzz"], "expected": ""}
+  ],
+  "hints": [
+    "At each step you always want the character you have the most of left (with ties going to the alphabetically smaller one). Which data structure hands you the current maximum again and again in log time?",
+    "Use a max-heap keyed on (-remaining_count, char). The crucial invariant is that the character you just placed must sit out the very next choice, so hold it aside and only return it to the heap after you have popped the next character.",
+    "Pop the best (neg_count, char) and append char. Before pushing anything else, re-push the character you held back from the previous step if its remaining count is still positive; then set the held-back slot to this char with its count decremented. If ever the most frequent character exceeds (len(s)+1)//2 you cannot succeed, so return \"\"."
+  ]
+}

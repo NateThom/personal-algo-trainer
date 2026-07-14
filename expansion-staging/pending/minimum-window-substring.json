@@ -1,0 +1,25 @@
+{
+  "id": "minimum-window-substring",
+  "pattern": "sliding-window",
+  "title": "Minimum Window Containing All Required Characters",
+  "difficulty": "hard",
+  "statement": "Given two strings s and t, return the shortest contiguous substring of s that contains every character of t, honoring multiplicity: if a character appears k times in t, the window must contain it at least k times. If several windows tie on length, return the leftmost one (the one with the smallest starting index). If no window of s satisfies the requirement, return the empty string \"\". Comparisons are case-sensitive, and t may contain repeated characters.",
+  "function_name": "min_window_substring",
+  "starter_code": "def min_window_substring(s, t):\n    # your code here\n    pass\n",
+  "reference_solution": "def min_window_substring(s, t):\n    from collections import Counter\n    if not t:\n        return \"\"\n    need = Counter(t)\n    missing = len(t)\n    have = {}\n    left = 0\n    best_len = -1\n    best_start = 0\n    for right, ch in enumerate(s):\n        have[ch] = have.get(ch, 0) + 1\n        if ch in need and have[ch] <= need[ch]:\n            missing -= 1\n        while missing == 0:\n            if best_len == -1 or (right - left + 1) < best_len:\n                best_len = right - left + 1\n                best_start = left\n            lc = s[left]\n            have[lc] -= 1\n            if lc in need and have[lc] < need[lc]:\n                missing += 1\n            left += 1\n    return \"\" if best_len == -1 else s[best_start:best_start + best_len]\n",
+  "tests": [
+    {"args": ["ADOBECODEBANC", "ABC"], "expected": "BANC"},
+    {"args": ["a", "a"], "expected": "a"},
+    {"args": ["a", "aa"], "expected": ""},
+    {"args": ["ABC", "XYZ"], "expected": ""},
+    {"args": ["AABBC", "AABC"], "expected": "AABBC"},
+    {"args": ["cabwefgewcwaefgcf", "cae"], "expected": "cwae"},
+    {"args": ["xAAyz", "AA"], "expected": "AA"},
+    {"args": ["bba", "ab"], "expected": "ba"}
+  ],
+  "hints": [
+    "You need the shortest contiguous window covering a requirement. What lets you grow a window on the right and trim it on the left without rescanning?",
+    "Track a count for each required character (a Counter of t), plus how many required slots are still unmet. A character only reduces the deficit while your window still has fewer of it than t demands.",
+    "Expand right and increment the window's count of that char, decrementing the deficit only if the count is still at or below what t needs. Whenever the deficit hits zero, record the window if it beats the best, then shrink from the left in a while loop, raising the deficit back the moment removing a char drops it below t's requirement. Keep the leftmost of any length-tied windows by only replacing best on a strictly smaller length."
+  ]
+}

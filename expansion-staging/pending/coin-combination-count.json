@@ -1,0 +1,25 @@
+{
+  "id": "coin-combination-count",
+  "pattern": "dp-1d",
+  "title": "Count Coin Combinations",
+  "difficulty": "medium",
+  "statement": "You run a vending machine stocked with an unlimited supply of coins in each of several distinct denominations. Given a list of distinct positive integer denominations `coins` and a non-negative integer `amount`, return the number of distinct multisets of coins that sum to exactly `amount`. Two ways are considered the same if they use the same count of each denomination; the order in which coins are chosen does not matter (so paying 3 with a 1 then a 2 is the same as a 2 then a 1). Each denomination may be used any number of times, including zero. Return 1 when `amount` is 0 (the empty selection), and return 0 when no selection sums to `amount`.",
+  "function_name": "count_coin_combinations",
+  "starter_code": "def count_coin_combinations(coins, amount):\n    # your code here\n    pass\n",
+  "reference_solution": "def count_coin_combinations(coins, amount):\n    dp = [0] * (amount + 1)\n    dp[0] = 1\n    for coin in coins:\n        for a in range(coin, amount + 1):\n            dp[a] += dp[a - coin]\n    return dp[amount]\n",
+  "tests": [
+    {"args": [[1, 2], 3], "expected": 2},
+    {"args": [[2], 3], "expected": 0},
+    {"args": [[2, 3, 5], 9], "expected": 3},
+    {"args": [[], 0], "expected": 1},
+    {"args": [[7], 0], "expected": 1},
+    {"args": [[1, 5, 10, 25], 30], "expected": 18},
+    {"args": [[3, 5], 4], "expected": 0},
+    {"args": [[1, 2, 5], 11], "expected": 11}
+  ],
+  "hints": [
+    "Counting selections where order does not matter is a counting DP over amounts. What subproblem would let dp[a] be the number of ways to make amount a?",
+    "To count multisets (not ordered sequences), fix an outer loop over each coin denomination and, inside it, an inner loop over amounts: this commits to considering each denomination once, so each multiset is counted exactly once.",
+    "Initialize dp[0] = 1 and dp[a] = 0 for a > 0. For each coin, for a from coin up to amount, do dp[a] += dp[a - coin]. Swapping these two loops would count ordered sequences instead. Return dp[amount]."
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "find-anagram-start-indices",
+  "pattern": "sliding-window",
+  "title": "Find All Anagram Start Indices",
+  "difficulty": "medium",
+  "statement": "You are given two strings s and p made up only of lowercase English letters. An anagram of p is any string that uses exactly the same letters as p with the same multiplicities. Return a list of every starting index i in s such that the substring s[i:i+len(p)] (the length-len(p) window that begins at position i) is an anagram of p. The returned indices must be in strictly increasing order. Return an empty list [] if there are no such indices, including the case where len(p) is greater than len(s). Note that multiplicity matters: if p has two copies of a letter, a matching window must also contain exactly two copies. Solve it by keeping a rolling frequency count of the current window of size len(p) and comparing it against the frequency count of p, updating the window count incrementally as it slides one position to the right.",
+  "function_name": "find_anagram_indices",
+  "starter_code": "def find_anagram_indices(s, p):\n    # your code here\n    pass\n",
+  "reference_solution": "def find_anagram_indices(s, p):\n    from collections import Counter\n    n, k = len(s), len(p)\n    if k > n:\n        return []\n    need = Counter(p)\n    window = Counter(s[:k])\n    result = []\n    if window == need:\n        result.append(0)\n    for i in range(k, n):\n        window[s[i]] += 1\n        left = s[i - k]\n        window[left] -= 1\n        if window[left] == 0:\n            del window[left]\n        if window == need:\n            result.append(i - k + 1)\n    return result\n",
+  "tests": [
+    {"args": ["cbaebabacd", "abc"], "expected": [0, 6]},
+    {"args": ["abab", "ab"], "expected": [0, 1, 2]},
+    {"args": ["aa", "bb"], "expected": []},
+    {"args": ["a", "ab"], "expected": []},
+    {"args": ["baa", "aa"], "expected": [1]},
+    {"args": ["aaaa", "aa"], "expected": [0, 1, 2]},
+    {"args": ["abba", "aab"], "expected": []},
+    {"args": ["", "a"], "expected": []}
+  ],
+  "hints": [
+    "The windows you check all have the same fixed length len(p) and overlap heavily — can you reuse the previous window's tally instead of recounting each one from scratch?",
+    "Track a frequency count of the current window and compare it to the frequency count of p; two strings are anagrams exactly when their letter counts match, so equality of the two count maps is your test.",
+    "Build the count for the first window s[0:len(p)] and compare to p's count. Then slide: for each new right index add s[i] to the window count, remove s[i-len(p)] (deleting the key when it hits zero so the maps compare equal), and record i-len(p)+1 whenever the window count equals p's count."
+  ]
+}

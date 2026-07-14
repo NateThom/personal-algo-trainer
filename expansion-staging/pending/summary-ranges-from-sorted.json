@@ -1,0 +1,24 @@
+{
+  "id": "summary-ranges-from-sorted",
+  "pattern": "intervals",
+  "title": "Summary Ranges",
+  "difficulty": "easy",
+  "statement": "You are given nums, a list of unique integers sorted in strictly ascending order. Collapse it into the minimal list of inclusive intervals [start, end] that together cover exactly the integers present, where each interval represents a maximal run of consecutive values (each value one more than the previous). Return the intervals as a list of [start, end] pairs ordered by increasing start; a value that stands alone becomes [x, x]. For example, [0, 1, 2, 4, 5, 7] collapses to [[0, 2], [4, 5], [7, 7]]. If nums is empty, return an empty list.",
+  "function_name": "summary_ranges",
+  "starter_code": "def summary_ranges(nums):\n    # your code here\n    pass\n",
+  "reference_solution": "def summary_ranges(nums):\n    result = []\n    i = 0\n    n = len(nums)\n    while i < n:\n        start = nums[i]\n        while i + 1 < n and nums[i + 1] == nums[i] + 1:\n            i += 1\n        result.append([start, nums[i]])\n        i += 1\n    return result\n",
+  "tests": [
+    {"args": [[0, 1, 2, 4, 5, 7]], "expected": [[0, 2], [4, 5], [7, 7]]},
+    {"args": [[]], "expected": []},
+    {"args": [[5]], "expected": [[5, 5]]},
+    {"args": [[1, 2, 3, 4, 5]], "expected": [[1, 5]]},
+    {"args": [[10, 12, 14]], "expected": [[10, 10], [12, 12], [14, 14]]},
+    {"args": [[-3, -2, -1, 1, 2]], "expected": [[-3, -1], [1, 2]]},
+    {"args": [[0, 2, 3, 4, 6, 8, 9]], "expected": [[0, 0], [2, 4], [6, 6], [8, 9]]}
+  ],
+  "hints": [
+    "Scan the sorted values left to right; a new interval only needs to begin when the current value is not exactly one more than the previous one.",
+    "Track the start of the current run and keep extending its end while nums[i + 1] == nums[i] + 1; the run's end is the last value before the chain breaks.",
+    "Use an index i: record start = nums[i], advance i while the next value continues the run, then append [start, nums[i]] and step past it. After the loop ends you have already appended every run including the final one, so nothing is left dangling."
+  ]
+}

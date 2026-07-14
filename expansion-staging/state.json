@@ -1,0 +1,771 @@
+{
+ "accepted_verified": [
+  {
+   "pattern": "arrays-hashing",
+   "id": "group-anagrams",
+   "repairs": 0
+  },
+  {
+   "pattern": "arrays-hashing",
+   "id": "top-k-frequent-elements",
+   "repairs": 0
+  },
+  {
+   "pattern": "arrays-hashing",
+   "id": "river-gauge-subarray-sum-k",
+   "repairs": 0
+  },
+  {
+   "pattern": "arrays-hashing",
+   "id": "longest-consecutive-sequence",
+   "repairs": 0
+  },
+  {
+   "pattern": "arrays-hashing",
+   "id": "first-missing-positive",
+   "repairs": 0
+  },
+  {
+   "pattern": "arrays-hashing",
+   "id": "substring-concatenation-all-words",
+   "repairs": 0
+  },
+  {
+   "pattern": "backtracking",
+   "id": "phone-letter-combos-sorted",
+   "repairs": 0
+  },
+  {
+   "pattern": "backtracking",
+   "id": "balanced-parentheses-strings",
+   "repairs": 0
+  },
+  {
+   "pattern": "backtracking",
+   "id": "palindrome-partitions-sorted",
+   "repairs": 0
+  },
+  {
+   "pattern": "backtracking",
+   "id": "restore-ip-addresses-sorted",
+   "repairs": 0
+  },
+  {
+   "pattern": "backtracking",
+   "id": "n-queens-count",
+   "repairs": 0
+  },
+  {
+   "pattern": "backtracking",
+   "id": "partition-k-equal-subsets",
+   "repairs": 0
+  },
+  {
+   "pattern": "binary-search",
+   "id": "integer-square-root",
+   "repairs": 0
+  },
+  {
+   "pattern": "binary-search",
+   "id": "search-rotated-array",
+   "repairs": 0
+  },
+  {
+   "pattern": "binary-search",
+   "id": "find-peak-element",
+   "repairs": 0
+  },
+  {
+   "pattern": "binary-search",
+   "id": "median-two-sorted-arrays",
+   "repairs": 0
+  },
+  {
+   "pattern": "binary-search",
+   "id": "kth-smallest-pair-distance",
+   "repairs": 0
+  },
+  {
+   "pattern": "bit-manipulation",
+   "id": "add-without-plus",
+   "repairs": 0
+  },
+  {
+   "pattern": "bit-manipulation",
+   "id": "single-number-of-three",
+   "repairs": 0
+  },
+  {
+   "pattern": "bit-manipulation",
+   "id": "range-bitwise-and",
+   "repairs": 0
+  },
+  {
+   "pattern": "bit-manipulation",
+   "id": "max-pairwise-xor",
+   "repairs": 0
+  },
+  {
+   "pattern": "bit-manipulation",
+   "id": "smallest-skill-team-size",
+   "repairs": 0
+  },
+  {
+   "pattern": "dp-1d",
+   "id": "min-cost-climbing-stairs",
+   "repairs": 0
+  },
+  {
+   "pattern": "dp-1d",
+   "id": "maximum-subarray",
+   "repairs": 0
+  },
+  {
+   "pattern": "dp-1d",
+   "id": "decode-ways",
+   "repairs": 0
+  },
+  {
+   "pattern": "dp-1d",
+   "id": "word-break-segmentation",
+   "repairs": 0
+  },
+  {
+   "pattern": "dp-1d",
+   "id": "longest-valid-parentheses-dp",
+   "repairs": 0
+  },
+  {
+   "pattern": "dp-2d",
+   "id": "minimum-path-sum",
+   "repairs": 0
+  },
+  {
+   "pattern": "dp-2d",
+   "id": "triangle-minimum-total",
+   "repairs": 0
+  },
+  {
+   "pattern": "dp-2d",
+   "id": "maximal-square",
+   "repairs": 0
+  },
+  {
+   "pattern": "dp-2d",
+   "id": "coin-combination-count",
+   "repairs": 0
+  },
+  {
+   "pattern": "dp-2d",
+   "id": "longest-common-substring",
+   "repairs": 0
+  },
+  {
+   "pattern": "dp-2d",
+   "id": "distinct-subsequence-count",
+   "repairs": 0
+  },
+  {
+   "pattern": "graphs",
+   "id": "keys-and-rooms",
+   "repairs": 0
+  },
+  {
+   "pattern": "graphs",
+   "id": "pacific-atlantic-water-flow",
+   "repairs": 0
+  },
+  {
+   "pattern": "graphs",
+   "id": "is-graph-bipartite",
+   "repairs": 0
+  },
+  {
+   "pattern": "graphs",
+   "id": "shortest-clear-path-binary-matrix",
+   "repairs": 0
+  },
+  {
+   "pattern": "graphs",
+   "id": "word-transformation-ladder",
+   "repairs": 0
+  },
+  {
+   "pattern": "graphs",
+   "id": "shortest-path-with-wall-breaks",
+   "repairs": 0
+  },
+  {
+   "pattern": "heaps",
+   "id": "min-cost-connect-ropes",
+   "repairs": 0
+  },
+  {
+   "pattern": "heaps",
+   "id": "top-k-frequent-elements",
+   "repairs": 0
+  },
+  {
+   "pattern": "heaps",
+   "id": "task-cooldown-intervals",
+   "repairs": 0
+  },
+  {
+   "pattern": "heaps",
+   "id": "reorganize-string-no-adjacent",
+   "repairs": 0
+  },
+  {
+   "pattern": "heaps",
+   "id": "running-median-stream",
+   "repairs": 0
+  },
+  {
+   "pattern": "intervals",
+   "id": "can-attend-all-meetings",
+   "repairs": 0
+  },
+  {
+   "pattern": "intervals",
+   "id": "summary-ranges-from-sorted",
+   "repairs": 0
+  },
+  {
+   "pattern": "intervals",
+   "id": "min-interval-removals",
+   "repairs": 0
+  },
+  {
+   "pattern": "intervals",
+   "id": "interval-list-intersections",
+   "repairs": 0
+  },
+  {
+   "pattern": "intervals",
+   "id": "min-intervals-to-cover-range",
+   "repairs": 0
+  },
+  {
+   "pattern": "linked-list",
+   "id": "dedupe-sorted-chain-in-place",
+   "repairs": 0
+  },
+  {
+   "pattern": "linked-list",
+   "id": "remove-kth-from-end-two-pointer",
+   "repairs": 0
+  },
+  {
+   "pattern": "linked-list",
+   "id": "add-reversed-digit-chains",
+   "repairs": 0
+  },
+  {
+   "pattern": "linked-list",
+   "id": "rotate-chain-right",
+   "repairs": 0
+  },
+  {
+   "pattern": "linked-list",
+   "id": "interleave-fold-reorder",
+   "repairs": 0
+  },
+  {
+   "pattern": "prefix-sum",
+   "id": "range-addition-updates",
+   "repairs": 0
+  },
+  {
+   "pattern": "prefix-sum",
+   "id": "subarrays-divisible-by-k",
+   "repairs": 0
+  },
+  {
+   "pattern": "prefix-sum",
+   "id": "longest-balanced-binary-subarray",
+   "repairs": 0
+  },
+  {
+   "pattern": "prefix-sum",
+   "id": "product-except-self",
+   "repairs": 0
+  },
+  {
+   "pattern": "prefix-sum",
+   "id": "submatrix-sum-target-count",
+   "repairs": 0
+  },
+  {
+   "pattern": "prefix-sum",
+   "id": "shortest-subarray-at-least-k",
+   "repairs": 0
+  },
+  {
+   "pattern": "sliding-window",
+   "id": "contains-duplicate-within-k",
+   "repairs": 0
+  },
+  {
+   "pattern": "sliding-window",
+   "id": "longest-subarray-k-distinct",
+   "repairs": 0
+  },
+  {
+   "pattern": "sliding-window",
+   "id": "find-anagram-start-indices",
+   "repairs": 0
+  },
+  {
+   "pattern": "sliding-window",
+   "id": "sliding-window-maximum",
+   "repairs": 0
+  },
+  {
+   "pattern": "sliding-window",
+   "id": "minimum-window-substring",
+   "repairs": 0
+  },
+  {
+   "pattern": "stack",
+   "id": "remove-adjacent-duplicates",
+   "repairs": 0
+  },
+  {
+   "pattern": "stack",
+   "id": "backspace-string-compare",
+   "repairs": 0
+  },
+  {
+   "pattern": "stack",
+   "id": "decode-nested-string",
+   "repairs": 0
+  },
+  {
+   "pattern": "stack",
+   "id": "asteroid-collision",
+   "repairs": 0
+  },
+  {
+   "pattern": "stack",
+   "id": "largest-rectangle-histogram",
+   "repairs": 0
+  },
+  {
+   "pattern": "stack",
+   "id": "basic-calculator-parens",
+   "repairs": 0
+  },
+  {
+   "pattern": "topological-sort",
+   "id": "minimum-vertices-to-reach-all",
+   "repairs": 0
+  },
+  {
+   "pattern": "topological-sort",
+   "id": "validate-task-order",
+   "repairs": 0
+  },
+  {
+   "pattern": "topological-sort",
+   "id": "eventual-safe-nodes",
+   "repairs": 0
+  },
+  {
+   "pattern": "topological-sort",
+   "id": "unique-sequence-reconstruction",
+   "repairs": 0
+  },
+  {
+   "pattern": "topological-sort",
+   "id": "alien-alphabet-from-words",
+   "repairs": 0
+  },
+  {
+   "pattern": "topological-sort",
+   "id": "project-completion-time",
+   "repairs": 0
+  },
+  {
+   "pattern": "trees",
+   "id": "validate-bst-ordering",
+   "repairs": 0
+  },
+  {
+   "pattern": "trees",
+   "id": "bst-lowest-common-ancestor",
+   "repairs": 0
+  },
+  {
+   "pattern": "trees",
+   "id": "tree-right-side-view",
+   "repairs": 0
+  },
+  {
+   "pattern": "trees",
+   "id": "tree-diameter-edges",
+   "repairs": 0
+  },
+  {
+   "pattern": "trees",
+   "id": "max-branch-path-sum",
+   "repairs": 0
+  },
+  {
+   "pattern": "tries",
+   "id": "wildcard-word-matching",
+   "repairs": 0
+  },
+  {
+   "pattern": "two-pointers",
+   "id": "max-area-between-walls",
+   "repairs": 0
+  }
+ ],
+ "needs_reverify": [
+  {
+   "pattern": "binary-search",
+   "id": "first-last-occurrence-range",
+   "stage": "verify",
+   "reason": "verifier agent died",
+   "shape": {
+    "slug": "first-last-occurrence-range",
+    "title": "First and Last Position of Target in Sorted Array",
+    "difficulty": "medium",
+    "sub_technique": "dual boundary search (leftmost/rightmost occurrence)",
+    "description": "Given a sorted list of ints (duplicates allowed) and a target, return the pair [first_index, last_index] of the target's occurrence range, or [-1, -1] if absent. Must run in O(log n): two separate boundary binary searches, one biased left (on found, keep searching left) and one biased right. Return value is a JSON list of two ints.",
+    "canonical_wrong": "The learner runs one standard binary search to find any occurrence, then linearly expands outward with while-loops to find the edges. It passes small tests but degrades to O(n) when the array is mostly one repeated value \u2014 the exact case the problem's adversarial tests target. The other classic slip: in the leftmost search, on arr[mid] == target they return mid immediately instead of setting right = mid - 1 and recording the candidate."
+   }
+  },
+  {
+   "pattern": "dp-1d",
+   "id": "maximum-product-subarray",
+   "stage": "verify",
+   "reason": "verifier agent died",
+   "shape": {
+    "slug": "maximum-product-subarray",
+    "title": "Maximum Product Subarray",
+    "difficulty": "hard",
+    "sub_technique": "dual-state DP (track running max AND min ending at i)",
+    "description": "Given a non-empty list of integers (which may include negatives and zeros), return the largest product (an int) of any non-empty contiguous subarray. Because a negative number turns the smallest running product into the largest, the DP must carry two states per index \u2014 the maximum and the minimum product of a subarray ending at i \u2014 each computed as max/min of (nums[i], nums[i]*prev_max, nums[i]*prev_min). The answer is the global max over all indices; a single-element subarray is always allowed.",
+    "canonical_wrong": "The learner ports Kadane directly and tracks only the running maximum product: cur = max(nums[i], cur * nums[i]). Two negatives never multiply back into a positive, so [2, -3, -4] returns 2 instead of 24; they also often zero the state incorrectly at 0s or return the value at the last index instead of the global max."
+   }
+  },
+  {
+   "pattern": "heaps",
+   "id": "maximize-sum-after-k-negations",
+   "stage": "repair",
+   "reason": "repair agent died",
+   "shape": {
+    "slug": "maximize-sum-after-k-negations",
+    "title": "Maximize Array Sum After K Negations",
+    "difficulty": "easy",
+    "sub_technique": "greedy min-heap with repeated element transform",
+    "description": "Given an integer array (may contain negatives and zeros) and an integer k, you must perform exactly k operations, each replacing some element x with -x (the same index may be chosen multiple times). Return the maximum possible sum of the array after the k operations, as an integer. The correct approach heapifies the array as a min-heap and, k times, pops the minimum, negates it, and pushes it back \u2014 naturally handling the case where negatives run out and the smallest non-negative element must absorb remaining flips.",
+    "canonical_wrong": "The learner sorts the array once and negates the first k elements (or all negatives up to k) in the sorted order, without re-inserting negated values \u2014 so after flipping -2 to 2 they continue flipping the next element in the original order instead of the new current minimum, and when k exceeds the count of negatives they mishandle the leftover flips (e.g. flipping an arbitrary element or using parity of k against the wrong element instead of the current smallest)."
+   }
+  },
+  {
+   "pattern": "intervals",
+   "id": "employee-free-time",
+   "stage": "repair",
+   "reason": "repair agent died",
+   "shape": {
+    "slug": "employee-free-time",
+    "title": "Common Free Time Across Schedules",
+    "difficulty": "hard",
+    "sub_technique": "k-list flatten + merge + gap extraction",
+    "description": "Given a list of schedules, where each schedule is a list of disjoint [start, end] intervals sorted by start (one per employee), return the list of finite intervals of positive length during which every employee is free, sorted by start. Ignore the unbounded free time before the first busy interval and after the last one; zero-length gaps are excluded. The function takes a list of lists of pairs and returns a list of [start, end] pairs.",
+    "canonical_wrong": "The learner flattens all schedules, sorts by start, and emits a gap whenever next.start > prev.end using only the immediately preceding interval instead of a running max end (i.e. skips the merge step). A containing interval like [1,10] followed by [2,3] then [4,5] produces phantom free time such as [3,4] that is actually busy."
+   }
+  },
+  {
+   "pattern": "linked-list",
+   "id": "erase-zero-sum-runs",
+   "stage": "verify",
+   "reason": "verifier agent died",
+   "shape": {
+    "slug": "erase-zero-sum-runs",
+    "title": "Erase Consecutive Runs That Sum to Zero",
+    "difficulty": "hard",
+    "sub_technique": "dummy head + prefix-sum map over a chain with cascading deletions",
+    "description": "Given a list of integers chained like a singly linked list, repeatedly delete consecutive runs of elements that sum to zero until no such run remains, and return the surviving values in order (possibly an empty list). The result is well-defined regardless of deletion order; the intended solution uses a dummy head and a prefix-sum-to-node map so all deletions are found in two passes rather than repeatedly rescanning. Example: [1,2,-3,3,1] -> [3,1] (or equivalently the unique stable result), [1,2,3,-3,-2] -> [1].",
+    "canonical_wrong": "A single left-to-right pass with a prefix-sum map that splices out a zero-sum span but never removes the stale prefix-sum entries belonging to the deleted span, so a later prefix sum matches a key inside the erased region and triggers a bogus deletion; the sibling classic is a one-shot scan that removes each zero-sum window once but never re-checks, missing cascades where a deletion makes two neighbors form a new zero-sum run (e.g. [3,4,-7,5,-6,6] must reduce all the way to [5])."
+   }
+  },
+  {
+   "pattern": "sliding-window",
+   "id": "longest-ones-with-k-flips",
+   "stage": "verify",
+   "reason": "verifier agent died",
+   "shape": {
+    "slug": "longest-ones-with-k-flips",
+    "title": "Longest Run of Ones with K Flips",
+    "difficulty": "medium",
+    "sub_technique": "variable window with a violation budget (at most K bad elements)",
+    "description": "Given a binary list nums (containing only 0s and 1s) and an integer k >= 0, return the length of the longest contiguous subarray consisting of all 1s if you may flip at most k zeros to ones. Return an int; 0 for an empty array. The window is valid while it contains at most k zeros; expand right, shrink left when the zero-count exceeds k.",
+    "canonical_wrong": "When the window exceeds k zeros, the learner resets the window entirely (left = right, zero count = 0) instead of sliding left by one \u2014 a greedy restart that discards valid overlapping windows and undercounts on inputs like [1,1,0,0,1,1,1,0,1,1] with k=1. A close second: shrinking left but forgetting to decrement the zero counter when the element leaving the window is a 0, so the window can never re-expand."
+   }
+  },
+  {
+   "pattern": "trees",
+   "id": "rebuild-tree-preorder-inorder",
+   "stage": "verify",
+   "reason": "verifier agent died",
+   "shape": {
+    "slug": "rebuild-tree-preorder-inorder",
+    "title": "Rebuild a Tree from Preorder and Inorder",
+    "difficulty": "hard",
+    "sub_technique": "Divide-and-conquer tree construction from traversal pair",
+    "description": "Given two lists of distinct integers, preorder and inorder, that are the preorder and inorder traversals of the same binary tree, reconstruct the tree and return it in level-order array form with null placeholders for missing children of internal nodes (trailing nulls trimmed, matching the encoding used by this pattern's other problems). preorder[0] is the root; its position in inorder splits the remaining elements into left and right subtrees.",
+    "canonical_wrong": "Off-by-one slice arithmetic when splitting preorder: after finding root index k in inorder, slicing the left subtree's preorder as preorder[1:k] is only correct because left subtree size equals k \u2014 learners routinely slice preorder[1:k+1] or split by inorder indices unadjusted for the subtree's offset in a recursive (start, end) version, producing a tree that is wrong whenever a right subtree is non-empty."
+   }
+  },
+  {
+   "pattern": "tries",
+   "id": "longest-buildable-word",
+   "stage": "verify",
+   "reason": "verifier agent died",
+   "shape": {
+    "slug": "longest-buildable-word",
+    "title": "Longest Word Built One Letter at a Time",
+    "difficulty": "easy",
+    "sub_technique": "is_word chain traversal (every prefix must be a complete word)",
+    "description": "Given a list of distinct lowercase words, return the longest word that can be built one character at a time such that every prefix of it (of length 1, 2, ..., len-1) is also a word in the list. If multiple candidates share the maximum length, return the lexicographically smallest one; return an empty string if no word qualifies (single letters trivially qualify). This is LC 720 (Longest Word in Dictionary).",
+    "canonical_wrong": "The learner checks that each prefix exists as a PATH in the trie (startsWith) rather than requiring every intermediate node to be a complete word (is_word), so 'apple' is accepted even when 'a', 'ap', 'app', 'appl' are not all in the list; a secondary classic miss is forgetting the lexicographic tie-break and returning whichever max-length word was seen first."
+   }
+  },
+  {
+   "pattern": "tries",
+   "id": "shortest-unique-prefixes",
+   "stage": "verify",
+   "reason": "verifier agent died",
+   "shape": {
+    "slug": "shortest-unique-prefixes",
+    "title": "Shortest Unique Prefix for Each Word",
+    "difficulty": "medium",
+    "sub_technique": "per-node pass counts to find minimal distinguishing prefix",
+    "description": "Given a list of distinct lowercase words where no word is a prefix of another, return a list (in input order) giving, for each word, its shortest prefix that is not a prefix of any other word in the list. Build a trie storing at each node how many words pass through it, then walk each word and emit the prefix ending at the first node whose pass count is 1. The function returns a list of strings aligned with the input.",
+    "canonical_wrong": "An off-by-one in the count walk: the learner tests the pass count BEFORE consuming the current character (or breaks after appending one extra character), returning a prefix one character too short or too long; the other classic cheat is comparing every prefix against all other words with startswith and stopping at the first prefix no other word starts with, which silently breaks when they compare against the word itself and never find a unique prefix."
+   }
+  },
+  {
+   "pattern": "tries",
+   "id": "maximum-xor-pair",
+   "stage": "verify",
+   "reason": "verifier agent died",
+   "shape": {
+    "slug": "maximum-xor-pair",
+    "title": "Maximum XOR of Two Numbers",
+    "difficulty": "medium",
+    "sub_technique": "bitwise (binary) trie with greedy opposite-bit descent",
+    "description": "Given a list of non-negative integers (length >= 2), return the maximum value of nums[i] XOR nums[j] over all pairs i != j. Insert each number into a binary trie of its bits from most significant to least significant (fixed width, e.g. 32 bits), then for each number greedily walk the trie preferring the opposite bit at each level, falling back to the same bit when the opposite branch is absent. Returns a single integer. This is LC 421, a frequent bit-trie interview question.",
+    "canonical_wrong": "The learner inserts/queries bits from least significant to most significant (or uses variable-width representations without zero-padding), so the greedy choice optimizes low-order bits first and returns a suboptimal XOR; the related classic bug is asserting the opposite branch exists instead of falling back to the same-bit child, crashing or skipping numbers."
+   }
+  },
+  {
+   "pattern": "tries",
+   "id": "grid-word-hunt",
+   "stage": "verify",
+   "reason": "verifier agent died",
+   "shape": {
+    "slug": "grid-word-hunt",
+    "title": "Word Hunt on a Letter Grid",
+    "difficulty": "hard",
+    "sub_technique": "trie-guided grid DFS with backtracking (Word Search II)",
+    "description": "Given a 2D grid of lowercase letters (list of lists of single-character strings) and a list of distinct dictionary words, return all words that can be formed by a path of horizontally/vertically adjacent cells where each cell is used at most once per word. Return the found words sorted lexicographically, each word at most once. Build a trie of the dictionary and DFS from every cell, pruning branches with no trie child. This is LC 212 (Word Search II), a canonical hard trie interview problem.",
+    "canonical_wrong": "The learner marks a cell visited when entering the DFS but never un-marks it on the way out (missing backtrack), so words whose paths share cells with an earlier explored branch are missed; the other classic miss is emitting a word at an is_word node but not deduplicating (or continuing to re-add it every time the node is reached), producing duplicates in the output."
+   }
+  },
+  {
+   "pattern": "tries",
+   "id": "concatenated-dictionary-words",
+   "stage": "verify",
+   "reason": "verifier agent died",
+   "shape": {
+    "slug": "concatenated-dictionary-words",
+    "title": "Concatenated Dictionary Words",
+    "difficulty": "hard",
+    "sub_technique": "trie-driven word segmentation with DFS over all split points",
+    "description": "Given a list of distinct non-empty lowercase words, return every word that can be written as the concatenation of two or more other (necessarily shorter) words from the same list, sorted lexicographically. Build a trie of all words, then for each candidate run a DFS/DP that, whenever a complete word ends mid-string, both restarts from the root at that position AND continues deeper in the trie. Returns a list of strings. This is LC 472 (Concatenated Words).",
+    "canonical_wrong": "The greedy shortcut: whenever the walk reaches an is_word node the learner immediately resets to the root (taking the shortest matching prefix word) instead of exploring both 'cut here' and 'keep extending' branches, so 'catsdogcats' with dictionary ['cat','cats','dog',...] fails when the wrong prefix is committed; the companion bug is letting a word match itself as its own single-part decomposition, marking every word as concatenated."
+   }
+  },
+  {
+   "pattern": "two-pointers",
+   "id": "three-way-partition-single-pass",
+   "stage": "verify",
+   "reason": "verifier agent died",
+   "shape": {
+    "slug": "three-way-partition-single-pass",
+    "title": "Single-Pass Three-Way Partition",
+    "difficulty": "medium",
+    "sub_technique": "in-place partitioning (Dutch national flag: low/mid/high pointers)",
+    "description": "Given a list containing only the values 0, 1, and 2 (priorities low/normal/urgent in the story), return a new list with the same elements sorted ascending, but the intended solution must be expressible as a single pass using low/mid/high pointers with O(1) extra state \u2014 the prompt forbids counting sort and built-in sort. The function takes the list and returns the sorted list; input order among equal values is irrelevant since values are indistinguishable. Include tests with long runs of a single value and arrays that start with 2s.",
+    "canonical_wrong": "After swapping arr[mid] with arr[high], the learner also advances mid \u2014 but the element swapped in from the high side is unexamined, so a 0 or 2 arriving from the right gets skipped and lands out of place (e.g. [2,0,1] sorts to [0,2,1]). The dual variant, advancing mid on the low-swap but not initializing pointers correctly, produces the same class of bug."
+   }
+  },
+  {
+   "pattern": "two-pointers",
+   "id": "unique-triplets-sum-zero",
+   "stage": "verify",
+   "reason": "verifier agent died",
+   "shape": {
+    "slug": "unique-triplets-sum-zero",
+    "title": "Unique Triplets Summing to Zero",
+    "difficulty": "medium",
+    "sub_technique": "sort + fix-one-element + converging pair sum with duplicate skipping (3Sum)",
+    "description": "Given a list of integers (with duplicates possible), return all unique triplets of VALUES [a, b, c] with a + b + c == 0. Each triplet is returned sorted ascending, and the list of triplets is sorted lexicographically, making the output fully deterministic. The intended solution sorts, fixes the smallest element, and converges two pointers over the remainder while skipping duplicate values at every level.",
+    "canonical_wrong": "Omitting duplicate skipping: after finding a valid triplet the learner advances left/right by exactly one without skipping equal neighbors (and/or does not skip repeated values of the fixed first element), so inputs like [-1,-1,0,1,1,2] emit the same triplet multiple times. The companion cheat is dumping tuples into a set to dedupe instead of pointer-skipping \u2014 the grader's canonical-wrong check should target the missing-skip version producing duplicates."
+   }
+  },
+  {
+   "pattern": "two-pointers",
+   "id": "almost-palindrome-one-deletion",
+   "stage": "verify",
+   "reason": "verifier agent died",
+   "shape": {
+    "slug": "almost-palindrome-one-deletion",
+    "title": "Palindrome After At Most One Deletion",
+    "difficulty": "medium",
+    "sub_technique": "converging comparison with one-branch backtrack (valid palindrome II)",
+    "description": "Given a lowercase string, return True if it is a palindrome or can become one by deleting at most one character, else False. Converge two pointers from the ends; on the first mismatch, the answer is True iff skipping the left character OR skipping the right character leaves a palindromic middle segment. Empty and single-character strings return True. Extremely common phone-screen question.",
+    "canonical_wrong": "On the first mismatch, trying only ONE branch \u2014 typically skipping just the left character and continuing \u2014 instead of checking both skip-left and skip-right. Fails on inputs where the deletable character is on the other side, e.g. 'ebcbbececabbacecbbcbe' (True, but skip-left-only returns False) or the minimal case 'cbbcc'."
+   }
+  },
+  {
+   "pattern": "two-pointers",
+   "id": "trapped-rainwater-volume",
+   "stage": "verify",
+   "reason": "verifier agent died",
+   "shape": {
+    "slug": "trapped-rainwater-volume",
+    "title": "Trapped Rainwater Volume",
+    "difficulty": "hard",
+    "sub_technique": "converging pointers with running left/right maxima (trapping rain water)",
+    "description": "Given a list of non-negative integer bar heights, return the total units of water trapped after rain, where water above each position is bounded by min(max height to its left, max height to its right) minus its own height, floored at zero. Return a single integer (0 for arrays shorter than 3). The intended O(n)/O(1) solution converges two pointers, processing whichever side has the smaller running maximum.",
+    "canonical_wrong": "Accounting water against only one side's maximum: the learner accumulates left_max - height whenever height < left_max without ever ensuring the right side is at least as tall (or converges pointers comparing current heights instead of running maxima, or forgets to update the running max before adding). Overcounts on descending tails like [3,2,1,0] which traps 0 but yields positive water."
+   }
+  },
+  {
+   "pattern": "two-pointers",
+   "id": "unique-quadruplets-target-sum",
+   "stage": "verify",
+   "reason": "verifier agent died",
+   "shape": {
+    "slug": "unique-quadruplets-target-sum",
+    "title": "Unique Quadruplets With Target Sum",
+    "difficulty": "hard",
+    "sub_technique": "sort + fix-two-elements + converging pair sum with multi-level duplicate skipping (4Sum)",
+    "description": "Given a list of integers and an integer target, return all unique quadruplets of values [a, b, c, d] with a + b + c + d == target. Each quadruplet is sorted ascending and the output list is sorted lexicographically for determinism. The intended solution sorts, iterates two nested fixed indices i < j (skipping duplicate values at both levels via continue, not break), then converges two pointers over the remaining suffix with inner duplicate skipping.",
+    "canonical_wrong": "Deduplicating only at the innermost two-pointer level: the learner skips equal neighbors after a hit but does not skip repeated values of the fixed i and j indices (or uses break instead of continue when skipping, silently dropping valid quadruplets). Input like [2,2,2,2,2] with target 8 then emits [2,2,2,2] many times, or [-2,-1,-1,1,1,2,2] target 0 yields duplicates/missing results."
+   }
+  },
+  {
+   "pattern": "union-find",
+   "id": "network-connectivity-queries",
+   "stage": "verify",
+   "reason": "verifier agent died",
+   "shape": {
+    "slug": "network-connectivity-queries",
+    "title": "Answer Connectivity Queries on a Network",
+    "difficulty": "easy",
+    "sub_technique": "batch same-set queries (find with path compression)",
+    "description": "Given n nodes labeled 0 to n-1, a list of undirected edges [u, v], and a list of queries [a, b], return a list of booleans, one per query in input order, where each boolean is True iff a and b are in the same connected component after all edges are applied. All edges are processed before any query is answered. A node is always connected to itself. This is the purest drill of build-the-DSU-then-query, distinct from counting components or detecting cycles.",
+    "canonical_wrong": "After unioning all edges, the learner answers each query with parent[a] == parent[b] instead of find(a) == find(b) \u2014 comparing immediate parents rather than roots. This passes on shallow star-shaped inputs but fails whenever the union order builds a chain (e.g. edges [[0,1],[1,2],[2,3]] then query [0,3]), because 0 and 3 have different immediate parents despite sharing a root."
+   }
+  },
+  {
+   "pattern": "union-find",
+   "id": "min-cost-connect-cities",
+   "stage": "verify",
+   "reason": "verifier agent died",
+   "shape": {
+    "slug": "min-cost-connect-cities",
+    "title": "Minimum Cost to Connect All Cities",
+    "difficulty": "medium",
+    "sub_technique": "Kruskal's MST (sort edges, union until n-1 merges)",
+    "description": "Given n cities labeled 1 to n and a list of possible roads [a, b, cost], return the minimum total cost to make every city reachable from every other city, or -1 if it is impossible with the given roads. Duplicate roads between the same pair may appear; use whichever is cheaper. Implements Kruskal: sort roads ascending by cost, union endpoints, add cost only when the union succeeds, and verify exactly n-1 successful merges at the end.",
+    "canonical_wrong": "The learner unions edges in the given input order without sorting by cost (or sorts but adds an edge's cost even when union() returns False because the endpoints were already connected). The unsorted version returns a valid spanning tree's cost but not the minimum \u2014 e.g. roads [[1,2,5],[1,3,6],[2,3,1]] yields 11 instead of 6. A second common miss is returning the accumulated cost without checking that all n cities ended up in one component, returning a number instead of -1 for disconnected inputs."
+   }
+  },
+  {
+   "pattern": "union-find",
+   "id": "satisfy-equality-equations",
+   "stage": "verify",
+   "reason": "verifier agent died",
+   "shape": {
+    "slug": "satisfy-equality-equations",
+    "title": "Can These Equality Equations All Hold?",
+    "difficulty": "medium",
+    "sub_technique": "constraint satisfaction (two-pass: union equalities, then check inequalities)",
+    "description": "Given a list of equations, each a 4-character string of the form \"a==b\" or \"a!=b\" over single lowercase-letter variables, return True iff some assignment of values to variables satisfies every equation simultaneously, else False. Requires a two-pass approach: first union all \"==\" pairs into equivalence classes, then scan every \"!=\" equation and return False if its two variables share a root. Note that \"x!=x\" is always unsatisfiable while \"x==x\" is always fine.",
+    "canonical_wrong": "The learner processes equations in a single pass in input order, checking each \"!=\" against the DSU state at that moment. This wrongly returns True for inputs like [\"a!=b\", \"b==c\", \"a==c\"], where the contradiction only materializes after later \"==\" equations merge the classes \u2014 the inequality check must happen after ALL equalities are unioned."
+   }
+  },
+  {
+   "pattern": "union-find",
+   "id": "smallest-string-after-swaps",
+   "stage": "verify",
+   "reason": "verifier agent died",
+   "shape": {
+    "slug": "smallest-string-after-swaps",
+    "title": "Lexicographically Smallest String After Allowed Swaps",
+    "difficulty": "medium",
+    "sub_technique": "component grouping over indices + within-group reordering",
+    "description": "Given a string s and a list of index pairs [i, j] (0-indexed), where you may swap the characters at any listed pair any number of times, return the lexicographically smallest string reachable. Because swaps compose transitively, indices connected through pairs form components whose characters can be permuted arbitrarily. Group indices with union-find, sort each component's characters ascending, then write them back into that component's index positions in ascending index order.",
+    "canonical_wrong": "The learner treats each pair as a one-shot local operation: greedily swaps s[i] and s[j] when it improves the string, possibly looping until no single swap helps. This misses multi-hop rearrangements \u2014 e.g. s=\"dcab\", pairs [[0,3],[1,2]] then [[0,2]] style chains where the optimal placement requires routing a character through an intermediate position, so greedy pairwise swapping gets stuck at a local optimum instead of sorting the whole component."
+   }
+  },
+  {
+   "pattern": "union-find",
+   "id": "island-count-after-land-additions",
+   "stage": "verify",
+   "reason": "verifier agent died",
+   "shape": {
+    "slug": "island-count-after-land-additions",
+    "title": "Island Count After Each Land Addition",
+    "difficulty": "hard",
+    "sub_technique": "online/incremental union-find with a maintained component counter (2D grid flattened to 1D)",
+    "description": "Given grid dimensions rows and cols (all water initially) and a list of positions [r, c] where land is added one at a time, return a list of integers: the number of islands (4-directionally connected land groups) after each addition, in order. Adding land at an already-land cell changes nothing (repeat its current count). Flatten (r, c) to r*cols + c, increment a counter for each genuinely new land cell, and decrement it once per successful union with an adjacent land neighbor.",
+    "canonical_wrong": "The learner increments the island counter for the new cell, then decrements once per land neighbor without checking whether that neighbor was already in the same component as a previously-merged neighbor (i.e., decrements when union() would return False). When a new cell bridges two arms of the SAME existing island \u2014 e.g. filling the gap that closes a ring \u2014 the count is decremented twice for one merge and goes wrong (even negative). A second flavor of the same bug: not skipping duplicate addLand positions, double-counting the cell."
+   }
+  },
+  {
+   "pattern": "union-find",
+   "id": "redundant-directed-connection",
+   "stage": "verify",
+   "reason": "verifier agent died",
+   "shape": {
+    "slug": "redundant-directed-connection",
+    "title": "Find the Redundant Directed Connection",
+    "difficulty": "hard",
+    "sub_technique": "directed variant: two-candidate analysis (double parent vs. cycle) layered on union-find",
+    "description": "A rooted tree on nodes 1..n has all edges directed parent-to-child, exactly one root, and every other node with exactly one parent. Given n directed edges [u, v] (meaning u is v's parent) that form such a tree plus one extra directed edge, return the edge that can be removed so the result is a valid rooted tree. If multiple answers exist, return the one occurring last in the input. Requires first scanning for a node with two parents (yielding candidate edges cand1, cand2), then running union-find on the edges skipping cand2: if no cycle appears return cand2, if a cycle appears and a double-parent node exists return cand1, otherwise return the edge that closed the cycle. Distinct algorithm from the undirected version, which is a pure last-failed-union.",
+    "canonical_wrong": "The learner ports the undirected solution verbatim: union every edge ignoring direction and return the last edge whose union fails. This is wrong whenever the extra edge creates a node with two parents but no directed cycle \u2014 e.g. edges [[1,2],[1,3],[2,3]] must return [2,3] by candidate analysis, but for [[2,1],[3,1],[4,2],[1,4]] the answer is [2,1] (an earlier edge), which last-failed-union can never produce because it ignores the in-degree-2 condition."
+   }
+  }
+ ],
+ "dropped": [],
+ "reviews_done": [
+  "backtracking",
+  "bit-manipulation"
+ ],
+ "reviews_missing": [
+  "arrays-hashing",
+  "binary-search",
+  "dp-1d",
+  "dp-2d",
+  "graphs",
+  "heaps",
+  "intervals",
+  "linked-list",
+  "prefix-sum",
+  "sliding-window",
+  "stack",
+  "topological-sort",
+  "trees",
+  "tries",
+  "two-pointers",
+  "union-find"
+ ]
+}

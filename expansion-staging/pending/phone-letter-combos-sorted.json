@@ -1,0 +1,23 @@
+{
+  "id": "phone-letter-combos-sorted",
+  "pattern": "backtracking",
+  "title": "Phone Keypad Letter Combinations",
+  "difficulty": "easy",
+  "statement": "On an old phone keypad each digit maps to letters: 2=abc, 3=def, 4=ghi, 5=jkl, 6=mno, 7=pqrs, 8=tuv, 9=wxyz. Given a string digits containing only characters '2'-'9', return every string of letters the digits could spell, picking one letter per digit in order. Return the list sorted in ascending lexicographic order. If digits is the empty string, return an empty list [] (not a list containing the empty string).",
+  "function_name": "keypad_words",
+  "starter_code": "def keypad_words(digits):\n    # your code here\n    pass\n",
+  "reference_solution": "def keypad_words(digits):\n    if not digits:\n        return []\n    keypad = {\"2\": \"abc\", \"3\": \"def\", \"4\": \"ghi\", \"5\": \"jkl\", \"6\": \"mno\", \"7\": \"pqrs\", \"8\": \"tuv\", \"9\": \"wxyz\"}\n    results = []\n    def backtrack(i, path):\n        if i == len(digits):\n            results.append(\"\".join(path))\n            return\n        for letter in keypad[digits[i]]:\n            path.append(letter)\n            backtrack(i + 1, path)\n            path.pop()\n    backtrack(0, [])\n    results.sort()\n    return results\n",
+  "tests": [
+    {"args": ["23"], "expected": ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"]},
+    {"args": ["2"], "expected": ["a", "b", "c"]},
+    {"args": [""], "expected": []},
+    {"args": ["7"], "expected": ["p", "q", "r", "s"]},
+    {"args": ["79"], "expected": ["pw", "px", "py", "pz", "qw", "qx", "qy", "qz", "rw", "rx", "ry", "rz", "sw", "sx", "sy", "sz"]},
+    {"args": ["222"], "expected": ["aaa", "aab", "aac", "aba", "abb", "abc", "aca", "acb", "acc", "baa", "bab", "bac", "bba", "bbb", "bbc", "bca", "bcb", "bcc", "caa", "cab", "cac", "cba", "cbb", "cbc", "cca", "ccb", "ccc"]}
+  ],
+  "hints": [
+    "Each digit offers 3-4 letter choices and every full spelling picks one letter per digit — what technique enumerates every path through such a decision tree?",
+    "Recurse on the digit index: at index i, try each letter of keypad[digits[i]], append it to the path, recurse to i+1, then pop it before trying the next letter. When i reaches len(digits), record the joined path.",
+    "Handle the empty string BEFORE recursing: if digits is empty, return [] immediately — otherwise the base case fires once with an empty path and you wrongly emit [\"\"]. Then run the choose/explore/un-choose loop and sort the results before returning."
+  ]
+}

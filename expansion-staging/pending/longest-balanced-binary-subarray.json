@@ -1,0 +1,25 @@
+{
+  "id": "longest-balanced-binary-subarray",
+  "pattern": "prefix-sum",
+  "title": "Longest Subarray With Equal 0s and 1s",
+  "difficulty": "medium",
+  "statement": "You are given a binary array nums containing only the integers 0 and 1. Return the length of the longest contiguous subarray that holds an equal number of 0s and 1s. If no such subarray exists, return 0. Since you only report the length, no tie-breaking is needed when several subarrays share the maximum length. Hint on framing: if you treat each 0 as -1 and each 1 as +1, a subarray is balanced exactly when its running total is unchanged from one endpoint to the other, so two positions with the same prefix total bound a balanced stretch.",
+  "function_name": "longest_balanced_subarray",
+  "starter_code": "def longest_balanced_subarray(nums):\n    # your code here\n    pass\n",
+  "reference_solution": "def longest_balanced_subarray(nums):\n    first_index = {0: -1}\n    running = 0\n    best = 0\n    for i, n in enumerate(nums):\n        running += 1 if n == 1 else -1\n        if running in first_index:\n            best = max(best, i - first_index[running])\n        else:\n            first_index[running] = i\n    return best\n",
+  "tests": [
+    {"args": [[0, 1]], "expected": 2},
+    {"args": [[0, 1, 0]], "expected": 2},
+    {"args": [[1, 1, 1, 1]], "expected": 0},
+    {"args": [[]], "expected": 0},
+    {"args": [[0]], "expected": 0},
+    {"args": [[1, 1, 0, 0, 1, 0, 0]], "expected": 6},
+    {"args": [[0, 0, 1, 0, 0, 0, 1, 1]], "expected": 6},
+    {"args": [[1, 0, 1, 0, 1, 1, 0, 0]], "expected": 8}
+  ],
+  "hints": [
+    "A subarray is balanced when its count of 1s minus its count of 0s is zero. What quantity, tracked as you scan, lets you detect that two endpoints enclose such a subarray?",
+    "Map 0 to -1 and 1 to +1, then keep a running total. Two indices with the same running total delimit a balanced subarray, so store each prefix total in a hashmap the FIRST time you see it (and pre-seed total 0 at index -1).",
+    "Walk the array maintaining running. At index i, if running was seen before at index j, the subarray (j, i] is balanced with length i - j; take the max. Only record running -> i when running is new, so j stays as early as possible and the length stays maximal. The seed {0: -1} handles balanced subarrays that begin at index 0."
+  ]
+}

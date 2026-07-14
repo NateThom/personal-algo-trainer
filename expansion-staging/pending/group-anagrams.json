@@ -1,0 +1,24 @@
+{
+  "id": "group-anagrams",
+  "pattern": "arrays-hashing",
+  "title": "Group Anagrams",
+  "difficulty": "medium",
+  "statement": "A word-puzzle app wants to bundle its answer bank so that scrambled variants of the same letters live together. Given a list of lowercase strings words, return a list of groups (each a list of strings) where every group contains exactly the words that are anagrams of one another: two words are anagrams when one is a rearrangement of the other's letters, using every letter exactly as many times as it occurs. Duplicated input words each appear in their group once per occurrence. Within a group, words must keep their original input order; groups must be ordered by the position in words where each group's first member appears. If words is empty, return an empty list.",
+  "function_name": "group_anagrams",
+  "starter_code": "def group_anagrams(words):\n    # your code here\n    pass\n",
+  "reference_solution": "def group_anagrams(words):\n    groups = {}\n    for w in words:\n        key = \"\".join(sorted(w))\n        groups.setdefault(key, []).append(w)\n    return list(groups.values())\n",
+  "tests": [
+    {"args": [["late", "tale", "gift", "teal", "flow", "wolf"]], "expected": [["late", "tale", "teal"], ["gift"], ["flow", "wolf"]]},
+    {"args": [["note"]], "expected": [["note"]]},
+    {"args": [[]], "expected": []},
+    {"args": [["cabbage", "drift", "moss"]], "expected": [["cabbage"], ["drift"], ["moss"]]},
+    {"args": [["stop", "pots", "stop", "tops", "opts"]], "expected": [["stop", "pots", "stop", "tops", "opts"]]},
+    {"args": [["aab", "abb", "bba", "baa"]], "expected": [["aab", "baa"], ["abb", "bba"]]},
+    {"args": [["loop", "polo", "pool", "lop", "plo"]], "expected": [["loop", "polo", "pool"], ["lop", "plo"]]}
+  ],
+  "hints": [
+    "Two anagrams differ only in letter order. Can you compute one canonical value that is identical for every rearrangement of the same letters, and bucket words by it?",
+    "Use a dict mapping a derived key to the list of words seen so far with that key. The key must capture letter multiplicities, not just which letters occur, and it must be hashable: sorted(w) is a list (unhashable), and set(w) drops counts, so ''.join(sorted(w)) or a tuple of 26 letter counts is the right key.",
+    "Scan words once; for each w compute key = ''.join(sorted(w)) and do groups.setdefault(key, []).append(w). Because Python dicts preserve insertion order, list(groups.values()) already yields groups ordered by first appearance, with each group's words in input order."
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "balanced-parentheses-strings",
+  "pattern": "backtracking",
+  "title": "Generate Balanced Parentheses",
+  "difficulty": "medium",
+  "statement": "A template engine wants to enumerate every distinct way to nest n pairs of brackets. Given a non-negative integer n, return every string made of exactly n '(' characters and n ')' characters that is well-formed, meaning every prefix of the string contains at least as many '(' as ')'. Return the strings as a list sorted lexicographically; note that '(' sorts before ')', so for n = 2 the answer is [\"(())\", \"()()\"]. For n = 0, return a list containing only the empty string: [\"\"]. Build the strings character by character and prune invalid branches as you go rather than generating all 2^(2n) strings and filtering.",
+  "function_name": "generate_balanced",
+  "starter_code": "def generate_balanced(n):\n    # your code here\n    pass\n",
+  "reference_solution": "def generate_balanced(n):\n    results = []\n\n    def backtrack(path, open_used, close_used):\n        if len(path) == 2 * n:\n            results.append(\"\".join(path))\n            return\n        if open_used < n:\n            path.append(\"(\")\n            backtrack(path, open_used + 1, close_used)\n            path.pop()\n        if close_used < open_used:\n            path.append(\")\")\n            backtrack(path, open_used, close_used + 1)\n            path.pop()\n\n    backtrack([], 0, 0)\n    return sorted(results)\n",
+  "tests": [
+    {"args": [0], "expected": [""]},
+    {"args": [1], "expected": ["()"]},
+    {"args": [2], "expected": ["(())", "()()"]},
+    {"args": [3], "expected": ["((()))", "(()())", "(())()", "()(())", "()()()"]},
+    {"args": [4], "expected": ["(((())))", "((()()))", "((())())", "((()))()", "(()(()))", "(()()())", "(()())()", "(())(())", "(())()()", "()((()))", "()(()())", "()(())()", "()()(())", "()()()()"]},
+    {"args": [5], "expected": ["((((()))))", "(((()())))", "(((())()))", "(((()))())", "(((())))()", "((()(())))", "((()()()))", "((()())())", "((()()))()", "((())(()))", "((())()())", "((())())()", "((()))(())", "((()))()()", "(()((())))", "(()(()()))", "(()(())())", "(()(()))()", "(()()(()))", "(()()()())", "(()()())()", "(()())(())", "(()())()()", "(())((()))", "(())(()())", "(())(())()", "(())()(())", "(())()()()", "()(((())))", "()((()()))", "()((())())", "()((()))()", "()(()(()))", "()(()()())", "()(()())()", "()(())(())", "()(())()()", "()()((()))", "()()(()())", "()()(())()", "()()()(())", "()()()()()"]}
+  ],
+  "hints": [
+    "You are building a string one character at a time, and at each position you have at most two choices. What rule tells you a choice can never lead to a valid string, so you can skip that whole branch?",
+    "Track two counters as you recurse: open_used and close_used. You may add '(' while open_used < n, and you may add ')' only while close_used < open_used — comparing close_used to n instead lets invalid strings like ')(' through.",
+    "Recurse with a path list: if len(path) == 2n, join and record it; otherwise try '(' when open_used < n (append, recurse with open_used+1, pop), then try ')' when close_used < open_used (append, recurse with close_used+1, pop). Sort the collected results before returning."
+  ]
+}

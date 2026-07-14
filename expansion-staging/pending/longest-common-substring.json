@@ -1,0 +1,25 @@
+{
+  "id": "longest-common-substring",
+  "pattern": "dp-2d",
+  "title": "Longest Common Substring",
+  "statement": "You are given two lowercase strings a and b. A substring is a run of characters that appears contiguously (no gaps). Return the length of the longest string that is a substring of BOTH a and b. If the two strings share no character at all, return 0. Because you want a contiguous match, this differs from a subsequence: 'abcde' and 'axcye' share only single letters contiguously, so the answer is 1, even though a, c, and e all appear in order in both.",
+  "difficulty": "medium",
+  "function_name": "longest_common_substring",
+  "starter_code": "def longest_common_substring(a, b):\n    # your code here\n    pass\n",
+  "reference_solution": "def longest_common_substring(a, b):\n    m, n = len(a), len(b)\n    dp = [[0] * (n + 1) for _ in range(m + 1)]\n    best = 0\n    for i in range(1, m + 1):\n        for j in range(1, n + 1):\n            if a[i - 1] == b[j - 1]:\n                dp[i][j] = dp[i - 1][j - 1] + 1\n                if dp[i][j] > best:\n                    best = dp[i][j]\n    return best\n",
+  "tests": [
+    {"args": ["abcde", "abfce"], "expected": 2},
+    {"args": ["abcde", "axcye"], "expected": 1},
+    {"args": ["banana", "ananas"], "expected": 5},
+    {"args": ["", "abc"], "expected": 0},
+    {"args": ["xyz", "abc"], "expected": 0},
+    {"args": ["aaaa", "aa"], "expected": 2},
+    {"args": ["mississippi", "issip"], "expected": 5},
+    {"args": ["z", "z"], "expected": 1}
+  ],
+  "hints": [
+    "You need a match that is contiguous in both strings, so ask: what is the longest common run that ends exactly at a[i-1] and b[j-1]?",
+    "Let dp[i][j] be the length of the longest common suffix of a[:i] and b[:j]. On a character match it extends the diagonal by 1; on a mismatch it is 0, not a carry-over. The answer is the maximum cell, not dp[m][n].",
+    "Fill an (m+1) by (n+1) grid of zeros. For each i, j: if a[i-1] == b[j-1] set dp[i][j] = dp[i-1][j-1] + 1 and update a running best; otherwise leave dp[i][j] at 0. Return best."
+  ]
+}

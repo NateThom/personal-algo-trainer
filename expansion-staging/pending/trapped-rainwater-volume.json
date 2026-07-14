@@ -1,0 +1,24 @@
+{
+  "id": "trapped-rainwater-volume",
+  "pattern": "two-pointers",
+  "title": "Trapped Rainwater Volume",
+  "difficulty": "hard",
+  "statement": "You are given a list of non-negative integers heights, where each value is the height of a solid bar of width 1 standing in a row. After a rainstorm, water pools on top of the bars wherever there are taller bars on both sides. The water resting above position i rises to min(tallest bar at or left of i, tallest bar at or right of i), so the units of water held at i equal that minimum minus heights[i], and never less than zero. Return the total units of water trapped across the whole row as a single integer. If the list has fewer than 3 bars there is nowhere to hold water, so return 0.",
+  "function_name": "trapped_rainwater_volume",
+  "starter_code": "def trapped_rainwater_volume(heights):\n    # your code here\n    pass\n",
+  "reference_solution": "def trapped_rainwater_volume(heights):\n    n = len(heights)\n    if n < 3:\n        return 0\n    left, right = 0, n - 1\n    left_max, right_max = heights[left], heights[right]\n    total = 0\n    while left < right:\n        if left_max <= right_max:\n            left += 1\n            if heights[left] > left_max:\n                left_max = heights[left]\n            else:\n                total += left_max - heights[left]\n        else:\n            right -= 1\n            if heights[right] > right_max:\n                right_max = heights[right]\n            else:\n                total += right_max - heights[right]\n    return total\n",
+  "tests": [
+    {"args": [[0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]], "expected": 6},
+    {"args": [[4, 2, 0, 3, 2, 5]], "expected": 9},
+    {"args": [[]], "expected": 0},
+    {"args": [[5]], "expected": 0},
+    {"args": [[1, 2, 3, 4, 5]], "expected": 0},
+    {"args": [[3, 2, 1, 0]], "expected": 0},
+    {"args": [[5, 5, 1, 5, 5]], "expected": 4}
+  ],
+  "hints": [
+    "Water above each bar is capped by the shorter of the two walls surrounding it, so what two quantities do you need to know at every position at once?",
+    "Walk two pointers inward from both ends while tracking the running maximum seen from each side; the smaller running maximum is the binding wall, so it is safe to settle that side's water and step it inward.",
+    "Advance whichever pointer has the smaller running max: move it one step, and if the new bar exceeds that side's running max update the max, otherwise add (running max - new bar) to the total, since the taller opposite running max guarantees the water is held."
+  ]
+}

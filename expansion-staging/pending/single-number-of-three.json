@@ -1,0 +1,25 @@
+{
+  "id": "single-number-of-three",
+  "pattern": "bit-manipulation",
+  "title": "Single Number Among Triples",
+  "difficulty": "medium",
+  "statement": "A telemetry relay retransmits every sensor reading exactly three times for redundancy, but one reading slipped through the relay exactly once. You are given the non-empty list of received integer readings (values may be negative or zero, and the order is arbitrary): every value appears exactly three times except one value that appears exactly once. Return that lone value as an integer. All values fit in a signed 32-bit integer. Your solution must run in O(n) time using O(1) extra space, so a hash map, set, or sorting is off the table. Note that the pairwise XOR trick does not work here: three copies of a value do not cancel under XOR. Instead, count how often each of the 32 bit positions is set across all readings modulo 3 and reassemble the answer, taking care to interpret bit 31 as the two's-complement sign bit (or use the equivalent ones/twos accumulator technique).",
+  "function_name": "find_lone_reading",
+  "starter_code": "def find_lone_reading(readings):\n    # your code here\n    pass\n",
+  "reference_solution": "def find_lone_reading(readings):\n    result = 0\n    for i in range(32):\n        count = 0\n        for r in readings:\n            count += (r >> i) & 1\n        if count % 3:\n            result |= 1 << i\n    if result >= 1 << 31:\n        result -= 1 << 32\n    return result\n",
+  "tests": [
+    {"args": [[4, 4, 4, 11]], "expected": 11},
+    {"args": [[7]], "expected": 7},
+    {"args": [[0, 0, 0, 5, 5, 5, -6]], "expected": -6},
+    {"args": [[1, 1, 1, -4]], "expected": -4},
+    {"args": [[-2, -2, -2, 3]], "expected": 3},
+    {"args": [[12, -8, 12, 9, 9, -8, 12, -8, 9, 30]], "expected": 30},
+    {"args": [[5, 5, 5, 0]], "expected": 0},
+    {"args": [[-7, -7, -7, -13, -13, -13, -9]], "expected": -9}
+  ],
+  "hints": [
+    "XOR cancels pairs, but here duplicates come in threes. What per-bit statistic would three copies of the same value contribute nothing to?",
+    "For each of the 32 bit positions, count how many readings have that bit set. Triples contribute multiples of 3, so count % 3 gives exactly the lone reading's bit at that position.",
+    "Loop i from 0 to 31, sum (r >> i) & 1 over all readings, and set bit i of the result when the sum % 3 is nonzero. Since Python ints are unbounded, finish with a sign fix: if result >= 2**31, subtract 2**32 so a set bit 31 becomes a negative number instead of a huge positive one."
+  ]
+}

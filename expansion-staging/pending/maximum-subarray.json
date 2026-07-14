@@ -1,0 +1,24 @@
+{
+  "id": "maximum-subarray",
+  "pattern": "dp-1d",
+  "title": "Maximum Subarray Sum (Kadane)",
+  "difficulty": "easy",
+  "statement": "A food truck logs its net profit for each day of a stretch of days as a non-empty list of integers deltas (a day can be negative). The owner wants to know the best possible total over any run of one or more CONSECUTIVE days. Return that maximum sum as an int. The run must contain at least one day, so if every day is a loss, the answer is the largest single day's value (which will be negative), never 0.",
+  "function_name": "max_streak_sum",
+  "starter_code": "def max_streak_sum(deltas):\n    # your code here\n    pass\n",
+  "reference_solution": "def max_streak_sum(deltas):\n    best_ending_here = deltas[0]\n    best_overall = deltas[0]\n    for x in deltas[1:]:\n        best_ending_here = max(x, best_ending_here + x)\n        best_overall = max(best_overall, best_ending_here)\n    return best_overall\n",
+  "tests": [
+    {"args": [[4, -2, 3, -10, 5, 1]], "expected": 6},
+    {"args": [[-7]], "expected": -7},
+    {"args": [[-8, -3, -6, -2, -5]], "expected": -2},
+    {"args": [[2, 2, -5, 2, 2]], "expected": 4},
+    {"args": [[1, 2, 3, -100, 1]], "expected": 6},
+    {"args": [[5, 1, 4]], "expected": 10},
+    {"args": [[-2, 4, -1, 2, -6, 3]], "expected": 5}
+  ],
+  "hints": [
+    "For each day i, what is the best-sum run that ends exactly on day i? Can you compute it from the answer for day i-1 in O(1)?",
+    "Recurrence: best_ending_here = max(deltas[i], best_ending_here + deltas[i]) — either extend yesterday's run or start fresh today. Initialize both trackers to deltas[0], NOT 0, or all-negative inputs break.",
+    "Scan once keeping best_ending_here and best_overall. At each element update best_ending_here with the recurrence, then best_overall = max(best_overall, best_ending_here). Return best_overall, not the value at the last index — the best run can end anywhere."
+  ]
+}

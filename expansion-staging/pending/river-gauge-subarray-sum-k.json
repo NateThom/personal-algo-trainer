@@ -1,0 +1,25 @@
+{
+  "id": "river-gauge-subarray-sum-k",
+  "pattern": "arrays-hashing",
+  "title": "Count Subarrays Summing to K",
+  "difficulty": "medium",
+  "statement": "A river gauge records the signed change in water level each hour: positive when the level rises, negative when it drops, zero when it holds steady. Given an integer array nums of these hourly changes (any value may be negative, zero, or positive) and an integer k, return how many contiguous non-empty spans of consecutive hours have changes that add up to exactly k. Two spans are counted separately whenever they begin or end at different positions, even if the numbers inside them look the same. Return a single non-negative int, and return 0 when nothing sums to k (including when nums is empty). Because a span can contain negatives, extending it does not always increase its sum, so a window that shrinks whenever the running total passes k will miss valid spans.",
+  "function_name": "count_subarrays_sum_k",
+  "starter_code": "def count_subarrays_sum_k(nums, k):\n    # your code here\n    pass\n",
+  "reference_solution": "def count_subarrays_sum_k(nums, k):\n    counts = {0: 1}\n    running = 0\n    total = 0\n    for n in nums:\n        running += n\n        total += counts.get(running - k, 0)\n        counts[running] = counts.get(running, 0) + 1\n    return total\n",
+  "tests": [
+    {"args": [[3, -1, 4, 1, -4, 2, 3], 3], "expected": 5},
+    {"args": [[1, 1, 1], 2], "expected": 2},
+    {"args": [[7], 7], "expected": 1},
+    {"args": [[4], 9], "expected": 0},
+    {"args": [[], 5], "expected": 0},
+    {"args": [[2, -2, 2, -2], 0], "expected": 4},
+    {"args": [[-1, -1, 1], 0], "expected": 1},
+    {"args": [[0, 0, 0], 0], "expected": 6}
+  ],
+  "hints": [
+    "The sum of a span from index i to j equals (running sum up to j) minus (running sum just before i). How could stored running sums turn this into a lookup?",
+    "Keep a hash map from each prefix-sum value to how many times it has appeared so far; at each step the answer grows by the number of earlier prefixes equal to running_sum - k.",
+    "Seed the map with {0: 1} so spans starting at index 0 are counted. Then for each element add it to running_sum, add counts.get(running_sum - k, 0) to the total, and only afterwards increment counts[running_sum]."
+  ]
+}

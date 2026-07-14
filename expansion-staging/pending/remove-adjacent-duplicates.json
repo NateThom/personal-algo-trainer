@@ -1,0 +1,25 @@
+{
+  "id": "remove-adjacent-duplicates",
+  "pattern": "stack",
+  "title": "Remove All Adjacent Duplicates",
+  "difficulty": "easy",
+  "statement": "Given a string s of lowercase English letters, repeatedly delete any two equal characters that sit next to each other, and keep doing this until no two adjacent characters are equal. Deletions cascade: after a pair is removed, the characters that were on either side of it become neighbors and may themselves form a new equal pair. For example 'abbaca' collapses as 'abbaca' -> 'aaca' (the 'bb' goes) -> 'ca' (the exposed 'aa' goes). The final string is the same no matter which pairs you remove first, so return that one string. If every character is eliminated, return the empty string \"\".",
+  "function_name": "remove_adjacent_duplicates",
+  "starter_code": "def remove_adjacent_duplicates(s):\n    # your code here\n    pass\n",
+  "reference_solution": "def remove_adjacent_duplicates(s):\n    stack = []\n    for ch in s:\n        if stack and stack[-1] == ch:\n            stack.pop()\n        else:\n            stack.append(ch)\n    return \"\".join(stack)\n",
+  "tests": [
+    {"args": ["abbaca"], "expected": "ca"},
+    {"args": ["azxxzy"], "expected": "ay"},
+    {"args": ["mississippi"], "expected": "m"},
+    {"args": ["abba"], "expected": ""},
+    {"args": ["aaaaaa"], "expected": ""},
+    {"args": ["abcde"], "expected": "abcde"},
+    {"args": ["a"], "expected": "a"},
+    {"args": [""], "expected": ""}
+  ],
+  "hints": [
+    "As you read the string left to right, each new character only ever interacts with the one immediately before it in the string built so far. What structure gives you O(1) access to that most-recent survivor?",
+    "Keep a stack of characters kept so far. The top of the stack is the current 'previous' character; a cancellation only ever affects the top.",
+    "For each character ch: if the stack is non-empty and its top equals ch, pop the top (they annihilate); otherwise push ch. Popping automatically re-exposes the character before it, so cascades resolve for free. At the end, join the stack into a string."
+  ]
+}

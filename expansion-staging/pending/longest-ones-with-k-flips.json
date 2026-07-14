@@ -1,0 +1,25 @@
+{
+  "id": "longest-ones-with-k-flips",
+  "pattern": "sliding-window",
+  "title": "Longest Run of Ones with K Flips",
+  "difficulty": "medium",
+  "statement": "You are given a binary list nums that contains only the integers 0 and 1, and a non-negative integer k. You are allowed to flip at most k of the zeros into ones (you may flip fewer, or none). Return the length of the longest contiguous subarray that consists entirely of ones after performing your flips. A subarray is valid to consider while it contains at most k zeros, since those zeros are exactly the ones you would flip. Return the answer as an int. If nums is empty, return 0.",
+  "function_name": "longest_ones_with_k_flips",
+  "starter_code": "def longest_ones_with_k_flips(nums, k):\n    # your code here\n    pass\n",
+  "reference_solution": "def longest_ones_with_k_flips(nums, k):\n    left = 0\n    zeros = 0\n    best = 0\n    for right in range(len(nums)):\n        if nums[right] == 0:\n            zeros += 1\n        while zeros > k:\n            if nums[left] == 0:\n                zeros -= 1\n            left += 1\n        best = max(best, right - left + 1)\n    return best\n",
+  "tests": [
+    {"args": [[1, 1, 0, 0, 1, 1, 1, 0, 1, 1], 1], "expected": 6},
+    {"args": [[], 0], "expected": 0},
+    {"args": [[0], 0], "expected": 0},
+    {"args": [[1], 0], "expected": 1},
+    {"args": [[0, 0, 0], 5], "expected": 3},
+    {"args": [[1, 0, 1, 0, 1, 0, 1], 2], "expected": 5},
+    {"args": [[0, 0, 1, 1, 0, 0, 1, 1, 1, 0], 2], "expected": 7},
+    {"args": [[1, 1, 1, 1], 0], "expected": 4}
+  ],
+  "hints": [
+    "You are looking for the longest contiguous stretch that satisfies a budget constraint (at most k zeros). What technique lets you grow and shrink a contiguous range without re-scanning it?",
+    "Keep a window [left, right] and a running count of zeros inside it. The window is valid exactly when that count is at most k; track the best width you have ever seen while valid.",
+    "Advance right one step at a time, incrementing the zero count when nums[right] is 0. Whenever the count exceeds k, slide left forward one position at a time, decrementing the count each time the element leaving at nums[left] is a 0, until the window is valid again. Do not reset left to right and do not forget to decrement on exit; after fixing the window, update best with right - left + 1."
+  ]
+}

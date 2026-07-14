@@ -1,0 +1,25 @@
+{
+  "id": "rebuild-tree-preorder-inorder",
+  "pattern": "trees",
+  "title": "Rebuild a Tree from Preorder and Inorder",
+  "statement": "An archivist has two scanned logs of the same binary tree of distinct integers: `preorder`, the order nodes were visited root-before-children, and `inorder`, the order nodes were visited left-subtree-then-node-then-right-subtree. Reconstruct the tree and return it in level-order array form. In that form the result is a list where index 0 is the root and the tree is rebuilt by scanning the array left to right, assigning each successive value as the left then right child of the next node still waiting for children; a missing child of a node that has any node below it is written as null, and trailing nulls are trimmed. The root is `preorder[0]`; the position of that value in `inorder` splits the remaining values into the left subtree (everything before it) and the right subtree (everything after it), and the same rule applies recursively. Return an empty list if the two logs cannot both describe a single binary tree of distinct integers -- specifically if they have different lengths, if either contains a repeated value, or if their value sets differ, or if no tree produces both orderings. Two empty logs describe an empty tree and also return an empty list.",
+  "function_name": "rebuild_tree",
+  "starter_code": "def rebuild_tree(preorder, inorder):\n    # your code here\n    pass\n",
+  "reference_solution": "from collections import deque\n\n\ndef rebuild_tree(preorder, inorder):\n    if len(preorder) != len(inorder):\n        return []\n    if len(set(preorder)) != len(preorder) or set(preorder) != set(inorder):\n        return []\n    idx = {v: i for i, v in enumerate(inorder)}\n    pos = [0]\n    valid = [True]\n\n    def build(lo, hi):\n        if lo > hi:\n            return None\n        root_val = preorder[pos[0]]\n        pos[0] += 1\n        k = idx[root_val]\n        if not (lo <= k <= hi):\n            valid[0] = False\n            return None\n        node = {'val': root_val, 'left': None, 'right': None}\n        node['left'] = build(lo, k - 1)\n        node['right'] = build(k + 1, hi)\n        return node\n\n    root = build(0, len(inorder) - 1)\n    if not valid[0] or root is None:\n        return []\n    out = []\n    q = deque([root])\n    while q:\n        node = q.popleft()\n        if node is None:\n            out.append(None)\n            continue\n        out.append(node['val'])\n        q.append(node['left'])\n        q.append(node['right'])\n    while out and out[-1] is None:\n        out.pop()\n    return out\n",
+  "tests": [
+    {"args": [[3, 9, 20, 15, 7], [9, 3, 15, 20, 7]], "expected": [3, 9, 20, null, null, 15, 7]},
+    {"args": [[1], [1]], "expected": [1]},
+    {"args": [[], []], "expected": []},
+    {"args": [[3, 2, 1], [1, 2, 3]], "expected": [3, 2, null, 1]},
+    {"args": [[1, 2, 3], [1, 2, 3]], "expected": [1, null, 2, null, 3]},
+    {"args": [[1, 2, 4, 5, 3, 6, 7], [4, 2, 5, 1, 6, 3, 7]], "expected": [1, 2, 3, 4, 5, 6, 7]},
+    {"args": [[1, 2, 3], [3, 1, 2]], "expected": []},
+    {"args": [[1, 2, 2], [2, 1, 2]], "expected": []}
+  ],
+  "hints": [
+    "The very first value in preorder is always the whole tree's root -- where does that same value sit in inorder, and what do the values on each side of it represent?",
+    "Everything left of the root in inorder is exactly the left subtree and everything right of it is the right subtree; the left subtree's size tells you how many of the values right after the root in preorder belong to the left before the right subtree begins.",
+    "Recurse with a moving preorder cursor: take preorder[cursor] as the current root, advance the cursor, find its index k in inorder, then build the left subtree from the inorder range before k and the right subtree from the range after k (the shared cursor automatically hands the correct preorder slice to each side); finally serialize the built tree with a level-order BFS, appending null for each missing child and trimming trailing nulls."
+  ],
+  "difficulty": "hard"
+}

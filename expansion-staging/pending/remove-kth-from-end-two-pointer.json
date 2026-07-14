@@ -1,0 +1,24 @@
+{
+  "id": "remove-kth-from-end-two-pointer",
+  "pattern": "linked-list",
+  "title": "Remove the K-th Element from the End in One Pass",
+  "difficulty": "medium",
+  "statement": "You are given `values`, the contents of a forward-only chain (think of a singly linked list you can walk from front to back but whose length you do not know in advance), and an integer `k` with 1 <= k <= n, where n is the number of elements. Remove the element that sits k positions from the end (k == 1 removes the last element; k == n removes the first element) using a single forward pass with the fixed-gap two-pointer technique: send a lead pointer k steps ahead, then advance a trailing pointer and the lead pointer together until the lead pointer runs off the end, leaving the trailing pointer just before the node to drop. Return the remaining values in their original front-to-back order as a list. If removing the only element leaves the chain empty, return an empty list. The result is uniquely determined; do not sort or reorder the surviving elements.",
+  "function_name": "remove_kth_from_end",
+  "starter_code": "def remove_kth_from_end(values, k):\n    # your code here\n    pass\n",
+  "reference_solution": "class ListNode:\n    def __init__(self, val=0, next=None):\n        self.val = val\n        self.next = next\n\n\ndef remove_kth_from_end(values, k):\n    dummy = ListNode()\n    curr = dummy\n    for v in values:\n        curr.next = ListNode(v)\n        curr = curr.next\n    lead = dummy\n    for _ in range(k):\n        lead = lead.next\n    trail = dummy\n    while lead.next:\n        lead = lead.next\n        trail = trail.next\n    trail.next = trail.next.next\n    out = []\n    node = dummy.next\n    while node:\n        out.append(node.val)\n        node = node.next\n    return out\n",
+  "tests": [
+    {"args": [[10, 20, 30, 40, 50], 2], "expected": [10, 20, 30, 50]},
+    {"args": [[10, 20, 30, 40, 50], 5], "expected": [20, 30, 40, 50]},
+    {"args": [[10, 20, 30, 40, 50], 1], "expected": [10, 20, 30, 40]},
+    {"args": [[42], 1], "expected": []},
+    {"args": [[7, 7, 7, 7], 3], "expected": [7, 7, 7]},
+    {"args": [[1, 2], 2], "expected": [2]},
+    {"args": [[5, 6, 7], 2], "expected": [5, 7]}
+  ],
+  "hints": [
+    "You do not know the length up front, so you cannot compute the front index in a first pass without walking twice. What if two pointers held a fixed gap of exactly k between them?",
+    "Start both pointers at a dummy node placed before the head, then move the lead pointer k steps ahead so k nodes sit between trail and the end; the dummy is what lets you delete the very first element when k == n.",
+    "Advance lead and trail together until lead.next is None. Now trail sits immediately before the target, so set trail.next = trail.next.next, then read out dummy.next onward into a list."
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "subarrays-divisible-by-k",
+  "pattern": "prefix-sum",
+  "title": "Count Subarrays With Sum Divisible by K",
+  "difficulty": "medium",
+  "statement": "You are given a list of integers nums (values may be negative, zero, or positive) and a positive integer k. Count how many contiguous, non-empty subarrays of nums have a sum that is exactly divisible by k (that is, the sum leaves a remainder of 0 when divided by k). Every distinct start/end index pair is counted separately, even if two subarrays hold the same values. Return that count as a single integer. If nums is empty, or no subarray qualifies, return 0. Note that divisibility must be judged with true mathematical remainders, so a subarray summing to a negative multiple of k (for example -k) still counts.",
+  "function_name": "count_divisible_subarrays",
+  "starter_code": "def count_divisible_subarrays(nums, k):\n    # your code here\n    pass\n",
+  "reference_solution": "def count_divisible_subarrays(nums, k):\n    from collections import defaultdict\n    residue_counts = defaultdict(int)\n    residue_counts[0] = 1\n    running = 0\n    total = 0\n    for n in nums:\n        running += n\n        r = running % k\n        total += residue_counts[r]\n        residue_counts[r] += 1\n    return total\n",
+  "tests": [
+    {"args": [[4, 5, 0, -2, -3, 1], 5], "expected": 7},
+    {"args": [[5], 5], "expected": 1},
+    {"args": [[3], 5], "expected": 0},
+    {"args": [[], 5], "expected": 0},
+    {"args": [[1, 2, 3], 7], "expected": 0},
+    {"args": [[-1, 2, 9], 2], "expected": 2},
+    {"args": [[2, 2, 2, 2], 2], "expected": 10},
+    {"args": [[7, -7, 7, -7], 7], "expected": 10}
+  ],
+  "hints": [
+    "Two prefixes of the array bound a subarray whose sum is divisible by k exactly when those two prefix sums leave the same remainder mod k; how could you count matching remainders in one pass?",
+    "Keep a hashmap from remainder (running_sum mod k) to how many prefixes produced it, and crucially seed remainder 0 with a count of 1 so subarrays starting at index 0 are counted.",
+    "Scan once maintaining running_sum; at each element compute r = running_sum % k, add the current stored count for r to the answer BEFORE incrementing residue_counts[r], and rely on Python's % giving a non-negative remainder for negative sums."
+  ]
+}

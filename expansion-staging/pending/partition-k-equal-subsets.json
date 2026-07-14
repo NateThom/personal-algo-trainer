@@ -1,0 +1,25 @@
+{
+  "id": "partition-k-equal-subsets",
+  "pattern": "backtracking",
+  "title": "Partition into K Equal-Sum Groups",
+  "difficulty": "hard",
+  "statement": "A warehouse must load a set of crates onto exactly k trucks. You are given a list of positive integers nums, where nums[i] is the weight of crate i, and an integer k >= 1. Every crate must be loaded onto exactly one truck, every truck must carry at least one crate, and all k trucks must end up carrying exactly the same total weight. Write can_split_shipments(nums, k) that returns True if such a loading exists and False otherwise. Return the single boolean only. Obvious rejections apply: if the total weight is not divisible by k, or any single crate weighs more than total/k, the answer is False. Inputs have at most ~12 crates, so an exhaustive search with pruning must finish.",
+  "function_name": "can_split_shipments",
+  "starter_code": "def can_split_shipments(nums, k):\n    # your code here\n    pass\n",
+  "reference_solution": "def can_split_shipments(nums, k):\n    total = sum(nums)\n    if total % k != 0:\n        return False\n    target = total // k\n    nums = sorted(nums, reverse=True)\n    if nums and nums[0] > target:\n        return False\n    buckets = [0] * k\n\n    def place(i):\n        if i == len(nums):\n            return True\n        seen = set()\n        for b in range(k):\n            if buckets[b] in seen:\n                continue\n            seen.add(buckets[b])\n            if buckets[b] + nums[i] <= target:\n                buckets[b] += nums[i]\n                if place(i + 1):\n                    return True\n                buckets[b] -= nums[i]\n            if buckets[b] == 0:\n                break\n        return False\n\n    return place(0)\n",
+  "tests": [
+    {"args": [[4, 3, 2, 3, 5, 2, 1], 4], "expected": true},
+    {"args": [[7], 1], "expected": true},
+    {"args": [[5, 5, 5, 5], 2], "expected": true},
+    {"args": [[1, 2, 3, 5], 2], "expected": false},
+    {"args": [[2, 2, 2, 2, 3, 3], 2], "expected": true},
+    {"args": [[6, 6, 6], 4], "expected": false},
+    {"args": [[10, 10, 10, 7, 7, 7, 7, 7, 7, 6, 6, 6], 3], "expected": true},
+    {"args": [[1, 1, 1, 1, 2, 2, 2], 3], "expected": false}
+  ],
+  "hints": [
+    "Greedily dropping each crate into the first truck it fits on can dead-end even when a valid loading exists — what technique lets you undo a placement and try a different truck?",
+    "Keep an array of k running bucket sums; recursively assign crates one at a time (largest first), only into buckets that stay <= total/k, and subtract the weight back out when a recursive call fails. Skip buckets whose current sum equals one you already tried for this crate, and stop after trying an empty bucket (symmetry pruning).",
+    "Compute target = sum(nums)//k after checking divisibility and max(nums) <= target. Sort descending. place(i): if i == len(nums) return True; for each bucket with an unseen sum, if buckets[b] + nums[i] <= target then add, recurse on i+1, and on failure subtract it back; break after an empty bucket. Return place(0)."
+  ]
+}

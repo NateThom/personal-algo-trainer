@@ -1,0 +1,25 @@
+{
+  "id": "tree-diameter-edges",
+  "pattern": "trees",
+  "title": "Diameter of a Binary Tree",
+  "difficulty": "medium",
+  "statement": "A binary tree is given as a level-order array. Index 0 is the root; for a node at index i, its left child (if present) and right child (if present) are the next two non-skipped slots, and null marks a missing child so its subtree contributes no further slots. The diameter is the number of EDGES on the longest path between any two nodes in the tree. This path may bend at any node and need NOT pass through the root. Return the diameter as an integer. Return 0 for an empty tree (empty array) and 0 for a single-node tree, since neither has any edges to traverse.",
+  "function_name": "tree_diameter",
+  "starter_code": "def tree_diameter(level_order):\n    # your code here\n    pass\n",
+  "reference_solution": "def tree_diameter(level_order):\n    if not level_order or level_order[0] is None:\n        return 0\n    n = len(level_order)\n    left = [None] * n\n    right = [None] * n\n    child = 1\n    for i in range(n):\n        if level_order[i] is None:\n            continue\n        if child < n:\n            if level_order[child] is not None:\n                left[i] = child\n            child += 1\n        if child < n:\n            if level_order[child] is not None:\n                right[i] = child\n            child += 1\n    best = 0\n\n    def height(i):\n        nonlocal best\n        if i is None:\n            return 0\n        lh = height(left[i])\n        rh = height(right[i])\n        best = max(best, lh + rh)\n        return 1 + max(lh, rh)\n\n    height(0)\n    return best\n",
+  "tests": [
+    {"args": [[]], "expected": 0},
+    {"args": [[1]], "expected": 0},
+    {"args": [[1, 2, 3]], "expected": 2},
+    {"args": [[1, 2, 3, 4, 5]], "expected": 3},
+    {"args": [[1, 2, null, 3, null, 4, null, 5]], "expected": 4},
+    {"args": [[1, 2, 3, 4, null, null, 5, 6, null, null, 7]], "expected": 6},
+    {"args": [[1, 2, null, 3, 6, 4, null, 7, null, 5, null, 8]], "expected": 6},
+    {"args": [[5, 3, 8, 1, 4, 7, 9, 0, null, null, null, 6]], "expected": 6}
+  ],
+  "hints": [
+    "The longest path might not touch the root at all -- so measuring only the two arms hanging off the root is not enough. What quantity would you need to know at every single node?",
+    "Run a post-order DFS that returns each subtree's height. At each node, the longest path that bends there is left_height + right_height (in edges); keep a running maximum of that value across all nodes.",
+    "Recurse into left and right to get their heights, update best = max(best, left_height + right_height), then return 1 + max(left_height, right_height) so the parent can use this subtree's height. After visiting every node, best is the diameter; a null child contributes height 0."
+  ]
+}

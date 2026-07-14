@@ -1,0 +1,25 @@
+{
+  "id": "task-cooldown-intervals",
+  "pattern": "heaps",
+  "title": "Minimum Intervals to Finish Tasks with Cooldown",
+  "difficulty": "medium",
+  "statement": "A single CPU processes a list of tasks, where each task is identified by a single-character label given in the list tasks. In each time unit the CPU either runs exactly one remaining task or sits idle. Because of a cooldown constraint, any two runs of the same label must be separated by at least n other time units; that is, if a label runs at time t it cannot run again until time t + n + 1 or later. The cooldown integer n is non-negative. Idle units count toward the total elapsed time. Return, as a single integer, the minimum number of time units (runs plus idles) required to complete every task in the list. If tasks is empty, return 0.",
+  "function_name": "min_cpu_intervals",
+  "starter_code": "def min_cpu_intervals(tasks, n):\n    # your code here\n    pass\n",
+  "reference_solution": "import heapq\nfrom collections import Counter\n\n\ndef min_cpu_intervals(tasks, n):\n    if not tasks:\n        return 0\n    counts = Counter(tasks)\n    heap = [-c for c in counts.values()]\n    heapq.heapify(heap)\n    time = 0\n    while heap:\n        buffer = []\n        for _ in range(n + 1):\n            if heap:\n                cnt = heapq.heappop(heap)\n                if cnt + 1 < 0:\n                    buffer.append(cnt + 1)\n            time += 1\n            if not heap and not buffer:\n                break\n        for c in buffer:\n            heapq.heappush(heap, c)\n    return time\n",
+  "tests": [
+    {"args": [["a", "a", "a", "b", "b", "b"], 2], "expected": 8},
+    {"args": [["a", "a", "a", "b", "b", "b"], 0], "expected": 6},
+    {"args": [["a"], 3], "expected": 1},
+    {"args": [[], 5], "expected": 0},
+    {"args": [["a", "b", "c", "d", "e"], 2], "expected": 5},
+    {"args": [["a", "a", "a", "a", "b", "c", "d"], 2], "expected": 10},
+    {"args": [["x", "x", "y", "y", "z", "z"], 2], "expected": 6},
+    {"args": [["a", "a", "a", "b", "b", "b", "c", "c"], 2], "expected": 8}
+  ],
+  "hints": [
+    "The bottleneck is whichever label appears most often, since its copies must be spread out. Which structure lets you always reach for the most-frequent remaining label first?",
+    "Simulate rounds of length n + 1. In each round pop the most-frequent labels from a max-heap (negate counts, since heapq is a min-heap), but do NOT return a decremented label to the heap until the round ends, or you will schedule it inside its own cooldown window.",
+    "Heapify negated counts. Repeatedly run a round: for n + 1 slots, pop a label if any remain and stash it (decremented, if still positive) in a side buffer, adding one to time per slot; break early only when both the heap and buffer are empty so trailing idles are not counted. After the round, push the buffered labels back and continue until the heap drains."
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "maximum-xor-pair",
+  "pattern": "tries",
+  "title": "Maximum XOR of Two Numbers",
+  "difficulty": "medium",
+  "statement": "You are given a list nums of at least two non-negative integers. For every pair of distinct indices i != j, compute nums[i] XOR nums[j]; return the single largest such value as an integer. Equal values sitting at different indices form a valid pair (their XOR is 0), so an answer always exists. The intended approach builds a binary trie: insert each number as a fixed-width bit string of 32 bits, walking from the most significant bit (bit 31) down to the least significant bit (bit 0) and creating a child node for each 0/1 bit. Then, for each number, walk the same trie greedily from bit 31 down, at every level preferring the branch holding the opposite bit (to make that XOR bit a 1) and falling back to the same-bit branch when the opposite branch does not exist. Track the best XOR seen across all numbers and return it. Zero-pad narrow numbers to the full 32-bit width so the most significant differences are always compared first.",
+  "function_name": "maximum_xor_pair",
+  "starter_code": "def maximum_xor_pair(nums):\n    # your code here\n    pass\n",
+  "reference_solution": "def maximum_xor_pair(nums):\n    WIDTH = 32\n    root = {}\n    for num in nums:\n        node = root\n        for bit in range(WIDTH - 1, -1, -1):\n            b = (num >> bit) & 1\n            if b not in node:\n                node[b] = {}\n            node = node[b]\n    best = 0\n    for num in nums:\n        node = root\n        cur = 0\n        for bit in range(WIDTH - 1, -1, -1):\n            b = (num >> bit) & 1\n            want = 1 - b\n            if want in node:\n                cur |= (1 << bit)\n                node = node[want]\n            else:\n                node = node[b]\n        if cur > best:\n            best = cur\n    return best\n",
+  "tests": [
+    {"args": [[3, 10, 5, 25, 2, 8]], "expected": 28},
+    {"args": [[8, 1]], "expected": 9},
+    {"args": [[0, 0]], "expected": 0},
+    {"args": [[7, 7, 7]], "expected": 0},
+    {"args": [[2147483647, 0]], "expected": 2147483647},
+    {"args": [[31, 51, 53, 22, 46]], "expected": 56},
+    {"args": [[14, 70, 53, 83, 49, 91, 36, 80, 92, 51, 66, 70]], "expected": 127},
+    {"args": [[6, 6, 2]], "expected": 4}
+  ],
+  "hints": [
+    "Trying all pairs is O(n^2). What structure lets you, for a fixed number, quickly find the stored number whose bits disagree the most with it?",
+    "Insert every number into a binary trie, one node per bit, from the most significant bit down. Comparing high bits first matters because a single higher bit outweighs every lower bit combined, so use a fixed 32-bit width and zero-pad.",
+    "For each number, descend the trie from bit 31 to bit 0: at each level compute the opposite bit and take that branch if it exists (adding 1<<bit to the running XOR), otherwise take the same-bit branch. Keep the maximum running XOR over all numbers and return it. Never assume the opposite branch exists."
+  ]
+}

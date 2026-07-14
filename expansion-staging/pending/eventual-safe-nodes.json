@@ -1,0 +1,25 @@
+{
+  "id": "eventual-safe-nodes",
+  "pattern": "topological-sort",
+  "title": "Terminal-Safe Nodes",
+  "difficulty": "medium",
+  "statement": "You are given a directed graph on n nodes labeled 0..n-1, described as an adjacency list graph where graph[i] is the list of nodes that node i points to. A node with no outgoing edges is called a terminal node. A node is safe when every path that starts at it is finite and eventually ends at a terminal node; equivalently, no path leaving the node can ever enter a cycle. Terminal nodes are themselves safe (the empty path already ends there). Return the labels of all safe nodes as a list sorted in strictly ascending order; return an empty list if no node is safe. If graph is empty, return an empty list.",
+  "function_name": "eventual_safe_nodes",
+  "starter_code": "def eventual_safe_nodes(graph):\n    # your code here\n    pass\n",
+  "reference_solution": "from collections import deque\n\ndef eventual_safe_nodes(graph):\n    n = len(graph)\n    reverse = [[] for _ in range(n)]\n    out_degree = [0] * n\n    for node in range(n):\n        for nxt in graph[node]:\n            reverse[nxt].append(node)\n            out_degree[node] += 1\n    queue = deque(node for node in range(n) if out_degree[node] == 0)\n    safe = [False] * n\n    while queue:\n        node = queue.popleft()\n        safe[node] = True\n        for prev in reverse[node]:\n            out_degree[prev] -= 1\n            if out_degree[prev] == 0:\n                queue.append(prev)\n    return [node for node in range(n) if safe[node]]\n",
+  "tests": [
+    {"args": [[[1, 2], [2, 3], [5], [0], [5], [], []]], "expected": [2, 4, 5, 6]},
+    {"args": [[[]]], "expected": [0]},
+    {"args": [[]], "expected": []},
+    {"args": [[[1], [2], [3], [1]]], "expected": []},
+    {"args": [[[1, 2, 3, 4], [1, 2], [3, 4], [0, 4], []]], "expected": [4]},
+    {"args": [[[1], [0], [3], []]], "expected": [2, 3]},
+    {"args": [[[1, 2], [3], [3], [], [3]]], "expected": [0, 1, 2, 3, 4]},
+    {"args": [[[2, 3], [1], [], [4], []]], "expected": [0, 2, 3, 4]}
+  ],
+  "hints": [
+    "A node is doomed if any path from it can reach a cycle. Instead of chasing forward paths, ask: which nodes are guaranteed to bottom out at a dead end?",
+    "Flip every edge and run Kahn's peeling on the reversed graph, seeding the queue with the original graph's out-degree-zero nodes (the terminals); a node becomes safe only once all of its outgoing edges have been confirmed to lead to already-safe nodes.",
+    "Build reverse adjacency and an out_degree array for the original graph. Enqueue all nodes with out_degree 0 and mark them safe. Popping a node, walk its reverse edges and decrement each predecessor's out_degree; when a predecessor hits 0 it is safe, so enqueue it. Nodes trapped in or feeding a cycle never reach 0. Return the safe labels in ascending order."
+  ]
+}

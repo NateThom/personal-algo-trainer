@@ -1,0 +1,24 @@
+{
+  "id": "find-peak-element",
+  "pattern": "binary-search",
+  "title": "Find a Peak Element",
+  "difficulty": "medium",
+  "statement": "A sensor logs a non-empty list of integer readings nums in which every pair of adjacent readings differs (nums[i] != nums[i+1] for all valid i). An index i is a spike if its reading is strictly greater than both of its neighbors, where any position outside the list counts as negative infinity — so the first or last element only has to beat its single in-bounds neighbor, and in a one-element list index 0 is always a spike. Every input is guaranteed to contain exactly one spike; return its index. Your solution must run in O(log n) time: binary search by comparing nums[mid] with nums[mid+1] and moving toward the rising side, since a spike must exist in that direction.",
+  "function_name": "find_peak_element",
+  "starter_code": "def find_peak_element(nums):\n    # your code here\n    pass\n",
+  "reference_solution": "def find_peak_element(nums):\n    left, right = 0, len(nums) - 1\n    while left < right:\n        mid = left + (right - left) // 2\n        if nums[mid] < nums[mid + 1]:\n            left = mid + 1\n        else:\n            right = mid\n    return left\n",
+  "tests": [
+    {"args": [[4, 9, 14, 11, 6]], "expected": 2},
+    {"args": [[7]], "expected": 0},
+    {"args": [[1, 2, 3, 4, 5]], "expected": 4},
+    {"args": [[9, 6, 3, 1]], "expected": 0},
+    {"args": [[1, 2]], "expected": 1},
+    {"args": [[1, 3, 5, 3, 1]], "expected": 2},
+    {"args": [[2, 4, 6, 8, 10, 9, 7, 5, 3, 1]], "expected": 4}
+  ],
+  "hints": [
+    "The list isn't sorted, so what local comparison at mid still tells you which half must contain a spike?",
+    "If nums[mid] < nums[mid+1], the terrain is rising to the right, so a spike is guaranteed on that side; otherwise mid itself could be the spike, so keep it in the window with right = mid. Only compare mid to mid+1 — checking mid-1 needs bounds guards you don't need.",
+    "Use left, right = 0, len(nums)-1 and loop while left < right (not <=, or right = mid never shrinks a two-element window): mid = left + (right - left) // 2; if nums[mid] < nums[mid+1] set left = mid + 1, else set right = mid. When left == right, that index is the spike — return left."
+  ]
+}

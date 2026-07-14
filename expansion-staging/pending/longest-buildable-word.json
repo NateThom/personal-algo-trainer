@@ -1,0 +1,25 @@
+{
+  "id": "longest-buildable-word",
+  "pattern": "tries",
+  "title": "Longest Word Built One Letter at a Time",
+  "difficulty": "easy",
+  "statement": "You are given a list of distinct lowercase words. A word is buildable if every one of its proper prefixes (the prefixes of length 1, 2, ..., len-1) also appears in the list as a complete word, so the word can be grown one character at a time with each intermediate string being a real word. Single-letter words are trivially buildable because they have no proper prefixes to check. Return the longest buildable word. If several buildable words share the maximum length, return the lexicographically smallest one. If no word is buildable (for example when the list is empty), return the empty string \"\". Note that it is not enough for a prefix to merely be the start of some longer word; the prefix must itself be present in the list.",
+  "function_name": "longest_buildable_word",
+  "starter_code": "def longest_buildable_word(words):\n    # your code here\n    pass\n",
+  "reference_solution": "def longest_buildable_word(words):\n    class Node:\n        def __init__(self):\n            self.children = {}\n            self.is_word = False\n\n    root = Node()\n    for w in words:\n        node = root\n        for ch in w:\n            if ch not in node.children:\n                node.children[ch] = Node()\n            node = node.children[ch]\n        node.is_word = True\n\n    best = \"\"\n\n    def dfs(node, path):\n        nonlocal best\n        for ch in sorted(node.children):\n            child = node.children[ch]\n            if child.is_word:\n                cand = path + ch\n                if len(cand) > len(best) or (len(cand) == len(best) and cand < best):\n                    best = cand\n                dfs(child, cand)\n\n    dfs(root, \"\")\n    return best\n",
+  "tests": [
+    {"args": [["a", "ap", "app", "appl", "apple", "b"]], "expected": "apple"},
+    {"args": [["r"]], "expected": "r"},
+    {"args": [[]], "expected": ""},
+    {"args": [["abc", "abcd"]], "expected": ""},
+    {"args": [["d", "do", "dog", "c", "ca", "cat"]], "expected": "cat"},
+    {"args": [["ban", "banana", "b", "ba"]], "expected": "ban"},
+    {"args": [["t", "ti", "tim", "time", "timer", "s", "so", "son"]], "expected": "timer"},
+    {"args": [["m", "ma", "map", "b", "ba", "bat", "bath"]], "expected": "bath"}
+  ],
+  "hints": [
+    "You repeatedly ask 'is this exact prefix a complete word?' for many overlapping prefixes. What structure shares those prefix checks instead of re-scanning the list every time?",
+    "Insert every word into a trie and mark each word's end node with is_word=True. A word is buildable only if EVERY node along its path (not just the final one) is is_word=True; walking a path that merely exists (startsWith) is the classic mistake.",
+    "DFS from the root but only descend into a child when child.is_word is True, so you never step onto a node that isn't itself a complete word. Track the best answer, preferring a longer candidate, and on equal length preferring the lexicographically smaller one; visiting children in sorted order and comparing with '<' on ties handles the tie-break."
+  ]
+}

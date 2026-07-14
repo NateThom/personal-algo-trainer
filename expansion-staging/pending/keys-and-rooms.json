@@ -1,0 +1,25 @@
+{
+  "id": "keys-and-rooms",
+  "pattern": "graphs",
+  "title": "Can You Visit All Rooms",
+  "difficulty": "easy",
+  "statement": "You are given rooms, a list of lists, where rooms[i] holds the integer keys lying inside room i. A key with value k permanently unlocks room k. You start with room 0 already unlocked; every other room is locked. You may pick up keys, walk between any rooms you have unlocked, and revisit rooms freely; each key can be used as many times as you like. Return True if there is some sequence of moves that lets you enter every room, and False otherwise. Keys pointing at room indices that do not exist are simply ignored.",
+  "function_name": "can_visit_all_rooms",
+  "starter_code": "def can_visit_all_rooms(rooms):\n    # your code here\n    pass\n",
+  "reference_solution": "from collections import deque\n\ndef can_visit_all_rooms(rooms):\n    n = len(rooms)\n    visited = {0}\n    queue = deque([0])\n    while queue:\n        room = queue.popleft()\n        for key in rooms[room]:\n            if 0 <= key < n and key not in visited:\n                visited.add(key)\n                queue.append(key)\n    return len(visited) == n\n",
+  "tests": [
+    {"args": [[[1], [2], [3], []]], "expected": true},
+    {"args": [[[]]], "expected": true},
+    {"args": [[[1], []]], "expected": true},
+    {"args": [[[1, 3], [3, 0, 1], [2], [0]]], "expected": false},
+    {"args": [[[2], [3], [1], []]], "expected": true},
+    {"args": [[[1, 1, 1], [2], []]], "expected": true},
+    {"args": [[[3], [], [], []]], "expected": false},
+    {"args": [[[1, 2], [2], [0, 1], [1]]], "expected": false}
+  ],
+  "hints": [
+    "Room 0 is your start node and each key is a directed edge to another room; what does 'can I reach every node?' become in graph terms?",
+    "Run a real traversal (DFS or BFS) from room 0, marking rooms visited as you unlock them, then check whether the visited set covers all n rooms.",
+    "Seed a stack/queue and a visited set with room 0; pop a room, and for every key it holds that names an unvisited existing room, mark it visited and push it; at the end return len(visited) == len(rooms)."
+  ]
+}

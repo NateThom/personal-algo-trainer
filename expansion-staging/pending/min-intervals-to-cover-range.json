@@ -1,0 +1,25 @@
+{
+  "id": "min-intervals-to-cover-range",
+  "pattern": "intervals",
+  "title": "Minimum Intervals to Cover a Range",
+  "difficulty": "hard",
+  "statement": "A city crew needs to floodlight the road segment from position 0 to position t (a positive integer). You are given a list of lamp coverage intervals, each written as [start, end] with 0 <= start <= end; a lamp lights every real point x with start <= x <= end. Return the minimum number of intervals whose union covers EVERY real point of [0, t] (endpoints included, and touching intervals such as [0, 2] and [2, 5] join with no gap at 2). Intervals may overlap arbitrarily and are given in no particular order; the same interval may appear more than once. Return the single integer count of intervals used in a smallest such selection, or -1 if no selection can cover all of [0, t]. The minimum count is unique, so return it directly.",
+  "function_name": "min_intervals_to_cover_range",
+  "starter_code": "def min_intervals_to_cover_range(intervals, t):\n    # your code here\n    pass\n",
+  "reference_solution": "def min_intervals_to_cover_range(intervals, t):\n    ivs = sorted(intervals, key=lambda iv: iv[0])\n    n = len(ivs)\n    count = 0\n    covered = 0\n    i = 0\n    while covered < t:\n        farthest = covered\n        while i < n and ivs[i][0] <= covered:\n            if ivs[i][1] > farthest:\n                farthest = ivs[i][1]\n            i += 1\n        if farthest == covered:\n            return -1\n        covered = farthest\n        count += 1\n    return count\n",
+  "tests": [
+    {"args": [[[0, 10]], 10], "expected": 1},
+    {"args": [[[0, 2], [1, 9], [2, 3]], 9], "expected": 2},
+    {"args": [[[0, 1], [0, 5]], 5], "expected": 1},
+    {"args": [[[0, 3], [1, 4], [3, 10], [4, 5]], 10], "expected": 2},
+    {"args": [[[0, 3], [5, 8]], 8], "expected": -1},
+    {"args": [[], 4], "expected": -1},
+    {"args": [[[1, 5], [2, 8]], 8], "expected": -1},
+    {"args": [[[0, 4], [0, 4], [3, 7], [4, 10]], 10], "expected": 2}
+  ],
+  "hints": [
+    "You are building one continuous covered stretch starting at 0. At each step, which of the still-usable intervals should you commit to so future steps have the best chance?",
+    "Track the farthest point currently covered. Among ALL intervals whose start lies within that covered reach, the greedy choice is the one that extends coverage the farthest (largest end) - not simply the first one you encounter. Sort by start so you can sweep the in-reach candidates in one pass.",
+    "Sort by start. Keep covered = 0 and a forward pointer. While covered < t, scan every interval with start <= covered, remembering the maximum end among them; if that maximum does not exceed covered there is a gap, so return -1; otherwise set covered to that maximum and add ONE to the count (one extension chosen, not one per interval scanned). Return the count when covered reaches t."
+  ]
+}

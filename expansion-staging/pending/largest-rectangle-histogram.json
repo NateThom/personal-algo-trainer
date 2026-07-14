@@ -1,0 +1,25 @@
+{
+  "id": "largest-rectangle-histogram",
+  "pattern": "stack",
+  "title": "Largest Rectangle in Histogram",
+  "statement": "You are given a list of non-negative integers heights, where heights[i] is the height of the i-th bar of a histogram and every bar has width 1. Return the area of the largest axis-aligned rectangle that fits entirely within the histogram. A rectangle spanning bars from index l to index r (inclusive) is valid only if its height does not exceed any bar in that span, so its area is (r - l + 1) times the minimum bar height over that span. Return a single integer: the maximum such area over all spans. If heights is empty, return 0.",
+  "difficulty": "hard",
+  "function_name": "largest_rectangle_area",
+  "starter_code": "def largest_rectangle_area(heights):\n    # your code here\n    pass\n",
+  "reference_solution": "def largest_rectangle_area(heights):\n    stack = []\n    best = 0\n    extended = list(heights) + [0]\n    for i, h in enumerate(extended):\n        while stack and extended[stack[-1]] > h:\n            top = stack.pop()\n            left = stack[-1] if stack else -1\n            width = i - left - 1\n            best = max(best, extended[top] * width)\n        stack.append(i)\n    return best\n",
+  "tests": [
+    {"args": [[2, 1, 5, 6, 2, 3]], "expected": 10},
+    {"args": [[]], "expected": 0},
+    {"args": [[7]], "expected": 7},
+    {"args": [[2, 1, 2]], "expected": 3},
+    {"args": [[1, 2, 3]], "expected": 4},
+    {"args": [[3, 3, 3, 3]], "expected": 12},
+    {"args": [[6, 2, 5, 4, 5, 1, 6]], "expected": 12},
+    {"args": [[4, 4, 4, 3, 2]], "expected": 12}
+  ],
+  "hints": [
+    "For each bar, the widest rectangle capped at that bar's height extends left and right until it hits a strictly shorter bar. How can you find those boundaries without re-scanning for every bar?",
+    "Keep a stack of bar indices whose heights are increasing. When a new bar is shorter than the stack's top, that top bar's right boundary is found, so pop it and settle its rectangle now.",
+    "When you pop index top for an incoming bar at index i, the left boundary is the new stack top (or -1 if the stack is empty), so the width is i - left - 1, not i - top. Append a sentinel bar of height 0 at the end so every remaining bar on the stack gets flushed and measured."
+  ]
+}

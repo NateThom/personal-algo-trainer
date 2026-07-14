@@ -1,0 +1,24 @@
+{
+  "id": "palindrome-partitions-sorted",
+  "pattern": "backtracking",
+  "title": "All Palindrome Partitions",
+  "difficulty": "medium",
+  "statement": "A calligrapher wants to cut a lowercase word s into consecutive pieces so that every piece reads the same forwards and backwards. Given s, return every possible way to do this. Each way (a partition) is a list of the pieces in left-to-right order, and joining the pieces in order must reproduce s exactly. Return the list of all partitions, sorted lexicographically: compare two partitions element by element as lists of strings (Python's default list comparison). If s is the empty string, return [[]] (one partition with no pieces). Every single character is a palindrome, so a non-empty s always has at least one partition.",
+  "function_name": "palindrome_partitions",
+  "starter_code": "def palindrome_partitions(s):\n    # your code here\n    pass\n",
+  "reference_solution": "def palindrome_partitions(s):\n    results = []\n    path = []\n\n    def backtrack(start):\n        if start == len(s):\n            results.append(path[:])\n            return\n        for end in range(start + 1, len(s) + 1):\n            piece = s[start:end]\n            if piece == piece[::-1]:\n                path.append(piece)\n                backtrack(end)\n                path.pop()\n\n    backtrack(0)\n    results.sort()\n    return results\n",
+  "tests": [
+    {"args": ["aab"], "expected": [["a", "a", "b"], ["aa", "b"]]},
+    {"args": ["a"], "expected": [["a"]]},
+    {"args": [""], "expected": [[]]},
+    {"args": ["ab"], "expected": [["a", "b"]]},
+    {"args": ["aaa"], "expected": [["a", "a", "a"], ["a", "aa"], ["aa", "a"], ["aaa"]]},
+    {"args": ["racecar"], "expected": [["r", "a", "c", "e", "c", "a", "r"], ["r", "a", "cec", "a", "r"], ["r", "aceca", "r"], ["racecar"]]},
+    {"args": ["abba"], "expected": [["a", "b", "b", "a"], ["a", "bb", "a"], ["abba"]]}
+  ],
+  "hints": [
+    "At each position you must decide where the current piece ends. What technique explores every choice of cut point and can undo a choice that led down one branch before trying the next?",
+    "Backtrack on the start index: try every end such that s[start:end] is a palindrome, append that piece to a path list, recurse from end, then pop the piece off. When start == len(s), record a copy of the path (path[:]) — recording the live list or skipping the pop corrupts later partitions.",
+    "def backtrack(start): if start == len(s): results.append(path[:]); return. Otherwise for end in range(start+1, len(s)+1): piece = s[start:end]; if piece == piece[::-1]: path.append(piece); backtrack(end); path.pop(). Call backtrack(0), then results.sort() gives the required lexicographic element-by-element order."
+  ]
+}

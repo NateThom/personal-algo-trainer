@@ -1,0 +1,25 @@
+{
+  "id": "add-reversed-digit-chains",
+  "pattern": "linked-list",
+  "title": "Add Two Numbers Stored as Reversed Digit Chains",
+  "difficulty": "medium",
+  "statement": "Two non-negative integers are each given as a list of decimal digits in reverse order, least significant digit first. For example the number 342 is written as [2, 4, 3]. Each input list contains only single decimal digits (0-9) and has no leading zeros in the number, except that the number zero itself is written as [0]. The two lists may have different lengths. Return the sum of the two numbers as a list of digits in the same reversed format. Build the answer one node at a time while carrying tens across positions (dummy-head construction), rather than converting both lists to integers, adding, and converting back. The returned list must have no trailing zeros in its reversed representation, except that the sum 0 must be returned as [0].",
+  "function_name": "add_reversed_digit_chains",
+  "starter_code": "def add_reversed_digit_chains(a, b):\n    # your code here\n    pass\n",
+  "reference_solution": "def add_reversed_digit_chains(a, b):\n    dummy = {\"next\": None}\n    tail = dummy\n    i = j = 0\n    carry = 0\n    while i < len(a) or j < len(b) or carry:\n        da = a[i] if i < len(a) else 0\n        db = b[j] if j < len(b) else 0\n        total = da + db + carry\n        carry = total // 10\n        node = {\"val\": total % 10, \"next\": None}\n        tail[\"next\"] = node\n        tail = node\n        i += 1\n        j += 1\n    out = []\n    node = dummy[\"next\"]\n    while node:\n        out.append(node[\"val\"])\n        node = node[\"next\"]\n    return out if out else [0]\n",
+  "tests": [
+    {"args": [[2, 4, 3], [5, 6, 4]], "expected": [7, 0, 8]},
+    {"args": [[0], [0]], "expected": [0]},
+    {"args": [[9, 9, 9], [1]], "expected": [0, 0, 0, 1]},
+    {"args": [[5], [5]], "expected": [0, 1]},
+    {"args": [[0], [7, 3]], "expected": [7, 3]},
+    {"args": [[1, 8], [0]], "expected": [1, 8]},
+    {"args": [[9, 9, 9, 9], [9, 9, 9, 9, 9, 9, 9]], "expected": [8, 9, 9, 9, 0, 0, 0, 1]},
+    {"args": [[6], [8]], "expected": [4, 1]}
+  ],
+  "hints": [
+    "You are adding two numbers digit by digit from the least significant end; which linked-list building trick lets you grow the result without special-casing the first node?",
+    "Walk both lists together with a running carry, and keep going until BOTH lists are exhausted AND the carry is zero, treating a missing digit as 0.",
+    "Use a dummy head: at each step compute da + db + carry, append (total % 10) as a new node, set carry = total // 10, and after the loop remember that a leftover carry of 1 must still become a final node (e.g. [5] + [5] -> [0, 1])."
+  ]
+}

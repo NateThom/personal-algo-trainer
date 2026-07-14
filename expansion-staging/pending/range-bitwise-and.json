@@ -1,0 +1,25 @@
+{
+  "id": "range-bitwise-and",
+  "pattern": "bit-manipulation",
+  "title": "Bitwise AND of a Number Range",
+  "difficulty": "medium",
+  "statement": "A sensor logs consecutive frame IDs and you need the bits that stay on across an entire capture window. Given two non-negative integers left and right with left <= right (values can be as large as about 2^40, so the window may contain billions of IDs), return the bitwise AND of every integer in the inclusive range [left, right]. When left == right the answer is that single number. Iterating over the range one number at a time is far too slow for the largest windows; aim for a solution whose running time depends on the number of bits, not the size of the range. Return the result as an int.",
+  "function_name": "range_bitwise_and",
+  "starter_code": "def range_bitwise_and(left, right):\n    # your code here\n    pass\n",
+  "reference_solution": "def range_bitwise_and(left, right):\n    shifts = 0\n    while left != right:\n        left >>= 1\n        right >>= 1\n        shifts += 1\n    return left << shifts\n",
+  "tests": [
+    {"args": [5, 7], "expected": 4},
+    {"args": [0, 0], "expected": 0},
+    {"args": [12, 12], "expected": 12},
+    {"args": [10, 11], "expected": 10},
+    {"args": [0, 1099511627776], "expected": 0},
+    {"args": [1099511627776, 1100511627776], "expected": 1099511627776},
+    {"args": [1099511640121, 1100499282097], "expected": 1099511627776},
+    {"args": [6, 7], "expected": 6}
+  ],
+  "hints": [
+    "ANDing many consecutive numbers zeroes out any bit that flips even once in the range. Which bits can possibly survive the whole window?",
+    "Only the common binary prefix of left and right survives: below the highest differing bit, every pattern occurs, so every lower bit gets zeroed. Right-shift both endpoints until they are equal, counting the shifts.",
+    "Loop while left != right: shift both right by 1 and increment a counter. When they meet, the value is the shared prefix; shift it back left by the counter (left << shifts) and return that. Do not forget the shift back, and note zero shifts happen when left == right."
+  ]
+}

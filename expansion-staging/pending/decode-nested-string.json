@@ -1,0 +1,25 @@
+{
+  "id": "decode-nested-string",
+  "pattern": "stack",
+  "title": "Decode Nested Repeat String",
+  "difficulty": "medium",
+  "statement": "You are given an encoded string s built from lowercase letters, digits, and square brackets. The pattern k[inner] means the substring inner is expanded and then repeated k times, where k is a positive integer that may span several digits (for example 12[a] expands to twelve copies of 'a'). Brackets may nest arbitrarily, so 3[a2[bc]] expands to 'abcbcabcbcabcbc'. Return the fully decoded string. The input is guaranteed to be well-formed: every bracket is matched, every '[' is preceded by its repeat count, and s contains only lowercase letters, digits, and the characters '[' and ']'. A string with no brackets is returned unchanged.",
+  "function_name": "decode_string",
+  "starter_code": "def decode_string(s):\n    # your code here\n    pass\n",
+  "reference_solution": "def decode_string(s):\n    stack = []\n    cur = \"\"\n    num = 0\n    for ch in s:\n        if ch.isdigit():\n            num = num * 10 + int(ch)\n        elif ch == '[':\n            stack.append((cur, num))\n            cur = \"\"\n            num = 0\n        elif ch == ']':\n            prev, k = stack.pop()\n            cur = prev + cur * k\n        else:\n            cur += ch\n    return cur\n",
+  "tests": [
+    {"args": ["3[a2[bc]]"], "expected": "abcbcabcbcabcbc"},
+    {"args": ["2[ab]3[cd]"], "expected": "ababcdcdcd"},
+    {"args": ["abc"], "expected": "abc"},
+    {"args": ["12[a]"], "expected": "aaaaaaaaaaaa"},
+    {"args": ["3[a2[c]]"], "expected": "accaccacc"},
+    {"args": ["2[a3[b]c]"], "expected": "abbbcabbbc"},
+    {"args": ["1[x]"], "expected": "x"},
+    {"args": ["10[z]"], "expected": "zzzzzzzzzz"}
+  ],
+  "hints": [
+    "When you hit a ']', which part of the string needs to be repeated, and how do you recover the text that came before the matching '['?",
+    "Push the string built so far and the repeat count onto a stack at each '[', then reset your working string; pop and recombine at each ']'.",
+    "Accumulate multi-digit counts with num = num * 10 + int(ch). On '[' push (cur, num) and reset both. On ']' pop (prev, k) and set cur = prev + cur * k, so the inner block is repeated and re-attached to its outer context."
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "id": "wildcard-word-matching",
+  "pattern": "tries",
+  "title": "Wildcard Word Matching",
+  "statement": "You are given a list of distinct lowercase dictionary words and a list of query strings. Each query may contain '.' characters, where a '.' matches any single lowercase letter, while every other character must match exactly. A query matches a dictionary word only if the two strings have the same length and, at every position, the query character is either '.' or equal to the word's character. Return a list of booleans, one per query in the same order as the queries, where the i-th boolean is true if and only if the i-th query matches at least one complete word in the dictionary. Matching a mere prefix of a word does not count: the whole word must be consumed. If the dictionary is empty, every query returns false. The dictionary may be empty and queries are always non-empty strings.",
+  "difficulty": "medium",
+  "function_name": "wildcard_word_matching",
+  "starter_code": "def wildcard_word_matching(words, queries):\n    # your code here\n    pass\n",
+  "reference_solution": "def wildcard_word_matching(words, queries):\n    root = {}\n    for w in words:\n        node = root\n        for ch in w:\n            node = node.setdefault(ch, {})\n        node[\"$\"] = True\n\n    def match(node, q, i):\n        if i == len(q):\n            return node.get(\"$\", False)\n        ch = q[i]\n        if ch == \".\":\n            for k, child in node.items():\n                if k == \"$\":\n                    continue\n                if match(child, q, i + 1):\n                    return True\n            return False\n        if ch in node:\n            return match(node[ch], q, i + 1)\n        return False\n\n    return [match(root, q, 0) for q in queries]\n",
+  "tests": [
+    {"args": [["apple", "apply", "ape"], ["appl.", "a.e", "..", "apple", "orange"]], "expected": [true, true, false, true, false]},
+    {"args": [["cat", "car", "cab"], ["ca.", "c..", ".at", "dog", "..."]], "expected": [true, true, true, false, true]},
+    {"args": [[], ["a", "."]], "expected": [false, false]},
+    {"args": [["a"], ["a", ".", "b", ".."]], "expected": [true, true, false, false]},
+    {"args": [["bad", "dad", "mad"], [".ad", "b..", "pad", "b.."]], "expected": [true, true, false, true]},
+    {"args": [["apple"], [".pp", "app", "apple", "....."]], "expected": [false, false, true, true]},
+    {"args": [["hello"], ["h.llo", "he.lo", "hell.", ".....", "......"]], "expected": [true, true, true, true, false]}
+  ],
+  "hints": [
+    "Every query is answered against the same fixed dictionary, and the '.' means you sometimes have to try several letters at one position. What structure lets you share the common prefixes of the words and branch cheaply?",
+    "Build a trie of the words, marking the end of each complete word (for example with an is-word flag). Search it with recursion: a normal letter follows one edge, but a '.' must recurse into every child and succeed if any branch does.",
+    "Write match(node, q, i): if i reached the end of q, return whether node is marked as a complete word (not just reachable). If q[i] is '.', loop over all real children and return true if any recursive call on i+1 succeeds; otherwise follow the single matching child edge if it exists, and return false when it does not."
+  ]
+}

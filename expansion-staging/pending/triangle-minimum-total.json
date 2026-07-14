@@ -1,0 +1,24 @@
+{
+  "id": "triangle-minimum-total",
+  "pattern": "dp-2d",
+  "title": "Triangle Minimum Path Total",
+  "difficulty": "easy",
+  "statement": "You are given a triangle of integers as a list of lists: row k (0-indexed) contains exactly k+1 integers, and values may be negative. A path begins at the single value at the apex (row 0). From position j in a row, the path must move down to position j or position j+1 in the next row, until it reaches the bottom row. Return the minimum possible sum of all values along such an apex-to-base path, as an integer. If the triangle has only one row, return its single value. The triangle is never empty.",
+  "function_name": "triangle_minimum_total",
+  "starter_code": "def triangle_minimum_total(triangle):\n    # your code here\n    pass\n",
+  "reference_solution": "def triangle_minimum_total(triangle):\n    dp = list(triangle[-1])\n    for r in range(len(triangle) - 2, -1, -1):\n        row = triangle[r]\n        dp = [row[j] + min(dp[j], dp[j + 1]) for j in range(len(row))]\n    return dp[0]\n",
+  "tests": [
+    {"args": [[[2], [3, 4], [6, 5, 7], [4, 1, 8, 3]]], "expected": 11},
+    {"args": [[[-7]]], "expected": -7},
+    {"args": [[[5], [9, 6]]], "expected": 11},
+    {"args": [[[1], [2, 100], [100, 100, 1], [100, 100, 100, -200]]], "expected": -98},
+    {"args": [[[3], [4, 4], [7, 1, 7]]], "expected": 8},
+    {"args": [[[-1], [-2, -3], [-4, -5, -6]]], "expected": -10},
+    {"args": [[[0], [5, 5], [5, 0, 5], [1, 9, 9, 1]]], "expected": 11}
+  ],
+  "hints": [
+    "Picking the smaller of the two children at each row seems tempting -- can a locally worse child ever lead to a cheaper rest-of-path? What does that tell you about needing the best answer for every position in a row, not just one?",
+    "Define dp[j] = minimum total from position j of the current row down to the base. Working bottom-up, the base row is its own dp, and each row above satisfies dp[j] = row[j] + min(dp_below[j], dp_below[j+1]).",
+    "Start with dp as a copy of the last row. For each row r from len(triangle)-2 down to 0, replace dp with [triangle[r][j] + min(dp[j], dp[j+1]) for each j in that row]. Each pass shrinks dp by one; after processing row 0, dp[0] is the answer."
+  ]
+}
