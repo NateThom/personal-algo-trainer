@@ -40,17 +40,33 @@ to `pattern_card`, never read by `mastery.py`. Flashcards feed *into* your abili
 - Four flashcard types per pattern, derived entirely from existing `content/patterns/*.json` docs:
   recognition (MCQ), complexity (flip), template (type-and-diff), gotcha (flip).
 - Independent FSRS scheduling per `(pattern, card_type)`, reusing the existing `SrsScheduler`.
-- Progressive unlock: a pattern's cards open once you've graded an attempt in it, or it's the next
-  pattern up in roadmap order.
+- All 18 patterns' flashcards available from day one — no gating on problem-solving progress.
 - Dedicated `/flashcards` page (global, interleaved study session) + a "Study this pattern" entry
   point from `/patterns/{id}`.
 - New nav entry.
+
+**Why no progressive unlock (revisited from the original draft):** the first draft of this spec
+gated a pattern's cards behind having attempted it, by analogy to the problem-solving track's
+block-then-interleave rule. That analogy doesn't actually hold: blocking practice on a new pattern
+early is about *procedural* skill — you need a few reps of writing the code before you have enough
+schema to usefully discriminate it from a confusable pattern. Flashcard recognition cards are
+*declarative* (scenario → label), not procedural, and benefit from interleaving confusable patterns
+immediately rather than after the fact — gating would deny exactly the cross-pattern comparison that
+sharpens discrimination. The real cost of full availability is inert knowledge (memorizing a
+recognition signal for a pattern you've never coded yet), which is real but acceptable here: the
+recognition card is scenario-based rather than a bare definition, and the learner (a highly
+self-directed solo user) has explicitly chosen a survey-then-drill strategy over incremental
+unlocking. Overwhelm — the other reason gating seemed attractive — is not actually a gating problem;
+if it becomes one, the standard SRS fix is a new-cards-per-day cap (deferred; see below), not tying
+availability to an unrelated track's progress.
 
 ### Explicitly out of scope (v1)
 - No manual card authoring/editing UI — a pattern doc *is* its flashcard content.
 - No dashboard integration — `/dashboard` is untouched.
 - No gamification (streaks, XP, badges).
 - No cross-device sync/export.
+- No new-cards-per-day pacing cap — the full 72-card deck is open from day one; revisit with a
+  standard SRS new-card limit if that volume proves overwhelming in practice.
 
 ### Rationale for narrow scope
 Zero new content debt (all four card types derive from data that already exists), and a tight
@@ -118,9 +134,6 @@ Same shape as complexity: front is the pattern name, flip reveals the `gotchas` 
 
 New `algotrainer/flashcards.py`, pure functions only (same style as `mastery.py`):
 
-- `unlocked_patterns(graded_patterns: set[str]) -> set[str]` — attempted patterns (from
-  `store.all_graded_patterns()`) plus the single next-not-yet-attempted pattern in roadmap order
-  (`roadmap_order()` from `patterns.py`).
 - MCQ option builder — correct pattern + confusable-group-first distractor selection, described
   above, with the empty-`confusable_with` fallback.
 - Diff builder — normalizes whitespace, runs `difflib.SequenceMatcher`, returns aligned line ops.
@@ -134,7 +147,7 @@ Added to `algotrainer/web/app.py`:
 - `GET /flashcards` — page.
 - `GET /flashcards/{pattern_id}` — page, pattern-scoped session (reuses the same static page, pattern
   passed client-side).
-- `GET /api/flashcards/due` — due cards across unlocked patterns, each with its rendered front
+- `GET /api/flashcards/due` — due cards across all 18 patterns, each with its rendered front
   payload (recognition includes pre-shuffled MCQ options; the other three types just need
   `pattern`/`card_type` — the frontend already has pattern-doc content available via the existing
   `/api/patterns/{id}` endpoint).
@@ -149,7 +162,7 @@ Added to `algotrainer/web/app.py`:
 
 - New `flashcards.html` + `flashcards.js`, linked from the nav bar (`nav.js`) alongside
   Solve/Dashboard/Patterns/Guide/Methodology. Shows a due-card count and a **Study** button that
-  starts a session pulling all due cards across unlocked patterns, shuffled across patterns
+  starts a session pulling all due cards across all patterns, shuffled across patterns
   (interleaved, matching the app's existing interleaving philosophy).
 - `patterns_detail.html`/`.js` gains a **Study this pattern** link, scoping a session to one
   pattern's due-or-new cards.
@@ -163,8 +176,9 @@ Added to `algotrainer/web/app.py`:
 
 Matching existing test-file conventions:
 
-- `tests/test_flashcards.py` — unlock progression, MCQ distractor selection (including the
-  empty-`confusable_with` fallback), diff-output shape.
+- `tests/test_flashcards.py` — MCQ distractor selection (including the empty-`confusable_with`
+  fallback), diff-output shape.
 - `tests/test_store.py` — flashcard CRUD + `reset_progress` wipes the new table.
-- `tests/test_web_flashcards.py` — due-list endpoint respects unlock gating; the review endpoint
-  updates `flashcard` state and provably never touches `pattern_card` or `graded_attempt`.
+- `tests/test_web_flashcards.py` — due-list endpoint returns cards for all patterns regardless of
+  problem-solving history; the review endpoint updates `flashcard` state and provably never touches
+  `pattern_card` or `graded_attempt`.

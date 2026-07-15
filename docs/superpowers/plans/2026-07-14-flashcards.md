@@ -239,7 +239,7 @@ Create `tests/test_flashcards.py`:
 import random
 
 from algotrainer.flashcards import (
-    CARD_TYPES, build_recognition_card, diff_template, grade_recognition, unlocked_patterns,
+    CARD_TYPES, build_recognition_card, diff_template, grade_recognition,
 )
 from algotrainer.pattern_docs import load_pattern_doc
 from algotrainer.patterns import PATTERNS
@@ -247,19 +247,6 @@ from algotrainer.patterns import PATTERNS
 
 def test_card_types_are_the_four_facets():
     assert set(CARD_TYPES) == {"recognition", "complexity", "template", "gotcha"}
-
-
-def test_unlocked_patterns_empty_history_opens_only_the_first_pattern():
-    assert unlocked_patterns(set()) == {"arrays-hashing"}
-
-
-def test_unlocked_patterns_opens_next_after_attempted():
-    assert unlocked_patterns({"arrays-hashing"}) == {"arrays-hashing", "two-pointers"}
-
-
-def test_unlocked_patterns_all_attempted_returns_all():
-    all_ids = {p.id for p in PATTERNS}
-    assert unlocked_patterns(all_ids) == all_ids
 
 
 def test_recognition_card_has_four_unique_options_including_correct():
@@ -329,30 +316,18 @@ Expected: FAIL — `ModuleNotFoundError: No module named 'algotrainer.flashcards
 Create `algotrainer/flashcards.py`:
 
 ```python
-"""Pure flashcard logic: which patterns are unlocked for study, how a
-recognition card's MCQ options are built, how it's graded, and how a typed
-template compares to the reference. No I/O — the web layer wires this to
-Store and the pattern-doc loader."""
+"""Pure flashcard logic: how a recognition card's MCQ options are built, how
+it's graded, and how a typed template compares to the reference. No I/O — the
+web layer wires this to Store and the pattern-doc loader. All 18 patterns'
+cards are available from day one (no unlock gating) — see the design doc for
+why that's a deliberate choice, not an oversight."""
 import difflib
 import random
 
-from algotrainer.patterns import PATTERNS, confusable_group
+from algotrainer.patterns import confusable_group
 from algotrainer.scheduler import RATING_BY_NAME
 
 CARD_TYPES: tuple[str, ...] = ("recognition", "complexity", "template", "gotcha")
-
-
-def unlocked_patterns(graded_patterns: set[str]) -> set[str]:
-    """Patterns whose flashcards are open: any pattern with at least one graded
-    attempt, plus the single next pattern in roadmap order — so you can study
-    ahead of practicing it, without every pattern being available day one."""
-    unlocked = set(graded_patterns)
-    remaining = sorted(
-        (p for p in PATTERNS if p.id not in graded_patterns), key=lambda p: p.order
-    )
-    if remaining:
-        unlocked.add(remaining[0].id)
-    return unlocked
 
 
 def build_recognition_card(
@@ -400,13 +375,13 @@ def diff_template(reference: str, typed: str) -> list[dict]:
 - [ ] **Step 4: Run tests to verify they pass**
 
 Run: `pytest tests/test_flashcards.py -v`
-Expected: PASS (12 tests)
+Expected: PASS (9 tests)
 
 - [ ] **Step 5: Commit**
 
 ```bash
 git add algotrainer/flashcards.py tests/test_flashcards.py
-git commit -m "feat: add pure flashcard logic (unlock, MCQ builder, diff)"
+git commit -m "feat: add pure flashcard logic (MCQ builder, grading, diff)"
 ```
 
 ---
@@ -446,15 +421,23 @@ def test_flashcards_pattern_page_served(tmp_path):
     assert c.get("/flashcards/two-pointers").status_code == 200
 
 
-def test_due_cards_only_include_unlocked_patterns(tmp_path):
+def test_due_cards_include_all_patterns_regardless_of_attempts(tmp_path):
     c = _client(tmp_path)
     body = c.get("/api/flashcards/due").json()
     patterns_present = {card["pattern"] for card in body["cards"]}
-    # nothing attempted yet: only the first roadmap pattern is unlocked
-    assert patterns_present == {"arrays-hashing"}
+    # nothing attempted yet, and nothing is gated: all 18 patterns show up
+    assert len(patterns_present) == 18
 
 
-def test_due_cards_include_all_four_types_for_unlocked_pattern(tmp_path):
+def test_due_cards_include_far_future_roadmap_pattern(tmp_path):
+    c = _client(tmp_path)
+    body = c.get("/api/flashcards/due").json()
+    patterns_present = {card["pattern"] for card in body["cards"]}
+    # dp-2d is last in roadmap order (order 17 of 18) — still available day one
+    assert "dp-2d" in patterns_present
+
+
+def test_due_cards_include_all_four_types_for_a_pattern(tmp_path):
     c = _client(tmp_path)
     body = c.get("/api/flashcards/due").json()
     types_seen = {
@@ -512,7 +495,7 @@ Replace with:
 ```python
 from algotrainer.content import DEFAULT_CONTENT_DIR, load_problems
 from algotrainer.flashcards import (
-    CARD_TYPES, build_recognition_card, diff_template, grade_recognition, unlocked_patterns,
+    CARD_TYPES, build_recognition_card, diff_template, grade_recognition,
 )
 from algotrainer.generated import GENERATED_DIR, load_generated
 ```
@@ -576,11 +559,10 @@ At `algotrainer/web/app.py:198-222`, immediately after the `pattern_detail` hand
     def flashcards_due():
         now = datetime.now(timezone.utc)
         docs = load_all_pattern_docs()
-        unlocked = unlocked_patterns(set(store.all_graded_patterns())) & docs.keys()
         due_map = store.all_flashcard_due(now)
         rng = random.Random()
         out = []
-        for pattern in sorted(unlocked):
+        for pattern in sorted(docs):
             doc = docs[pattern]
             meta = pattern_meta(pattern)
             for card_type in CARD_TYPES:
@@ -608,7 +590,7 @@ At `algotrainer/web/app.py:198-222`, immediately after the `pattern_detail` hand
 - [ ] **Step 4: Run tests to verify they pass**
 
 Run: `pytest tests/test_web_flashcards.py -v`
-Expected: PASS (5 tests)
+Expected: PASS (6 tests)
 
 Also run the full suite to confirm nothing else broke:
 
@@ -759,7 +741,7 @@ In `algotrainer/web/app.py`, immediately after the `flashcards_due` handler adde
 - [ ] **Step 4: Run tests to verify they pass**
 
 Run: `pytest tests/test_web_flashcards.py -v`
-Expected: PASS (14 tests total in the file)
+Expected: PASS (15 tests total in the file)
 
 Run the full suite:
 
@@ -1154,7 +1136,7 @@ Expected: Server starts, logs listening on `http://127.0.0.1:8000`.
 - [ ] **Step 3: Manually exercise the feature in a browser**
 
 Visit `http://127.0.0.1:8000/flashcards`:
-- Confirm the due count shows `1 due` or more and the page lists only `arrays-hashing` cards (nothing has been attempted yet in a fresh db, so per `unlocked_patterns`, only the first roadmap pattern is unlocked).
+- Confirm the due count shows `72 due` (18 patterns × 4 card types) on a fresh db — nothing is gated by problem-solving progress, so every pattern shows up immediately.
 - Click **Study**. Step through at least one card of each type:
   - **Recognition**: click an option, confirm correct/incorrect feedback appears, click Next.
   - **Complexity**: click "Show answer", confirm time/space text renders, click a rating button.
