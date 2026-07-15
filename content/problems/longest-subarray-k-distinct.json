@@ -18,7 +18,7 @@
     {"args": [[9, 8, 7, 6], 4], "expected": 4}
   ],
   "hints": [
-    "You want the longest contiguous run whose variety of values stays within a limit — what kind of window can grow on the right and give ground on the left as needed?",
+    "You want the longest contiguous run whose variety of values stays within a limit — brute forcing every start and end recomputes overlapping ranges, so what work could you carry from one candidate range to the next?",
     "Track the values currently inside the window with a frequency map; the number of distinct values is exactly how many keys the map holds.",
     "Extend right by one each step, incrementing that value's count. While the map has more than k keys, decrement nums[left] and, crucially, delete the key when its count reaches zero so the distinct count actually drops; then move left forward. Record right - left + 1 as a candidate best."
   ]

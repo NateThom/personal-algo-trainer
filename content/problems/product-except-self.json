@@ -3,7 +3,7 @@
   "pattern": "prefix-sum",
   "title": "Product of Array Except Self",
   "difficulty": "medium",
-  "statement": "You are given a list of integers nums with length at least 2. The list may contain zeros and negative numbers. Build and return a new list answer of the same length where answer[i] equals the product of every element of nums other than nums[i]. Return the values in the same index order as nums. You must not use division at any point; instead combine a left-to-right running product of everything before index i with a right-to-left running product of everything after index i. Note that when nums contains exactly one zero, every answer entry is 0 except at the zero's own position, and when nums contains two or more zeros every answer entry is 0.",
+  "statement": "You are given a list of integers nums with length at least 2. The list may contain zeros and negative numbers. Build and return a new list answer of the same length where answer[i] equals the product of every element of nums other than nums[i]. Return the values in the same index order as nums. You must not use the division operator at any point in your solution. Note that when nums contains exactly one zero, every answer entry is 0 except at the zero's own position, and when nums contains two or more zeros every answer entry is 0.",
   "function_name": "products_except_self",
   "starter_code": "def products_except_self(nums):\n    # your code here\n    pass\n",
   "reference_solution": "def products_except_self(nums):\n    n = len(nums)\n    answer = [1] * n\n    prefix = 1\n    for i in range(n):\n        answer[i] = prefix\n        prefix *= nums[i]\n    suffix = 1\n    for i in range(n - 1, -1, -1):\n        answer[i] *= suffix\n        suffix *= nums[i]\n    return answer\n",

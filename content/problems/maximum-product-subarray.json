@@ -2,7 +2,7 @@
   "id": "maximum-product-subarray",
   "pattern": "dp-1d",
   "title": "Maximum Product Subarray",
-  "difficulty": "hard",
+  "difficulty": "medium",
   "statement": "A signal-processing pipeline multiplies gain factors together over a stretch of consecutive stages. You are given gains, a non-empty list of integers that may include negatives and zeros. Choose any non-empty run of consecutive stages and return the product of its gains, maximized over all possible runs, as an int. A run of a single stage is allowed, so the answer for [-7] is -7. Note that two negative gains multiply into a positive, so the best run may pass through negatives.",
   "function_name": "max_product_window",
   "starter_code": "def max_product_window(gains):\n    # your code here\n    pass\n",

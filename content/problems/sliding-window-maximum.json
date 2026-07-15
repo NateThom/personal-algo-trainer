@@ -1,7 +1,7 @@
 {
   "id": "sliding-window-maximum",
   "pattern": "sliding-window",
-  "title": "Sliding Window Maximum",
+  "title": "Maximum in Each K-Length Window",
   "difficulty": "hard",
   "statement": "A conveyor belt carries readings past a viewing slot exactly k units wide. Given an integer list nums and an integer k with 1 <= k <= len(nums), slide a window of size k from left to right across nums, one step at a time, and record the maximum value inside the window at each stop. Return these maxima as a list in left-to-right window order. The first window covers indices 0..k-1 and the last covers indices len(nums)-k..len(nums)-1, so the returned list has exactly len(nums) - k + 1 entries. When k == len(nums) there is a single window, so return a one-element list holding the maximum of the whole list.",
   "function_name": "max_sliding_window",

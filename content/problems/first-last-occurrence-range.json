@@ -18,7 +18,7 @@
     {"args": [[1, 1, 1, 1, 9], 9], "expected": [4, 4]}
   ],
   "hints": [
-    "A single binary search finds *an* occurrence of target, but which index does the problem actually ask for? If you return that one index for both ends, what happens when target is duplicated? Can you aim a binary search at the leftmost match specifically?",
+    "Finding *an* occurrence of target is the easy part -- but which index does the problem actually ask for? If you report that single landing spot for both ends, what goes wrong when target is duplicated across a run? Could you steer your search to prefer the leftmost match specifically, and separately the rightmost?",
     "Run two binary searches. In the leftmost search, when values[mid] == target, record mid as a candidate and keep going left (right = mid - 1); in the rightmost search, record mid and keep going right (left = mid + 1). Never return mid immediately on a match.",
     "Write find_edge(bias_left): loop while left <= right with mid = left + (right - left) // 2. On values[mid] == target set found = mid, then shrink toward the biased side; on values[mid] < target set left = mid + 1, else right = mid - 1. Return found (-1 if never set). The answer is [find_edge(True), find_edge(False)]."
   ]

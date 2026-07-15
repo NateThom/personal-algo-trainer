@@ -18,7 +18,7 @@
     {"args": [[7, -7, 7, -7], 7], "expected": 10}
   ],
   "hints": [
-    "Two prefixes of the array bound a subarray whose sum is divisible by k exactly when those two prefix sums leave the same remainder mod k; how could you count matching remainders in one pass?",
+    "A contiguous subarray's sum is divisible by k exactly when the two running totals at its endpoints leave the same remainder when divided by k; how could you count, in one pass, endpoints that share a remainder?",
     "Keep a hashmap from remainder (running_sum mod k) to how many prefixes produced it, and crucially seed remainder 0 with a count of 1 so subarrays starting at index 0 are counted.",
     "Scan once maintaining running_sum; at each element compute r = running_sum % k, add the current stored count for r to the answer BEFORE incrementing residue_counts[r], and rely on Python's % giving a non-negative remainder for negative sums."
   ]

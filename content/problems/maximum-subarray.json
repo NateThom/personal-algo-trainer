@@ -1,7 +1,7 @@
 {
   "id": "maximum-subarray",
   "pattern": "dp-1d",
-  "title": "Maximum Subarray Sum (Kadane)",
+  "title": "Maximum Subarray Sum",
   "difficulty": "easy",
   "statement": "A food truck logs its net profit for each day of a stretch of days as a non-empty list of integers deltas (a day can be negative). The owner wants to know the best possible total over any run of one or more CONSECUTIVE days. Return that maximum sum as an int. The run must contain at least one day, so if every day is a loss, the answer is the largest single day's value (which will be negative), never 0.",
   "function_name": "max_streak_sum",

@@ -1,452 +1,7 @@
 {
- "accepted_verified": [
-  {
-   "pattern": "arrays-hashing",
-   "id": "group-anagrams",
-   "repairs": 0
-  },
-  {
-   "pattern": "arrays-hashing",
-   "id": "top-k-frequent-elements",
-   "repairs": 0
-  },
-  {
-   "pattern": "arrays-hashing",
-   "id": "river-gauge-subarray-sum-k",
-   "repairs": 0
-  },
-  {
-   "pattern": "arrays-hashing",
-   "id": "longest-consecutive-sequence",
-   "repairs": 0
-  },
-  {
-   "pattern": "arrays-hashing",
-   "id": "first-missing-positive",
-   "repairs": 0
-  },
-  {
-   "pattern": "arrays-hashing",
-   "id": "substring-concatenation-all-words",
-   "repairs": 0
-  },
-  {
-   "pattern": "backtracking",
-   "id": "phone-letter-combos-sorted",
-   "repairs": 0
-  },
-  {
-   "pattern": "backtracking",
-   "id": "balanced-parentheses-strings",
-   "repairs": 0
-  },
-  {
-   "pattern": "backtracking",
-   "id": "palindrome-partitions-sorted",
-   "repairs": 0
-  },
-  {
-   "pattern": "backtracking",
-   "id": "restore-ip-addresses-sorted",
-   "repairs": 0
-  },
-  {
-   "pattern": "backtracking",
-   "id": "n-queens-count",
-   "repairs": 0
-  },
-  {
-   "pattern": "backtracking",
-   "id": "partition-k-equal-subsets",
-   "repairs": 0
-  },
-  {
-   "pattern": "binary-search",
-   "id": "integer-square-root",
-   "repairs": 0
-  },
-  {
-   "pattern": "binary-search",
-   "id": "search-rotated-array",
-   "repairs": 0
-  },
-  {
-   "pattern": "binary-search",
-   "id": "find-peak-element",
-   "repairs": 0
-  },
-  {
-   "pattern": "binary-search",
-   "id": "median-two-sorted-arrays",
-   "repairs": 0
-  },
-  {
-   "pattern": "binary-search",
-   "id": "kth-smallest-pair-distance",
-   "repairs": 0
-  },
-  {
-   "pattern": "bit-manipulation",
-   "id": "add-without-plus",
-   "repairs": 0
-  },
-  {
-   "pattern": "bit-manipulation",
-   "id": "single-number-of-three",
-   "repairs": 0
-  },
-  {
-   "pattern": "bit-manipulation",
-   "id": "range-bitwise-and",
-   "repairs": 0
-  },
-  {
-   "pattern": "bit-manipulation",
-   "id": "max-pairwise-xor",
-   "repairs": 0
-  },
-  {
-   "pattern": "bit-manipulation",
-   "id": "smallest-skill-team-size",
-   "repairs": 0
-  },
-  {
-   "pattern": "dp-1d",
-   "id": "min-cost-climbing-stairs",
-   "repairs": 0
-  },
-  {
-   "pattern": "dp-1d",
-   "id": "maximum-subarray",
-   "repairs": 0
-  },
-  {
-   "pattern": "dp-1d",
-   "id": "decode-ways",
-   "repairs": 0
-  },
-  {
-   "pattern": "dp-1d",
-   "id": "word-break-segmentation",
-   "repairs": 0
-  },
-  {
-   "pattern": "dp-1d",
-   "id": "longest-valid-parentheses-dp",
-   "repairs": 0
-  },
-  {
-   "pattern": "dp-2d",
-   "id": "minimum-path-sum",
-   "repairs": 0
-  },
-  {
-   "pattern": "dp-2d",
-   "id": "triangle-minimum-total",
-   "repairs": 0
-  },
-  {
-   "pattern": "dp-2d",
-   "id": "maximal-square",
-   "repairs": 0
-  },
-  {
-   "pattern": "dp-2d",
-   "id": "coin-combination-count",
-   "repairs": 0
-  },
-  {
-   "pattern": "dp-2d",
-   "id": "longest-common-substring",
-   "repairs": 0
-  },
-  {
-   "pattern": "dp-2d",
-   "id": "distinct-subsequence-count",
-   "repairs": 0
-  },
-  {
-   "pattern": "graphs",
-   "id": "keys-and-rooms",
-   "repairs": 0
-  },
-  {
-   "pattern": "graphs",
-   "id": "pacific-atlantic-water-flow",
-   "repairs": 0
-  },
-  {
-   "pattern": "graphs",
-   "id": "is-graph-bipartite",
-   "repairs": 0
-  },
-  {
-   "pattern": "graphs",
-   "id": "shortest-clear-path-binary-matrix",
-   "repairs": 0
-  },
-  {
-   "pattern": "graphs",
-   "id": "word-transformation-ladder",
-   "repairs": 0
-  },
-  {
-   "pattern": "graphs",
-   "id": "shortest-path-with-wall-breaks",
-   "repairs": 0
-  },
-  {
-   "pattern": "heaps",
-   "id": "min-cost-connect-ropes",
-   "repairs": 0
-  },
-  {
-   "pattern": "heaps",
-   "id": "top-k-frequent-elements",
-   "repairs": 0
-  },
-  {
-   "pattern": "heaps",
-   "id": "task-cooldown-intervals",
-   "repairs": 0
-  },
-  {
-   "pattern": "heaps",
-   "id": "reorganize-string-no-adjacent",
-   "repairs": 0
-  },
-  {
-   "pattern": "heaps",
-   "id": "running-median-stream",
-   "repairs": 0
-  },
-  {
-   "pattern": "intervals",
-   "id": "can-attend-all-meetings",
-   "repairs": 0
-  },
-  {
-   "pattern": "intervals",
-   "id": "summary-ranges-from-sorted",
-   "repairs": 0
-  },
-  {
-   "pattern": "intervals",
-   "id": "min-interval-removals",
-   "repairs": 0
-  },
-  {
-   "pattern": "intervals",
-   "id": "interval-list-intersections",
-   "repairs": 0
-  },
-  {
-   "pattern": "intervals",
-   "id": "min-intervals-to-cover-range",
-   "repairs": 0
-  },
-  {
-   "pattern": "linked-list",
-   "id": "dedupe-sorted-chain-in-place",
-   "repairs": 0
-  },
-  {
-   "pattern": "linked-list",
-   "id": "remove-kth-from-end-two-pointer",
-   "repairs": 0
-  },
-  {
-   "pattern": "linked-list",
-   "id": "add-reversed-digit-chains",
-   "repairs": 0
-  },
-  {
-   "pattern": "linked-list",
-   "id": "rotate-chain-right",
-   "repairs": 0
-  },
-  {
-   "pattern": "linked-list",
-   "id": "interleave-fold-reorder",
-   "repairs": 0
-  },
-  {
-   "pattern": "prefix-sum",
-   "id": "range-addition-updates",
-   "repairs": 0
-  },
-  {
-   "pattern": "prefix-sum",
-   "id": "subarrays-divisible-by-k",
-   "repairs": 0
-  },
-  {
-   "pattern": "prefix-sum",
-   "id": "longest-balanced-binary-subarray",
-   "repairs": 0
-  },
-  {
-   "pattern": "prefix-sum",
-   "id": "product-except-self",
-   "repairs": 0
-  },
-  {
-   "pattern": "prefix-sum",
-   "id": "submatrix-sum-target-count",
-   "repairs": 0
-  },
-  {
-   "pattern": "prefix-sum",
-   "id": "shortest-subarray-at-least-k",
-   "repairs": 0
-  },
-  {
-   "pattern": "sliding-window",
-   "id": "contains-duplicate-within-k",
-   "repairs": 0
-  },
-  {
-   "pattern": "sliding-window",
-   "id": "longest-subarray-k-distinct",
-   "repairs": 0
-  },
-  {
-   "pattern": "sliding-window",
-   "id": "find-anagram-start-indices",
-   "repairs": 0
-  },
-  {
-   "pattern": "sliding-window",
-   "id": "sliding-window-maximum",
-   "repairs": 0
-  },
-  {
-   "pattern": "sliding-window",
-   "id": "minimum-window-substring",
-   "repairs": 0
-  },
-  {
-   "pattern": "stack",
-   "id": "remove-adjacent-duplicates",
-   "repairs": 0
-  },
-  {
-   "pattern": "stack",
-   "id": "backspace-string-compare",
-   "repairs": 0
-  },
-  {
-   "pattern": "stack",
-   "id": "decode-nested-string",
-   "repairs": 0
-  },
-  {
-   "pattern": "stack",
-   "id": "asteroid-collision",
-   "repairs": 0
-  },
-  {
-   "pattern": "stack",
-   "id": "largest-rectangle-histogram",
-   "repairs": 0
-  },
-  {
-   "pattern": "stack",
-   "id": "basic-calculator-parens",
-   "repairs": 0
-  },
-  {
-   "pattern": "topological-sort",
-   "id": "minimum-vertices-to-reach-all",
-   "repairs": 0
-  },
-  {
-   "pattern": "topological-sort",
-   "id": "validate-task-order",
-   "repairs": 0
-  },
-  {
-   "pattern": "topological-sort",
-   "id": "eventual-safe-nodes",
-   "repairs": 0
-  },
-  {
-   "pattern": "topological-sort",
-   "id": "unique-sequence-reconstruction",
-   "repairs": 0
-  },
-  {
-   "pattern": "topological-sort",
-   "id": "alien-alphabet-from-words",
-   "repairs": 0
-  },
-  {
-   "pattern": "topological-sort",
-   "id": "project-completion-time",
-   "repairs": 0
-  },
-  {
-   "pattern": "trees",
-   "id": "validate-bst-ordering",
-   "repairs": 0
-  },
-  {
-   "pattern": "trees",
-   "id": "bst-lowest-common-ancestor",
-   "repairs": 0
-  },
-  {
-   "pattern": "trees",
-   "id": "tree-right-side-view",
-   "repairs": 0
-  },
-  {
-   "pattern": "trees",
-   "id": "tree-diameter-edges",
-   "repairs": 0
-  },
-  {
-   "pattern": "trees",
-   "id": "max-branch-path-sum",
-   "repairs": 0
-  },
-  {
-   "pattern": "tries",
-   "id": "wildcard-word-matching",
-   "repairs": 0
-  },
-  {
-   "pattern": "two-pointers",
-   "id": "max-area-between-walls",
-   "repairs": 0
-  }
- ],
- "verified_2026_07_14": {
-  "note": "23/23 verified accepted by finish-expansion.js workflow run wf_65b94d20-012 (2026-07-14). All now behave as accepted_verified; kept here as a record instead of merging into accepted_verified pending final id/pattern reconciliation at assembly time.",
-  "accepted": [
-   "first-last-occurrence-range", "maximum-product-subarray", "maximize-sum-after-k-negations",
-   "employee-free-time", "erase-zero-sum-runs", "longest-ones-with-k-flips",
-   "rebuild-tree-preorder-inorder", "longest-buildable-word", "shortest-unique-prefixes",
-   "maximum-xor-pair", "grid-word-hunt", "concatenated-dictionary-words",
-   "three-way-partition-single-pass", "unique-triplets-sum-zero", "almost-palindrome-one-deletion",
-   "trapped-rainwater-volume", "unique-quadruplets-target-sum", "network-connectivity-queries",
-   "min-cost-connect-cities", "satisfy-equality-equations", "smallest-string-after-swaps",
-   "island-count-after-land-additions", "redundant-directed-connection"
-  ]
- },
- "reviews_done_2026_07_14": {
-  "note": "5/16 pattern reviews completed by run wf_65b94d20-012; edits already applied+gate-passed in pending/. Drops flagged: dp-2d/triangle-minimum-total (dup of minimum-path-sum), dp-2d/coin-combination-count (mis-patterned, actually dp-1d).",
-  "patterns": ["arrays-hashing", "binary-search", "dp-1d", "dp-2d", "graphs"],
-  "flagged_drop": [
-   {"pattern": "dp-2d", "id": "triangle-minimum-total", "why": "duplicate of minimum-path-sum"},
-   {"pattern": "dp-2d", "id": "coin-combination-count", "why": "misrouted 1-D DP, not a dp-2d instance"}
-  ]
- },
- "reviews_remaining_2026_07_14": [
-  "heaps", "intervals", "linked-list", "prefix-sum", "sliding-window", "stack",
-  "topological-sort", "trees", "tries", "two-pointers", "union-find"
- ],
- "needs_reverify_STALE_do_not_use": [
+ "repo": "/Users/nthom/Development/personal-algo-trainer",
+ "py": "/Users/nthom/Development/personal-algo-trainer/.venv/bin/python",
+ "needs_reverify": [
   {
    "pattern": "binary-search",
    "id": "first-last-occurrence-range",
@@ -770,11 +325,6 @@
    }
   }
  ],
- "dropped": [],
- "reviews_done": [
-  "backtracking",
-  "bit-manipulation"
- ],
  "reviews_missing": [
   "arrays-hashing",
   "binary-search",
@@ -792,5 +342,125 @@
   "tries",
   "two-pointers",
   "union-find"
- ]
+ ],
+ "accepted_by_pattern": {
+  "arrays-hashing": [
+   "group-anagrams",
+   "top-k-frequent-elements",
+   "river-gauge-subarray-sum-k",
+   "longest-consecutive-sequence",
+   "first-missing-positive",
+   "substring-concatenation-all-words"
+  ],
+  "backtracking": [
+   "phone-letter-combos-sorted",
+   "balanced-parentheses-strings",
+   "palindrome-partitions-sorted",
+   "restore-ip-addresses-sorted",
+   "n-queens-count",
+   "partition-k-equal-subsets"
+  ],
+  "binary-search": [
+   "integer-square-root",
+   "search-rotated-array",
+   "find-peak-element",
+   "median-two-sorted-arrays",
+   "kth-smallest-pair-distance"
+  ],
+  "bit-manipulation": [
+   "add-without-plus",
+   "single-number-of-three",
+   "range-bitwise-and",
+   "max-pairwise-xor",
+   "smallest-skill-team-size"
+  ],
+  "dp-1d": [
+   "min-cost-climbing-stairs",
+   "maximum-subarray",
+   "decode-ways",
+   "word-break-segmentation",
+   "longest-valid-parentheses-dp"
+  ],
+  "dp-2d": [
+   "minimum-path-sum",
+   "triangle-minimum-total",
+   "maximal-square",
+   "coin-combination-count",
+   "longest-common-substring",
+   "distinct-subsequence-count"
+  ],
+  "graphs": [
+   "keys-and-rooms",
+   "pacific-atlantic-water-flow",
+   "is-graph-bipartite",
+   "shortest-clear-path-binary-matrix",
+   "word-transformation-ladder",
+   "shortest-path-with-wall-breaks"
+  ],
+  "heaps": [
+   "min-cost-connect-ropes",
+   "top-k-frequent-elements",
+   "task-cooldown-intervals",
+   "reorganize-string-no-adjacent",
+   "running-median-stream"
+  ],
+  "intervals": [
+   "can-attend-all-meetings",
+   "summary-ranges-from-sorted",
+   "min-interval-removals",
+   "interval-list-intersections",
+   "min-intervals-to-cover-range"
+  ],
+  "linked-list": [
+   "dedupe-sorted-chain-in-place",
+   "remove-kth-from-end-two-pointer",
+   "add-reversed-digit-chains",
+   "rotate-chain-right",
+   "interleave-fold-reorder"
+  ],
+  "prefix-sum": [
+   "range-addition-updates",
+   "subarrays-divisible-by-k",
+   "longest-balanced-binary-subarray",
+   "product-except-self",
+   "submatrix-sum-target-count",
+   "shortest-subarray-at-least-k"
+  ],
+  "sliding-window": [
+   "contains-duplicate-within-k",
+   "longest-subarray-k-distinct",
+   "find-anagram-start-indices",
+   "sliding-window-maximum",
+   "minimum-window-substring"
+  ],
+  "stack": [
+   "remove-adjacent-duplicates",
+   "backspace-string-compare",
+   "decode-nested-string",
+   "asteroid-collision",
+   "largest-rectangle-histogram",
+   "basic-calculator-parens"
+  ],
+  "topological-sort": [
+   "minimum-vertices-to-reach-all",
+   "validate-task-order",
+   "eventual-safe-nodes",
+   "unique-sequence-reconstruction",
+   "alien-alphabet-from-words",
+   "project-completion-time"
+  ],
+  "trees": [
+   "validate-bst-ordering",
+   "bst-lowest-common-ancestor",
+   "tree-right-side-view",
+   "tree-diameter-edges",
+   "max-branch-path-sum"
+  ],
+  "tries": [
+   "wildcard-word-matching"
+  ],
+  "two-pointers": [
+   "max-area-between-walls"
+  ]
+ }
 }

@@ -2,7 +2,7 @@
   "id": "basic-calculator-parens",
   "pattern": "stack",
   "title": "Basic Calculator with Parentheses",
-  "statement": "You are given a string expr holding a valid arithmetic expression built from non-negative multi-digit integers, the binary operators '+' and '-', matched parentheses, and spaces. A minus sign may also appear as a unary negation immediately after an opening parenthesis or at the very start of the expression (for example '-(2 + 3)' or '(1 - (-4))'). Evaluate the expression and return its integer value. Scan left to right keeping a running result and a current sign; when you reach '(' remember the result and sign accumulated so far and start a fresh sub-total, and when you reach ')' fold the finished sub-total back into the remembered context. Return a single Python int. If expr is empty or contains only spaces, return 0. Examples: '1 - (2 + 3) + 4' returns 0, and '2 - (3 - 4)' returns 3.",
+  "statement": "You are given a string expr holding a valid arithmetic expression built from non-negative multi-digit integers, the binary operators '+' and '-', matched parentheses, and spaces. A minus sign may also appear as a unary negation immediately after an opening parenthesis or at the very start of the expression (for example '-(2 + 3)' or '(1 - (-4))'). Evaluate the expression and return its integer value as a single Python int. If expr is empty or contains only spaces, return 0. Examples: '1 - (2 + 3) + 4' returns 0, and '2 - (3 - 4)' returns 3.",
   "difficulty": "hard",
   "function_name": "evaluate_expression",
   "starter_code": "def evaluate_expression(expr):\n    # your code here\n    pass\n",

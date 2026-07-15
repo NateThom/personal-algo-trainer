@@ -18,7 +18,7 @@
     {"args": ["dogdogdogcatdog", ["dog", "dog", "cat"]], "expected": [3, 6]}
   ],
   "hints": [
-    "All words share one length, so any candidate window splits cleanly into fixed-size chunks. What hash-based structure compares two collections where duplicates matter?",
+    "All words share one length, so any candidate window splits cleanly into fixed-size chunks. What compact summary of a window lets you compare it against the target collection when order is irrelevant but duplicate counts still matter?",
     "Build a Counter of words once. A window starting at i matches iff the Counter of its word-length chunks equals that target Counter — a plain set loses the duplicate counts.",
     "Loop i over every index 0..len(s)-total (not just multiples of word_len). For each i, slice the window into len(words) chunks of word_len, build Counter(chunks), and append i when it equals Counter(words)."
   ]

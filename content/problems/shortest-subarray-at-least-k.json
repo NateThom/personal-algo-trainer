@@ -18,7 +18,7 @@
     {"args": [[-28, 81, -20, 28, -29], 89], "expected": 3}
   ],
   "hints": [
-    "Range sums over a static array beg for a prefix array; the condition sum(i..j) >= k becomes prefix[j+1] - prefix[i] >= k. What lets you find, for each end, the best start fast?",
+    "Rewrite sum(i..j) >= k as a difference of two cumulative totals, one at each endpoint, so any subarray sum is a single subtraction. For a fixed end position, what lets you find the best start quickly?",
     "Sweep the prefix array with a deque of candidate start indices kept in increasing prefix-value order; a smaller-and-later prefix always dominates a larger-and-earlier one, so pop those from the back.",
     "For each j: while the front start satisfies prefix[j] - prefix[front] >= k, record j - front and pop the front (it can never give a shorter answer again); then pop from the back while prefix[back] >= prefix[j] before appending j. Answer is the smallest length seen, else -1."
   ]

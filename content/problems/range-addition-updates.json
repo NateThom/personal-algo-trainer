@@ -1,9 +1,9 @@
 {
   "id": "range-addition-updates",
   "pattern": "prefix-sum",
-  "title": "Range Addition (Difference Array)",
+  "title": "Apply Range Increment Updates",
   "difficulty": "easy",
-  "statement": "You are given an integer n and a list of updates. Start with an array of length n whose entries are all 0. Each update is a list [start, end, inc] with 0-indexed, inclusive bounds (0 <= start <= end < n); applying it adds inc to every index from start to end. Apply all updates in the given order and return the final array as a list of n integers in index order (index 0 first). If updates is empty, return the all-zeros array of length n. Solve it with a difference array: for each update record +inc at start and -inc at end+1, then take a single running (prefix-sum) pass to reconstruct the result.",
+  "statement": "You are given an integer n and a list of updates. Start with an array of length n whose entries are all 0. Each update is a list [start, end, inc] with 0-indexed, inclusive bounds (0 <= start <= end < n); applying it adds inc to every index from start to end. Apply all updates in the given order and return the final array as a list of n integers in index order (index 0 first). If updates is empty, return the all-zeros array of length n.",
   "function_name": "apply_range_updates",
   "starter_code": "def apply_range_updates(n, updates):\n    # your code here\n    pass\n",
   "reference_solution": "def apply_range_updates(n, updates):\n    diff = [0] * (n + 1)\n    for start, end, inc in updates:\n        diff[start] += inc\n        diff[end + 1] -= inc\n    result = []\n    running = 0\n    for i in range(n):\n        running += diff[i]\n        result.append(running)\n    return result\n",

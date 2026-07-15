@@ -18,7 +18,7 @@
     {"args": [[6], [8]], "expected": [4, 1]}
   ],
   "hints": [
-    "You are adding two numbers digit by digit from the least significant end; which linked-list building trick lets you grow the result without special-casing the first node?",
+    "The digits already arrive least-significant-first, and the two lists can differ in length. How could you produce output positions one at a time, left to right, while a leftover 'ten' from one position spills into the next?",
     "Walk both lists together with a running carry, and keep going until BOTH lists are exhausted AND the carry is zero, treating a missing digit as 0.",
     "Use a dummy head: at each step compute da + db + carry, append (total % 10) as a new node, set carry = total // 10, and after the loop remember that a leftover carry of 1 must still become a final node (e.g. [5] + [5] -> [0, 1])."
   ]

@@ -18,7 +18,7 @@
     {"args": [[[0, 1, 1], [1, 1, 1], [1, 1, 0]], 4], "expected": 4}
   ],
   "hints": [
-    "This is a shortest-path-in-an-unweighted-grid question, so BFS by levels gives the answer in moves — but a plain cell is no longer the full picture. What extra fact do you carry alongside (row, col)?",
+    "This is a shortest-path-in-an-unweighted-grid question, so exploring outward level by level gives the answer in moves — but a plain cell is no longer the full picture. What extra fact do you carry alongside (row, col)?",
     "The state is (row, col, eliminations_remaining). Two arrivals at the same cell are genuinely different if they have different budgets left, so track the best (largest) remaining budget ever seen per cell and only re-enqueue when you arrive with strictly more budget than before.",
     "Seed the queue with the start cell and k minus its own value (return -1 if that is negative). Each BFS level increments the step count; for every in-bounds neighbor compute nrem = rem - grid[nr][nc], skip if nrem < 0, return the current step count the moment the neighbor is the bottom-right cell, and otherwise enqueue it only if nrem beats best[nr][nc]."
   ]

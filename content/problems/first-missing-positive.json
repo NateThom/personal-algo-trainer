@@ -2,7 +2,7 @@
   "id": "first-missing-positive",
   "pattern": "arrays-hashing",
   "title": "First Missing Positive",
-  "difficulty": "hard",
+  "difficulty": "medium",
   "statement": "A ticketing kiosk hands out badge numbers starting from 1, but its log nums is corrupted: it is an integer array that may contain zeros, negative values, and duplicate entries, in no particular order. Return the smallest positive integer (1 or greater) that does NOT appear anywhere in nums. If nums is empty, or contains no positive values at all, the answer is 1. If every integer from 1 up to some k appears, the answer is the first gap after them; in particular, if all of 1..len(nums) are present the answer is len(nums) + 1. The function returns a single int. Aim for O(n) time: note that the answer can never exceed len(nums) + 1, so you never need to look at candidates beyond that.",
   "function_name": "first_missing_positive",
   "starter_code": "def first_missing_positive(nums):\n    # your code here\n    pass\n",

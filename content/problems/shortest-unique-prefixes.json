@@ -3,7 +3,7 @@
   "pattern": "tries",
   "title": "Shortest Unique Prefix for Each Word",
   "difficulty": "medium",
-  "statement": "You are given a list of distinct lowercase words in which no word is a prefix of another word. For each word, its shortest unique prefix is the shortest leading substring that no other word in the list begins with. Return a list of these shortest unique prefixes, one per input word, in the same order as the input. Because the words are distinct and none is a prefix of another, every word always has such a prefix (in the worst case the whole word itself). Build a trie in which each node records how many of the input words pass through it, then for each word walk down the trie and emit the prefix ending at the first node whose pass count equals 1. If the input list is empty, return an empty list.",
+  "statement": "You are given a list of distinct lowercase words in which no word is a prefix of another word. For each word, its shortest unique prefix is the shortest leading substring that no other word in the list begins with. Return a list of these shortest unique prefixes, one per input word, in the same order as the input. Because the words are distinct and none is a prefix of another, every word always has such a prefix (in the worst case the whole word itself). If the input list is empty, return an empty list.",
   "function_name": "shortest_unique_prefixes",
   "starter_code": "def shortest_unique_prefixes(words):\n    # your code here\n    pass\n",
   "reference_solution": "def shortest_unique_prefixes(words):\n    root = {\"count\": 0, \"children\": {}}\n    for word in words:\n        node = root\n        for ch in word:\n            if ch not in node[\"children\"]:\n                node[\"children\"][ch] = {\"count\": 0, \"children\": {}}\n            node = node[\"children\"][ch]\n            node[\"count\"] += 1\n    result = []\n    for word in words:\n        node = root\n        prefix_chars = []\n        for ch in word:\n            node = node[\"children\"][ch]\n            prefix_chars.append(ch)\n            if node[\"count\"] == 1:\n                break\n        result.append(\"\".join(prefix_chars))\n    return result\n",
@@ -14,7 +14,7 @@
     {"args": [["zebra", "zone", "zip"]], "expected": ["ze", "zo", "zi"]},
     {"args": [["north", "nice", "note", "nap"]], "expected": ["nor", "ni", "not", "na"]},
     {"args": [["ba", "be", "bi", "bo", "bu"]], "expected": ["ba", "be", "bi", "bo", "bu"]},
-    {"args": [["stack", "star", "start"]], "expected": ["stac", "star", "start"]},
+    {"args": [["stack", "star", "strap"]], "expected": ["stac", "star", "str"]},
     {"args": [["a", "b", "c"]], "expected": ["a", "b", "c"]}
   ],
   "hints": [
