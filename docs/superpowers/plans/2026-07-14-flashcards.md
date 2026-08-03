@@ -1136,7 +1136,7 @@ Expected: Server starts, logs listening on `http://127.0.0.1:8000`.
 - [ ] **Step 3: Manually exercise the feature in a browser**
 
 Visit `http://127.0.0.1:8000/flashcards`:
-- Confirm the due count shows `72 due` (18 patterns × 4 card types) on a fresh db — nothing is gated by problem-solving progress, so every pattern shows up immediately.
+- Confirm the due count shows `72 due` (18 patterns × 4 card types) on a fresh db — nothing is gated by problem-solving progress, so every pattern shows up immediately. (Note: now 90 due = 18 patterns × 5 card types as of the 2026-08-03 lesson-card addition.)
 - Click **Study**. Step through at least one card of each type:
   - **Recognition**: click an option, confirm correct/incorrect feedback appears, click Next.
   - **Complexity**: click "Show answer", confirm time/space text renders, click a rating button.

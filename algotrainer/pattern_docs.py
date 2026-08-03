@@ -1,7 +1,7 @@
 """Loader for the pattern reference library (content/patterns/<id>.json).
 Pure: reads JSON docs, validates shape, skips invalid ones. The registry
 (patterns.py) supplies name/order/confusable; these docs supply the teaching
-content (summary, recognition signals, complexity, template, gotchas, examples)."""
+content (summary, lesson, recognition signals, complexity, template, gotchas, examples)."""
 import json
 from pathlib import Path
 

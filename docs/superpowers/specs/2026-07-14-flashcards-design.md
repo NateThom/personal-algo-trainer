@@ -66,7 +66,9 @@ availability to an unrelated track's progress.
 - No gamification (streaks, XP, badges).
 - No cross-device sync/export.
 - No new-cards-per-day pacing cap — the full 72-card deck is open from day one; revisit with a
-  standard SRS new-card limit if that volume proves overwhelming in practice.
+  standard SRS new-card limit if that volume proves overwhelming in practice. (Note: updated to
+  90 cards = 18 patterns × 5 card types after the 2026-08-03 lesson-card addition — see
+  docs/superpowers/specs/2026-08-03-lesson-card-design.md)
 
 ### Rationale for narrow scope
 Zero new content debt (all four card types derive from data that already exists), and a tight
