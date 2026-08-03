@@ -288,6 +288,8 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
         else:
             if body.rating is None:
                 raise HTTPException(status_code=400, detail="rating is required")
+            if body.rating not in RATING_BY_NAME.values():
+                raise HTTPException(status_code=400, detail="rating is out of range")
             rating = body.rating
             correct = None
         now = datetime.now(timezone.utc)

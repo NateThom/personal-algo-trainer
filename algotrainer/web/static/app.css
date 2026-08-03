@@ -99,3 +99,4 @@ main.doc .code-template { background: #0f0f23; color: #6be675; padding: 12px 14p
 .diff-line.diff-reference { color: #ff8a80; }
 .diff-line.diff-typed { color: #6be675; }
 #session-progress { font-size: 0.85rem; color: #666; }
+.mtrap { color: #c62828; }

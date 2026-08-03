@@ -1,5 +1,6 @@
 from fastapi.testclient import TestClient
 
+from algotrainer.store import Store
 from algotrainer.web.app import create_app
 
 
@@ -124,6 +125,19 @@ def test_review_does_not_touch_mastery_or_pattern_card(tmp_path):
     # no graded_attempt rows were written by the flashcard review, so the
     # mastery table (which reads graded_attempt) stays empty
     assert dash["patterns"] == []
+    # nor did the review write a pattern_card row: that table feeds the
+    # mastery gate's stability signal, and flashcard reviews must never be
+    # able to "purchase apparent mastery" through it (design doc §1, §8)
+    store = Store(tmp_path / "t.db")
+    assert store.get_pattern_card("arrays-hashing") is None
+
+
+def test_review_flip_card_with_out_of_range_rating_is_400(tmp_path):
+    c = _client(tmp_path)
+    r = c.post("/api/flashcards/review", json={
+        "pattern": "arrays-hashing", "card_type": "complexity", "rating": 99,
+    })
+    assert r.status_code == 400
 
 
 def test_diff_endpoint_returns_ops(tmp_path):
