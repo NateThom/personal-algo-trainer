@@ -1,6 +1,7 @@
 {
   "id": "binary-search",
   "summary": "Repeatedly halve a monotonic search space by comparing the midpoint against a condition, discarding the half that cannot contain the answer, to find a target or boundary in logarithmic time.",
+  "lesson": "Binary search works on any answer space where you can ask a yes/no question and the answers are monotonic -- all the \"no\"s come before all the \"yes\"es (or vice versa). Instead of checking every candidate, you check the midpoint and use its answer to throw away half the remaining space, repeating until one candidate remains. This is why it isn't limited to \"find X in a sorted array\" -- any problem where you can binary-search on the answer itself (like \"the minimum capacity that lets you finish shipping in D days\") fits the same shape. Each halving takes it from O(n) linear scanning down to O(log n).",
   "recognize_when": [
     "The input is sorted, or the answer space is monotonic even if the input array isn't (binary search on the answer)",
     "You need to find an exact value, insertion point, or boundary (first/last occurrence) faster than O(n)",

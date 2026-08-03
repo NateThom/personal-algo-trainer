@@ -1,6 +1,7 @@
 {
   "id": "stack",
   "summary": "Use a LIFO stack to track the most recent unresolved item (an opening bracket, a smaller/larger element, a pending operation) so it can be matched or resolved in O(1) when the right condition appears later.",
+  "lesson": "A stack is useful whenever the thing you need to resolve later is \"whatever is most recently still open\" -- an unmatched opening bracket, the last unresolved comparison, the most recent unfinished operation. You push items as you encounter them and pop them off once the matching condition arrives, so each item is handled in the reverse order it was seen (LIFO). The monotonic stack variant takes this further: by only keeping elements on the stack that could still be useful (discarding anything a new, better element makes irrelevant), you can answer \"next greater element\" style questions for the whole array while still only pushing and popping each element once -- giving amortized O(n) despite the nested-looking while loop.",
   "recognize_when": [
     "The problem involves matching pairs like brackets, parentheses, or tags",
     "You need the 'next greater/smaller element' or 'nearest previous element with property X'",

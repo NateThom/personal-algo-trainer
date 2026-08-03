@@ -1,6 +1,7 @@
 {
   "id": "trees",
   "summary": "Traverse or transform a binary (or n-ary) tree using recursive DFS (pre/in/post-order) or iterative BFS (level order) to compute properties, search, or rebuild structure.",
+  "lesson": "Trees are graphs with a fixed hierarchy (a single root, no cycles), which means most tree problems decompose naturally: the answer for a node is defined in terms of the answers for its children. That's why recursive DFS (compute left, compute right, combine) is the default tool -- height, sum, balance, and lowest-common-ancestor problems all follow this same \"solve the subtree, combine with the current node\" shape. BFS (level order, via a queue) is what you reach for instead whenever the question is actually about levels or \"shortest path\" in an unweighted tree, since DFS doesn't naturally expose that structure.",
   "recognize_when": [
     "Input is explicitly a binary tree / BST / n-ary tree with node.left, node.right (or children)",
     "You need a property defined recursively on subtrees (height, sum, balance, LCA)",

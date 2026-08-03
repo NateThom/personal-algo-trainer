@@ -1,6 +1,7 @@
 {
   "id": "bit-manipulation",
   "summary": "Use bitwise operators (XOR, AND, OR, shifts) to exploit binary structure for O(1) per-element tricks, avoiding extra space that a hash set or sort would require.",
+  "lesson": "Every integer is already a sequence of bits, so bitwise operators let you inspect or transform that structure directly instead of building an auxiliary data structure. XOR is the standout trick: it cancels a value with itself (a ^ a = 0) and is commutative, so XOR-ing a list where everything appears in pairs except one element isolates that unpaired element for free. AND/OR/shift operations let you test, set, clear, or count individual bits in O(1). The appeal is almost always space: where a hash set solution needs O(n) extra memory, the bit trick often needs none.",
   "recognize_when": [
     "The problem involves finding a single/odd-occurring element among duplicates (XOR cancels pairs)",
     "You need to count set bits, check powers of two, or manipulate individual bits of a number",

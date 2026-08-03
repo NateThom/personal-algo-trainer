@@ -1,6 +1,7 @@
 {
   "id": "dp-1d",
   "summary": "Build a bottom-up 1-D table where each entry is computed from a small fixed number of previous entries via a recurrence, avoiding exponential recomputation from naive recursion.",
+  "lesson": "Dynamic programming exists because some recursive problems keep re-solving the exact same smaller subproblem over and over -- naive Fibonacci recomputes fib(n-2) exponentially many times. 1-D DP fixes this by storing each subproblem's answer in a table indexed by a single position (dp[i]), and filling that table from the smallest index up, so each entry is computed once from a few already-known earlier entries. You've turned exponential recursion into a linear pass. The pattern to look for is a recurrence: can you describe the answer at position i purely in terms of answers at smaller positions?",
   "recognize_when": [
     "The problem asks for a count, min/max, or yes/no answer that depends on smaller versions of the same problem (e.g. dp[i] depends on dp[i-1], dp[i-2])",
     "A brute-force recursive solution has overlapping subproblems (recomputes the same state repeatedly)",

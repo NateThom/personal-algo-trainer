@@ -7,7 +7,7 @@ from pathlib import Path
 
 PATTERN_DOCS_DIR = Path(__file__).resolve().parent.parent / "content" / "patterns"
 
-_REQUIRED = ("id", "summary", "recognize_when", "complexity", "template")
+_REQUIRED = ("id", "summary", "lesson", "recognize_when", "complexity", "template")
 
 
 def _valid(doc: dict) -> bool:

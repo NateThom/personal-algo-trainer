@@ -1,6 +1,7 @@
 {
   "id": "dp-2d",
   "summary": "Fill a 2-D table indexed by two positions (two sequences, or a grid's rows/columns) where each cell is derived from neighboring cells, capturing pairwise or grid-based subproblem overlap.",
+  "lesson": "2-D DP is the same idea as 1-D DP, but the state needs two coordinates instead of one -- most often because you're comparing two sequences (dp[i][j] = best answer using the first i characters of A and the first j characters of B) or moving through a grid. Each cell is filled from a small number of neighboring cells (usually the cell above, to the left, or diagonally up-left), so once the first row and column are seeded, the rest fills in one pass. This is the pattern behind \"align these two strings\" problems like edit distance and longest common subsequence, and grid-path problems like counting unique paths. The mental model: if a single index doesn't fully describe \"where you are\" in the problem, you probably need a second one.",
   "recognize_when": [
     "The problem compares or aligns two sequences (strings/arrays), like matching, editing, or subsequence problems",
     "You're moving through a grid and need the best path, count of paths, or min cost to reach each cell",

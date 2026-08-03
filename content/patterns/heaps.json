@@ -1,6 +1,7 @@
 {
   "id": "heaps",
   "summary": "Use a binary heap (priority queue) to repeatedly access the smallest/largest element in O(log n), ideal for top-K, merging, and greedy-by-priority problems.",
+  "lesson": "A heap (priority queue) keeps its smallest (or largest) element accessible in O(1) while still supporting O(log n) insertion and removal -- it's the data structure for \"give me the next-most-important item\" without paying for a full sort. That makes it the natural fit whenever a problem asks for the top-K, K-th largest, or repeatedly needs the current minimum/maximum as new elements stream in over time. Merging K sorted lists is a heap problem in disguise: keep one candidate from each list in the heap and always pull the smallest. The key efficiency win over sorting is that a heap only pays O(log k) per operation for a heap of size k, rather than O(n log n) to sort everything up front.",
   "recognize_when": [
     "Problem asks for the top-K, K-th largest/smallest, or K closest elements",
     "You need to repeatedly extract the current min/max as elements are added over time (streaming median, scheduling)",

@@ -1,6 +1,7 @@
 {
   "id": "prefix-sum",
   "summary": "Precompute cumulative sums (or counts) so that the sum of any subrange can be retrieved in O(1), turning repeated range-sum queries or subarray-sum-equals-target problems into a single pass.",
+  "lesson": "If you're going to ask \"what's the sum of this subrange\" many times over an array that doesn't change, it's wasteful to re-add the same numbers on every query. Prefix sum precomputes a running total once, so the sum of any subrange becomes a single subtraction: sum(i, j) = prefix[j] - prefix[i]. The same idea generalizes to counting: if you're looking for subarrays that sum to a target, you can reframe the condition as \"has this exact prefix value occurred before,\" and answer it with a hashmap in one pass instead of checking every subarray. It trades one O(n) setup pass for O(1) answers afterward.",
   "recognize_when": [
     "You need many range-sum queries over an otherwise static array",
     "The problem asks for the number/length of subarrays whose sum equals (or is divisible by) some target",

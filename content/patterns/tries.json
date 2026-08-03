@@ -1,6 +1,7 @@
 {
   "id": "tries",
   "summary": "Store strings in a tree of characters so that shared prefixes are shared nodes, enabling fast prefix search, autocomplete, and word lookup.",
+  "lesson": "A trie stores a set of strings as a tree of characters, where any two words sharing a prefix also share the tree nodes for that prefix. Looking up a word or checking whether any word starts with a given prefix costs only O(L), where L is the length of the word or prefix being checked -- completely independent of how many words are stored, unlike scanning a word list. This makes it the right structure whenever a problem needs repeated prefix queries (autocomplete, dictionary word search) against a fixed or growing set of strings. The key structural detail is the is_word flag on each node -- it's what distinguishes \"this prefix exists\" from \"this exact word was inserted.\"",
   "recognize_when": [
     "Problem involves a dictionary of words plus prefix queries (starts-with, autocomplete)",
     "You need to repeatedly search for words or prefixes among a large, static or growing set of strings",

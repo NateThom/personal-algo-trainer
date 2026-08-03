@@ -1,6 +1,7 @@
 {
   "id": "linked-list",
   "summary": "Manipulate nodes via pointers instead of indices, using dummy heads and multi-pointer techniques (fast/slow, prev/curr) to reverse, merge, or detect structure in O(1) extra space.",
+  "lesson": "A linked list has no indices -- only pointers -- so problems here are about manipulating those pointers directly rather than array positions. Common techniques include the fast/slow pointer pair (fast moves two nodes per step, slow moves one; when fast reaches the end, slow is at the midpoint -- and if there's a cycle, they eventually meet), and using a dummy head node so you never need special-case logic for \"the answer's first node might change.\" Because you can't jump backward, most operations (reversal, merging) are done by carefully re-wiring .next pointers while walking forward once. The payoff for this extra care is O(1) space -- no array copy needed to reorder or transform the list.",
   "recognize_when": [
     "Problem is phrased in terms of a singly or doubly linked list, not an array",
     "You need to reverse, reorder, or splice nodes in place without extra storage",

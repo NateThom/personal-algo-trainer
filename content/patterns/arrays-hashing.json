@@ -1,6 +1,7 @@
 {
   "id": "arrays-hashing",
   "summary": "Use a hash map or hash set to trade space for speed, turning O(n) or O(n^2) linear scans/lookups into O(1) average-case membership checks and frequency counts.",
+  "lesson": "A hash map (or hash set) is a lookup table: it lets you ask \"have I seen this before?\" or \"what index did this appear at?\" in constant time, instead of scanning the whole array again. The core trick is trading memory for speed -- you spend O(n) space remembering what you've seen so you never have to re-scan. That turns problems that look like they need nested loops (compare every pair) into a single pass: for each element, check the map before adding to it. It's the workhorse pattern for counting, deduplication, and complement-lookup problems like Two Sum.",
   "recognize_when": [
     "You need to check membership, count occurrences, or find duplicates in a collection",
     "A brute force solution repeatedly scans the array to find a complement or match (e.g. Two Sum)",

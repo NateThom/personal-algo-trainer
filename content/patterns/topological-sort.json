@@ -1,6 +1,7 @@
 {
   "id": "topological-sort",
   "summary": "Order the nodes of a directed acyclic graph so every edge points from an earlier node to a later one, typically via Kahn's BFS algorithm that repeatedly removes zero-in-degree nodes.",
+  "lesson": "Topological sort answers \"in what order can these tasks happen, given that some must come before others?\" It only works on a directed acyclic graph, because a cycle would mean two tasks depend on each other, which has no valid order. Kahn's algorithm builds the order by repeatedly picking off any node with zero remaining prerequisites (in-degree zero), removing its outgoing edges, and repeating -- nodes that become prerequisite-free as a result get added to the queue next. If you run out of nodes to process before every node is ordered, that's proof a cycle exists somewhere in the remaining graph.",
   "recognize_when": [
     "The problem involves prerequisites, dependencies, or 'must happen before' relationships",
     "You're given a directed graph and asked for a valid build/execution/course order",

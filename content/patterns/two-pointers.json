@@ -1,6 +1,7 @@
 {
   "id": "two-pointers",
   "summary": "Use two indices moving through a sequence (toward each other, or both forward at different speeds) to avoid nested loops when the data is sorted or has a structural property to exploit.",
+  "lesson": "Two pointers replaces a nested-loop pairwise check with two indices that walk through the data together, using the fact that the data is sorted (or has some other structural property) to know which pointer to move next without ever backtracking. In the classic \"pointers moving toward each other\" form, comparing the sum at both ends against a target tells you unambiguously whether to move the left pointer up or the right pointer down -- you never need to reconsider a pair you've already ruled out. The fast/slow variant (both pointers moving forward at different speeds) is the same underlying idea applied to linked lists, for finding midpoints or detecting cycles. Either way, the win is turning an O(n^2) pairwise scan into a single O(n) pass.",
   "recognize_when": [
     "The input array or linked list is sorted (or can be sorted without losing needed info)",
     "You need to find a pair/triplet satisfying a sum or comparison condition",

@@ -4,7 +4,7 @@ from algotrainer.pattern_docs import load_all_pattern_docs, load_pattern_doc
 from algotrainer.patterns import PATTERNS
 
 VALID = {
-    "id": "x", "summary": "s", "recognize_when": ["a"],
+    "id": "x", "summary": "s", "lesson": "l", "recognize_when": ["a"],
     "complexity": {"time": "O(n)", "space": "O(1)", "notes": "n"},
     "template": "def f():\n    pass\n", "gotchas": ["g"], "examples": ["e"],
 }
@@ -39,3 +39,9 @@ def test_every_registry_pattern_has_a_valid_doc():
     registry_ids = {p.id for p in PATTERNS}
     missing = registry_ids - set(docs)
     assert not missing, f"patterns without a valid reference doc: {sorted(missing)}"
+
+
+def test_doc_without_lesson_is_invalid(tmp_path):
+    missing_lesson = {k: v for k, v in VALID.items() if k != "lesson"}
+    (tmp_path / "no-lesson.json").write_text(json.dumps(missing_lesson))
+    assert load_pattern_doc("no-lesson", tmp_path) is None
