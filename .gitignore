@@ -8,5 +8,6 @@ sessions/*.json
 .env
 .DS_Store
 .superpowers/
+.worktrees/
 *.egg-info/
 content/generated/*.json
