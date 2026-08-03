@@ -3,6 +3,7 @@
 // Built with DOM methods (textContent) for anything derived from pattern-doc
 // free text — same convention as patterns_detail.js.
 let queue = [];
+let studiedCount = 0; // cards fully completed (reviewed/rated) this session
 const docCache = new Map(); // pattern id -> full /api/patterns/<id> doc
 
 function patternIdFromPath() {
@@ -30,7 +31,10 @@ function ratingRow(onRate) {
   for (const [label, value] of [["Again", 1], ["Hard", 2], ["Good", 3], ["Easy", 4]]) {
     const btn = document.createElement("button");
     btn.textContent = label;
-    btn.addEventListener("click", () => onRate(value));
+    btn.addEventListener("click", () => {
+      [...row.children].forEach((b) => (b.disabled = true));
+      onRate(value);
+    });
     row.appendChild(btn);
   }
   return row;
@@ -67,7 +71,10 @@ function renderRecognition(card, body) {
       body.appendChild(feedback);
       const next = document.createElement("button");
       next.textContent = "Next";
-      next.addEventListener("click", advance);
+      next.addEventListener("click", () => {
+        studiedCount++;
+        advance();
+      });
       body.appendChild(next);
     });
     options.appendChild(btn);
@@ -111,6 +118,7 @@ function renderFlipCard(card, body, reveal) {
     reveal(doc, body);
     body.appendChild(ratingRow(async (rating) => {
       await submitReview(card, { rating });
+      studiedCount++;
       advance();
     }));
   });
@@ -165,6 +173,7 @@ function renderTemplate(card, body) {
     body.appendChild(renderDiff(ops));
     body.appendChild(ratingRow(async (rating) => {
       await submitReview(card, { rating });
+      studiedCount++;
       advance();
     }));
   });
@@ -192,7 +201,7 @@ function advance() {
     const body = clearBody();
     const done = document.createElement("p");
     done.className = "lede";
-    done.textContent = "Session complete.";
+    done.textContent = `Session complete — ${studiedCount} card${studiedCount === 1 ? "" : "s"} studied.`;
     body.appendChild(done);
     document.getElementById("session-progress").textContent = "";
     return;
@@ -204,6 +213,7 @@ async function startSession() {
   const filterPattern = patternIdFromPath();
   const { cards } = await (await fetch("/api/flashcards/due")).json();
   queue = filterPattern ? cards.filter((c) => c.pattern === filterPattern) : cards;
+  studiedCount = 0;
   document.getElementById("due-count").textContent = `${queue.length} due`;
   document.getElementById("start-btn").hidden = queue.length === 0;
   document.getElementById("empty-note").hidden = queue.length > 0;
