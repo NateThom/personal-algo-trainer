@@ -236,6 +236,7 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
         return {
             "id": meta.id, "name": meta.name, "order": meta.order,
             "summary": doc["summary"] if doc else "",
+            "lesson": doc["lesson"] if doc else "",
             "recognize_when": doc["recognize_when"] if doc else [],
             "complexity": doc["complexity"] if doc else {},
             "template": doc["template"] if doc else "",

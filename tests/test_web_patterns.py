@@ -53,3 +53,10 @@ def test_api_pattern_detail_404_for_unknown(tmp_path):
     c = _client(tmp_path)
     r = c.get("/api/patterns/does-not-exist")
     assert r.status_code == 404
+
+
+def test_api_pattern_detail_includes_lesson(tmp_path):
+    c = _client(tmp_path)
+    body = c.get("/api/patterns/sliding-window").json()
+    assert isinstance(body["lesson"], str)
+    assert body["lesson"].strip() != ""
