@@ -94,6 +94,12 @@ function revealComplexity(doc, body) {
   }
 }
 
+function revealLesson(doc, body) {
+  const p = document.createElement("p");
+  p.textContent = doc.lesson;
+  body.appendChild(p);
+}
+
 function revealGotchas(doc, body) {
   const ul = document.createElement("ul");
   for (const g of doc.gotchas) {
@@ -186,6 +192,8 @@ function renderCard(card) {
     `${queue.length + 1} card${queue.length === 0 ? "" : "s"} remaining`;
   if (card.card_type === "recognition") {
     renderRecognition(card, body);
+  } else if (card.card_type === "lesson") {
+    renderFlipCard(card, body, revealLesson);
   } else if (card.card_type === "complexity") {
     renderFlipCard(card, body, revealComplexity);
   } else if (card.card_type === "gotcha") {
