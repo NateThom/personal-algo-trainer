@@ -48,6 +48,13 @@ CREATE TABLE IF NOT EXISTS graded_attempt (
     self_explanation_score INTEGER,
     feedback TEXT NOT NULL DEFAULT ''
 );
+CREATE TABLE IF NOT EXISTS flashcard (
+    pattern   TEXT NOT NULL,
+    card_type TEXT NOT NULL,
+    card_json TEXT NOT NULL,
+    next_due  TEXT NOT NULL,
+    PRIMARY KEY (pattern, card_type)
+);
 """
 
 
@@ -178,6 +185,34 @@ class Store:
             )
             self._conn.commit()
 
+    def get_flashcard(self, pattern: str, card_type: str) -> str | None:
+        with self._lock:
+            row = self._conn.execute(
+                "SELECT card_json FROM flashcard WHERE pattern = ? AND card_type = ?",
+                (pattern, card_type),
+            ).fetchone()
+        return row[0] if row else None
+
+    def save_flashcard(
+        self, pattern: str, card_type: str, card_json: str, next_due: datetime
+    ) -> None:
+        with self._lock:
+            self._conn.execute(
+                "INSERT INTO flashcard(pattern, card_type, card_json, next_due) "
+                "VALUES(?,?,?,?) "
+                "ON CONFLICT(pattern, card_type) DO UPDATE SET "
+                "card_json=excluded.card_json, next_due=excluded.next_due",
+                (pattern, card_type, card_json, _iso(next_due)),
+            )
+            self._conn.commit()
+
+    def all_flashcard_due(self, now: datetime) -> dict[tuple[str, str], datetime]:
+        with self._lock:
+            rows = self._conn.execute(
+                "SELECT pattern, card_type, next_due FROM flashcard"
+            ).fetchall()
+        return {(pat, ctype): datetime.fromisoformat(due) for pat, ctype, due in rows}
+
     def record_graded_attempt(
         self, attempt_id: int, problem_id: str, pattern: str, recall_pattern: str | None,
         hints_used: int, judge_passed: bool, grade: str, complexity_ok: bool | None,
@@ -247,12 +282,15 @@ class Store:
 
     def reset_progress(self) -> None:
         """Wipe all learner progress (cards, attempts, reviews, graded history,
-        pattern cards) in one transaction. Leaves the schema intact; problems and
-        generated variants live in files, not the db, so they are untouched."""
+        pattern cards, flashcards) in one transaction. Leaves the schema intact;
+        problems and generated variants live in files, not the db, so they are
+        untouched."""
         with self._lock:
             try:
                 self._conn.execute("BEGIN")
-                for table in ("card", "attempt", "review", "graded_attempt", "pattern_card"):
+                for table in (
+                    "card", "attempt", "review", "graded_attempt", "pattern_card", "flashcard",
+                ):
                     self._conn.execute(f"DELETE FROM {table}")  # noqa: S608 - fixed table names
                 self._conn.commit()
             except Exception:
