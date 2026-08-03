@@ -7,10 +7,14 @@
   <link rel="stylesheet" href="/static/app.css" />
 </head>
 <body>
-  <header><h1>Flashcards</h1></header>
-  <main class="doc" id="flashcards-body">
-    <p>Coming soon.</p>
+  <header><h1>Flashcards</h1><span id="due-count"></span></header>
+  <main class="doc">
+    <p class="lede" id="empty-note" hidden>No flashcards due right now.</p>
+    <button id="start-btn" type="button" hidden>Study</button>
+    <p id="session-progress"></p>
+    <section id="session-body"></section>
   </main>
   <script src="/static/nav.js"></script>
+  <script src="/static/flashcards.js"></script>
 </body>
 </html>
