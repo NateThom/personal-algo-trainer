@@ -40,6 +40,12 @@ function renderPattern(body, p, nameToId) {
   summary.textContent = p.summary || "No reference doc has been written for this pattern yet.";
   body.appendChild(summary);
 
+  if (p.lesson) {
+    const lesson = document.createElement("p");
+    lesson.textContent = p.lesson;
+    body.appendChild(lesson);
+  }
+
   const studyLink = document.createElement("p");
   const studyA = document.createElement("a");
   studyA.href = `/flashcards/${p.id}`;
