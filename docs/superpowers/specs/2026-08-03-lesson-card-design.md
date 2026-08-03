@@ -40,8 +40,9 @@ plus as reference prose on the existing `/patterns/{id}` page.
 
 ### Explicitly out of scope
 - No changes to the recognition/complexity/template/gotcha card types or their content.
-- No new API routes — `/api/flashcards/due` and `/api/flashcards/review` already iterate
-  `CARD_TYPES` generically and only need the tuple extended (see §4).
+- No new API routes and no changes to `/api/flashcards/due` or `/api/flashcards/review` — both
+  already iterate `CARD_TYPES` generically and only need the tuple extended (see §4). One existing
+  route's response shape does change: `GET /api/patterns/{id}` gains a `lesson` key (see §5).
 - No DB schema migration — `flashcard` is keyed by `(pattern, card_type)` as free-text `TEXT`
   columns; a new `card_type` value needs no table change.
 - No gating/ordering changes to how patterns become available (unchanged: all 18 patterns' cards
@@ -104,7 +105,21 @@ no route changes.
 
 ---
 
-## 5. UI/UX
+## 5. API
+
+`GET /api/patterns/{id}` (`algotrainer/web/app.py`, `pattern_detail` handler) builds its response as
+a hand-picked field-by-field dict, not a passthrough of the doc — so it does *not* automatically
+expose new doc keys the way `/api/flashcards/due` does. It needs one added line,
+`"lesson": doc["lesson"] if doc else ""`, alongside the existing `"summary"` line. Both consumers in
+§6 below (`flashcards.js`'s `fetchDoc`, and `patterns_detail.js`) read `lesson` through this same
+endpoint, so this is a prerequisite for both.
+
+`/api/flashcards/due` and `/api/flashcards/review` need no changes — confirmed in §4, they already
+iterate `CARD_TYPES` generically.
+
+---
+
+## 6. UI/UX
 
 **Flashcard session (`flashcards.js`):** add `revealLesson(doc, body)`, mirroring the existing
 `revealComplexity`/`revealGotchas` functions — renders `doc.lesson` as a single paragraph. Add a
@@ -119,7 +134,7 @@ No new styling needed — reuses existing `.lede`/paragraph/flip-card CSS.
 
 ---
 
-## 6. Content authoring
+## 7. Content authoring
 
 The bulk of this change is writing 18 lesson paragraphs, one per `content/patterns/*.json`. Each
 should:
@@ -134,7 +149,7 @@ Drafted by Claude from each doc's existing `summary`/`recognize_when`/`gotchas`/
 
 ---
 
-## 7. Anki export
+## 8. Anki export
 
 The scratchpad `build_anki_deck.py` script (not committed to the repo — a one-off AnkiConnect
 pusher) gains a fifth note-emission block, mirroring the existing `complexity`/`gotcha`/`template`
@@ -159,15 +174,19 @@ it won't duplicate the recognition/complexity/gotcha/template notes already push
 
 ---
 
-## 8. Testing
+## 9. Testing
 
 Matching existing test-file conventions:
 
+- `tests/test_pattern_docs.py` — `VALID` fixture gains `"lesson"`; new test asserts a doc missing
+  `lesson` is rejected by `load_pattern_doc`.
 - `tests/test_flashcards.py` — `test_card_types_are_the_four_facets` updated to assert the full
   5-member set (`{"lesson", "recognition", "complexity", "template", "gotcha"}`); rename to
   `test_card_types_are_the_five_facets`.
 - `tests/test_web_flashcards.py` — `test_due_cards_include_all_four_types_for_a_pattern` updated to
   expect 5 types and renamed accordingly; due-count comment in the design/plan docs (72 = 18×4)
   becomes 90 = 18×5 wherever it's asserted or documented.
+- `tests/test_web_patterns.py` — new test asserting `GET /api/patterns/{id}` includes a non-empty
+  `lesson` string (see §5).
 - No new test file — `lesson` reuses existing flip-card code paths, so it's covered by extending the
   existing parametrized-style assertions rather than adding new test functions.
