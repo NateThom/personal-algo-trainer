@@ -58,3 +58,84 @@ def test_recognition_card_has_four_options_including_self(tmp_path):
     ids = {opt["id"] for opt in rec["options"]}
     assert "arrays-hashing" in ids
     assert all(opt["name"] for opt in rec["options"])
+
+
+def test_review_recognition_correct_is_marked_correct(tmp_path):
+    c = _client(tmp_path)
+    r = c.post("/api/flashcards/review", json={
+        "pattern": "arrays-hashing", "card_type": "recognition", "selected": "arrays-hashing",
+    })
+    assert r.status_code == 200
+    body = r.json()
+    assert body["correct"] is True
+    assert body["next_due"] is not None
+
+
+def test_review_recognition_incorrect_is_marked_incorrect(tmp_path):
+    c = _client(tmp_path)
+    r = c.post("/api/flashcards/review", json={
+        "pattern": "arrays-hashing", "card_type": "recognition", "selected": "two-pointers",
+    })
+    assert r.status_code == 200
+    assert r.json()["correct"] is False
+
+
+def test_review_recognition_without_selected_is_400(tmp_path):
+    c = _client(tmp_path)
+    r = c.post("/api/flashcards/review", json={
+        "pattern": "arrays-hashing", "card_type": "recognition",
+    })
+    assert r.status_code == 400
+
+
+def test_review_flip_card_requires_rating(tmp_path):
+    c = _client(tmp_path)
+    r = c.post("/api/flashcards/review", json={
+        "pattern": "arrays-hashing", "card_type": "complexity",
+    })
+    assert r.status_code == 400
+
+
+def test_review_flip_card_with_rating_reschedules(tmp_path):
+    c = _client(tmp_path)
+    r = c.post("/api/flashcards/review", json={
+        "pattern": "arrays-hashing", "card_type": "complexity", "rating": 3,
+    })
+    assert r.status_code == 200
+    body = r.json()
+    assert body["next_due"] is not None
+    assert body["correct"] is None
+
+
+def test_review_unknown_card_type_is_404(tmp_path):
+    c = _client(tmp_path)
+    r = c.post("/api/flashcards/review", json={
+        "pattern": "arrays-hashing", "card_type": "nonsense", "rating": 3,
+    })
+    assert r.status_code == 404
+
+
+def test_review_does_not_touch_mastery_or_pattern_card(tmp_path):
+    c = _client(tmp_path)
+    c.post("/api/flashcards/review", json={
+        "pattern": "arrays-hashing", "card_type": "recognition", "selected": "arrays-hashing",
+    })
+    dash = c.get("/api/dashboard").json()
+    # no graded_attempt rows were written by the flashcard review, so the
+    # mastery table (which reads graded_attempt) stays empty
+    assert dash["patterns"] == []
+
+
+def test_diff_endpoint_returns_ops(tmp_path):
+    c = _client(tmp_path)
+    r = c.post("/api/flashcards/diff", json={"pattern": "two-pointers", "code": "left = 0"})
+    assert r.status_code == 200
+    ops = r.json()["ops"]
+    assert isinstance(ops, list)
+    assert len(ops) > 0
+
+
+def test_diff_endpoint_404_for_unknown_pattern(tmp_path):
+    c = _client(tmp_path)
+    r = c.post("/api/flashcards/diff", json={"pattern": "does-not-exist", "code": ""})
+    assert r.status_code == 404

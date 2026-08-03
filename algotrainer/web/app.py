@@ -274,6 +274,35 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
         rng.shuffle(out)
         return {"cards": out}
 
+    @app.post("/api/flashcards/review")
+    def flashcard_review(body: FlashcardReviewBody):
+        if body.card_type not in CARD_TYPES:
+            raise HTTPException(status_code=404, detail="unknown card type")
+        if body.card_type == "recognition":
+            if body.selected is None:
+                raise HTTPException(
+                    status_code=400, detail="selected is required for recognition cards"
+                )
+            rating = grade_recognition(body.selected, body.pattern)
+            correct = body.selected == body.pattern
+        else:
+            if body.rating is None:
+                raise HTTPException(status_code=400, detail="rating is required")
+            rating = body.rating
+            correct = None
+        now = datetime.now(timezone.utc)
+        card_json = store.get_flashcard(body.pattern, body.card_type)
+        new_card_json, next_due, _ = scheduler.review(card_json, rating, now)
+        store.save_flashcard(body.pattern, body.card_type, new_card_json, next_due)
+        return {"next_due": next_due.isoformat(), "correct": correct}
+
+    @app.post("/api/flashcards/diff")
+    def flashcard_diff(body: FlashcardDiffBody):
+        doc = load_pattern_doc(body.pattern)
+        if doc is None:
+            raise HTTPException(status_code=404, detail="unknown pattern")
+        return {"ops": diff_template(doc["template"], body.code)}
+
     @app.get("/api/dashboard")
     def dashboard():
         now = datetime.now(timezone.utc)
