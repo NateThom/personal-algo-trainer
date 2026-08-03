@@ -88,3 +88,14 @@ main.doc .code-template { background: #0f0f23; color: #6be675; padding: 12px 14p
 .confusable-links a, .confusable-links span { background: #f2f2f7; padding: 4px 10px;
   border-radius: 14px; font-size: 0.85rem; text-decoration: none; color: #333; }
 .confusable-links a:hover { background: #e0e0f0; }
+
+/* --- flashcards --- */
+.mcq-options { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.rating-row { display: flex; gap: 8px; margin: 12px 0; }
+.flashcard-code { width: 100%; font-family: ui-monospace, monospace; padding: 8px; }
+.diff-view { background: #0f0f23; color: #eee; padding: 12px 14px; border-radius: 6px;
+  font-family: ui-monospace, monospace; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.diff-line.diff-equal { color: #9aa0c3; }
+.diff-line.diff-reference { color: #ff8a80; }
+.diff-line.diff-typed { color: #6be675; }
+#session-progress { font-size: 0.85rem; color: #666; }

@@ -40,6 +40,13 @@ function renderPattern(body, p, nameToId) {
   summary.textContent = p.summary || "No reference doc has been written for this pattern yet.";
   body.appendChild(summary);
 
+  const studyLink = document.createElement("p");
+  const studyA = document.createElement("a");
+  studyA.href = `/flashcards/${p.id}`;
+  studyA.textContent = "Study this pattern with flashcards →";
+  studyLink.appendChild(studyA);
+  body.appendChild(studyLink);
+
   if (p.recognize_when.length) {
     const sec = section("Recognize when");
     sec.appendChild(bulletList(p.recognize_when));
