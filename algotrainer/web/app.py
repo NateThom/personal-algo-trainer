@@ -1,3 +1,4 @@
+import random
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -10,6 +11,9 @@ from pydantic import BaseModel
 from algotrainer import mastery as mastery_mod
 from algotrainer.composer import compose_order
 from algotrainer.content import DEFAULT_CONTENT_DIR, load_problems
+from algotrainer.flashcards import (
+    CARD_TYPES, build_recognition_card, diff_template, grade_recognition,
+)
 from algotrainer.generated import GENERATED_DIR, load_generated
 from algotrainer.handoff.files import read_verdict, write_session
 from algotrainer.handoff.schema import SessionFile
@@ -44,6 +48,18 @@ class IngestBody(BaseModel):
 class HintBody(BaseModel):
     problem_id: str
     tier: int
+
+
+class FlashcardReviewBody(BaseModel):
+    pattern: str
+    card_type: str
+    rating: int | None = None
+    selected: str | None = None
+
+
+class FlashcardDiffBody(BaseModel):
+    pattern: str
+    code: str
 
 
 def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI:
@@ -110,6 +126,14 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
     @app.get("/patterns/{pattern_id}")
     def patterns_detail_page(pattern_id: str):
         return FileResponse(_STATIC / "patterns_detail.html")
+
+    @app.get("/flashcards")
+    def flashcards_page():
+        return FileResponse(_STATIC / "flashcards.html")
+
+    @app.get("/flashcards/{pattern_id}")
+    def flashcards_pattern_page(pattern_id: str):
+        return FileResponse(_STATIC / "flashcards.html")
 
     @app.post("/api/reset")
     def reset():
@@ -220,6 +244,35 @@ def create_app(db_path, content_dir, session_dir, generated_dir=None) -> FastAPI
             "confusable": confusable_names,
             "seed_examples": seed_examples,
         }
+
+    @app.get("/api/flashcards/due")
+    def flashcards_due():
+        now = datetime.now(timezone.utc)
+        docs = load_all_pattern_docs()
+        due_map = store.all_flashcard_due(now)
+        rng = random.Random()
+        out = []
+        for pattern in sorted(docs):
+            doc = docs[pattern]
+            meta = pattern_meta(pattern)
+            for card_type in CARD_TYPES:
+                due = due_map.get((pattern, card_type))
+                if due is not None and due > now:
+                    continue
+                card = {
+                    "pattern": pattern, "card_type": card_type,
+                    "pattern_name": meta.name if meta else pattern,
+                }
+                if card_type == "recognition":
+                    rc = build_recognition_card(pattern, doc, list(docs.keys()), rng)
+                    card["signal"] = rc["signal"]
+                    card["options"] = [
+                        {"id": pid, "name": pattern_meta(pid).name if pattern_meta(pid) else pid}
+                        for pid in rc["options"]
+                    ]
+                out.append(card)
+        rng.shuffle(out)
+        return {"cards": out}
 
     @app.get("/api/dashboard")
     def dashboard():
