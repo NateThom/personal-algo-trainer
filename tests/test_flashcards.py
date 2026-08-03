@@ -7,8 +7,8 @@ from algotrainer.pattern_docs import load_pattern_doc
 from algotrainer.patterns import PATTERNS
 
 
-def test_card_types_are_the_four_facets():
-    assert set(CARD_TYPES) == {"recognition", "complexity", "template", "gotcha"}
+def test_card_types_are_the_five_facets():
+    assert set(CARD_TYPES) == {"lesson", "recognition", "complexity", "template", "gotcha"}
 
 
 def test_recognition_card_has_four_unique_options_including_correct():

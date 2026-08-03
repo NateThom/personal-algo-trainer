@@ -39,13 +39,13 @@ def test_due_cards_include_far_future_roadmap_pattern(tmp_path):
     assert "dp-2d" in patterns_present
 
 
-def test_due_cards_include_all_four_types_for_a_pattern(tmp_path):
+def test_due_cards_include_all_five_types_for_a_pattern(tmp_path):
     c = _client(tmp_path)
     body = c.get("/api/flashcards/due").json()
     types_seen = {
         card["card_type"] for card in body["cards"] if card["pattern"] == "arrays-hashing"
     }
-    assert types_seen == {"recognition", "complexity", "template", "gotcha"}
+    assert types_seen == {"lesson", "recognition", "complexity", "template", "gotcha"}
 
 
 def test_recognition_card_has_four_options_including_self(tmp_path):

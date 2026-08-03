@@ -9,7 +9,7 @@ import random
 from algotrainer.patterns import confusable_group
 from algotrainer.scheduler import RATING_BY_NAME
 
-CARD_TYPES: tuple[str, ...] = ("recognition", "complexity", "template", "gotcha")
+CARD_TYPES: tuple[str, ...] = ("lesson", "recognition", "complexity", "template", "gotcha")
 
 
 def build_recognition_card(
